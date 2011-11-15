@@ -115,7 +115,7 @@ $.fn.hide = function()
  * lhgdialog 入口函数
  * 还有待改进，先使用着
  */
-var lhgdialog = function( config )
+var lhgdialog = function( config, ok, cancel )
 {
 	config = config || {};
 	
@@ -136,6 +136,24 @@ var lhgdialog = function( config )
 	
 	// 目前主流移动设备对fixed支持不好
 	if(_isMobile) config.fixed = false;
+	
+	// 按钮队列
+	if( !$.isArray(config.button) )
+		config.button = config.button ? [config.button] : [];
+	
+	if( ok !== undefined ) config.ok = ok;
+	if( cancel !== undefined ) config.cancel = cancel;
+	
+	config.ok && config.button.push({
+	    name: config.okVal,
+		callback: config.ok,
+		focus: true
+	});
+	
+	config.cancel && config.button.push({
+	    name: config.cancelVal,
+		callback: config.cancel
+	});
 	
 	lhgdialog.setting.zIndex = config.zIndex;
 	
@@ -169,6 +187,7 @@ lhgdialog.fn =
 		DOM.content.css('padding', config.padding);
 		
 		that[config.show?'show':'hide'](true)
+		.button(config.button)
 		.title(config.title)
 		.content(config.content, true);
 		
@@ -186,14 +205,19 @@ lhgdialog.fn =
 		
 		_box = null;
 		
-		config.init && config.init.call( that, _top );
+		if( !_rurl.test(config.content) )
+		{
+		    config.init && config.init.call( that, window );
+		}
 		
 		return that;
 	},
 	
 	content: function( msg )
 	{
-	    var that = this, _url,
+	    if( msg === undefined ) return this;
+		
+		var that = this, _url,
 		    DOM = that.DOM,
 			wrap = DOM.wrap[0],
 			width = wrap.offsetWidth,
@@ -205,8 +229,6 @@ lhgdialog.fn =
 			loading = lhgdialog.setting.content;
 		
 		wrap.style.width = 'auto';
-		
-		if( msg === undefined ) return $content[0];
 		
 		if( typeof msg === 'string' )
 		{
@@ -247,17 +269,18 @@ lhgdialog.fn =
 	/**
 	 * 设置标题
 	 * @param	{String, Boolean}	标题内容. 为false则隐藏标题栏
-	 * @return	{this, HTMLElement}	如果无参数则返回内容器DOM对象
+	 * @return	{this}	如果无参数则返回对象本身
 	 */
 	title: function( text )
 	{
+		if( text === undefined ) return this;
+		
 		var DOM = this.DOM,
 			wrap = DOM.wrap,
 			title = DOM.title,
 			className = 'ui_state_noTitle';
-			
-		if (text === undefined) return title[0];
-		if (text === false)
+		
+		if( text === false )
 		{
 			title.hide().html('');
 			wrap.addClass(className);
@@ -400,14 +423,14 @@ lhgdialog.fn =
 			listeners = that._listeners = that._listeners || {},
 			list = $.isArray(ags[0]) ? ags[0] : [].slice.call(ags);
 		
-		if( ags[0] === undefined ) return elem;
+		if( ags[0] === undefined ) return that;
 		
 		$.each(list, function(i,obj){
 		    var name = obj.name,
 			    isNewButton = !listeners[name],
 				button = !isNewButton ?
 					listeners[name].elem :
-					document.createElement('button');
+					_doc.createElement('button');
 			
 			if( !listeners[name] ) listeners[name] = {};
 			if( obj.callback ) listeners[name].callback = obj.callback;
@@ -456,7 +479,7 @@ lhgdialog.fn =
 	/** 关闭对话框 */
 	close: function()
 	{
-		if (!this._isRun) return this;
+		if( !this._isRun ) return this;
 		
 		var that = this,
 			DOM = that.DOM,
@@ -468,15 +491,20 @@ lhgdialog.fn =
 		
 		if( that.iframe )
 		{
+			if( typeof  fn === 'function' && fn.call(that, that.iframe.contentWindow, window) === false )
+			    return that;
+				
 			$(that.iframe).css('display', 'none')
 			.unbind('load', that._fmLoad)
 			.attr('src', 'about:blank').remove();
 			
 			DOM.content.removeClass('ui_state_full');
 		}
-		
-		if( typeof fn === 'function' && fn.call(that, window) === false )
-			return that;
+		else
+		{
+		    if( typeof fn === 'function' && fn.call(that, window) === false )
+			    return that;
+		}
 		
 		that.unlock();
 		
@@ -486,7 +514,7 @@ lhgdialog.fn =
 		DOM.content.html('');
 		DOM.buttons.html('');
 		
-		if(lhgdialog.focus === that) lhgdialog.focus = null;
+		if( lhgdialog.focus === that ) lhgdialog.focus = null;
 		
 		delete list[that.config.id];
 		that._removeEvent();
@@ -680,6 +708,8 @@ lhgdialog.fn =
 			
 			that.size( iWidth, iHeight )
 			.position( config.left, config.top );
+			
+			config.init && config.init.call( that, iwin, _top );
 		};
 		
 		$iframe.bind( 'load', load );
@@ -840,11 +870,11 @@ lhgdialog.fn =
 	
 	// 按钮回调函数触发
 	_click: function( name )
-	{ return this.close();
-		// var that = this,
-			// fn = that._listeners[name] && that._listeners[name].callback;
-		// return typeof fn !== 'function' || fn.call(that, window) !== false ?
-			// that.close() : that;
+	{ 
+		var that = this,
+			fn = that._listeners[name] && that._listeners[name].callback;
+		return typeof fn !== 'function' || fn.call(that, window) !== false ?
+			that.close() : that;
 	},
 	
 	// 重置位置与尺寸
@@ -871,7 +901,7 @@ lhgdialog.fn =
 			that.position(left, top);
 	},
 	
-	_addEvent: function()   // 此方法需要优化
+	_addEvent: function()
 	{
 		var resizeTimer,
 			that = this,
@@ -883,30 +913,34 @@ lhgdialog.fn =
 		that._winResize = function()
 		{
 			resizeTimer && clearTimeout(resizeTimer);
-			resizeTimer = setTimeout(function(){
+			resizeTimer = setTimeout(function()
+			{
 				that._reset(isIE);
 			}, 40);
 		};
 		_$top.bind('resize', that._winResize);
 		
-		DOM.wrap
-		.bind('click',function(event){
+		DOM.wrap.bind('click',function(event)
+		{
 			var target = event.target, callbackID;
 			
-			if (target.disabled) return false; // IE BUG
+			if( target.disabled ) return false; // IE BUG
 			
-			if (target === DOM.close[0]) {
+			if( target === DOM.close[0] )
+			{
 				that._click(config.cancelVal);
 				return false;
-			} else {
+			}
+			else
+			{
 				callbackID = target[_expando + 'callback'];
 				callbackID && that._click(callbackID);
 			};
 			
 			that._ie6SelectFix();
 			return false;
-		})
-		.bind('mousedown',function(){
+		}).bind('mousedown',function()
+		{
 		    that.focus(true);
 		});
 	},
