@@ -1,0 +1,628 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>lhgDialog 4.0.0 beta1 版本测试</title>
+<link type="text/css" rel="stylesheet" href="js/prettify/prettify.css" />
+<link type="text/css" rel="stylesheet" href="js/demo.css" />
+<script src="js/jquery-1.7.min.js" type="text/javascript"></script>
+<script src="js/prettify/prettify.js" type="text/javascript"></script>
+<script type="text/javascript">
+	function op1(){
+		var a = $.dialog();
+	}
+	function op2(){
+		var a = $.dialog({ id:'a1',lock: true });
+	}
+	function op3(){
+		var a = $.dialog({ 
+			id: "a2" ,
+			content: "我是HTML内容"
+		});
+	}
+	function op4(){
+		var a = $.dialog({ 
+			id: "a3" ,
+			content: "我是HTML内容",
+			title: "我是新的Title"
+		});
+	}
+	function op5(){
+		var a = $.dialog({ 
+			id: "a5" ,
+			content: "我是HTML内容",
+			button: [
+				{
+					name:"上一步",
+					callback: function () {
+						this.content("这是上一步的内容");
+						return false;
+					},
+					focus: true
+				},
+				{
+					name:"下一步",
+					callback: function () {
+						alert('你点击了下一步')
+					}
+				},
+				{
+					name: "无效按钮",
+					disabled: true
+				}
+			]
+		});	
+	}
+	function op6(){
+		var a = $.dialog({ 
+			id: "a6" ,
+			content: "我是HTML内容",
+			ok: function(){
+				alert("你点击了确定按钮");
+				this.content("通过返回值true,执行默认函数，返回false，可以阻止窗口关闭");
+				return false;
+			},
+			okVal:"我是OK按钮"
+		});
+	}
+	function op7(){
+		var a = $.dialog({
+			id: "a7" ,
+			content: "我是HTML内容,我只有一个取消按钮，右上角关闭按钮，和右下角取消按钮，同属一个函数控制。",	
+			cancel:function(){
+				alert("你点击了取消按钮");
+			},
+			cancelVal:"我是取消按钮"
+		});
+	}
+	function op8(){
+		var a = $.dialog({
+			id: "a8" ,
+			content:"init对话框初始化后执行的函数",
+			init:function(){
+				alert("我是对话框初始化执行的函数");
+			}
+		});
+	}
+	function op9(){
+		var a = $.dialog({
+			id: "a9",
+			content: "对话框关闭前可执行回调函数close",
+			close:function(){
+				alert("等我执行完了才关闭，可用户关闭后刷新父页面");
+			}	
+		});	
+	}
+	function op10(){
+		var a = $.dialog({
+			id: "a10",
+			content: "可以同时使用多套皮肤哦，这个是新的皮肤",
+			skin:"我是全新的4.0.0皮肤"	
+		});	
+	}
+	function op11(){
+		var a = $.dialog({
+			id: "a11",
+			content: "注意看focus焦点到按钮上了",
+			button: [
+				{
+					name: "我是一个普通按钮",
+					focus: true,
+					callback: function(){
+						alert("焦点在我身上");
+						return false;	
+					}
+				}
+			]
+			
+		});	
+	}
+	/*
+	var a_op12 = $.dialog({
+		id: "a12",
+		content: "我显示出来了哦",
+		show:false
+	});
+	function op12(){
+		a_op12.show();
+	}*/
+	function op13(){
+		var a = $.dialog({
+			id: "a13",
+			content: "可以通过width和height指定初始宽度和高度,默认为auto(根据内容自动调整)<br/><br/>单位支持px(默认)和%(百分比)",
+			width:	'300px',
+			height: '80%',
+		});
+	}
+	function op14(){
+		var a = $.dialog({
+			id: "a14",
+			content: "通过minwidth和minheight可设置最小宽度和最小宽度，<br/><br/>默认值( minWidth: 96,minHeight: 32)",
+			width:	400,
+			height: 300,
+			minWidht: 200,
+			minHeight: 200
+		});	
+	}
+	function op15(){
+		var a = $.dialog({
+			id: "a15" ,
+			lock: true ,
+			title: "Android4.0照片",
+			content: "<img src='js/android.jpg'/>",
+			lock:true
+		});	
+	}
+	function op16(){
+		var a = $.dialog({
+			id: "a16",
+			title: "系统消息",
+			content: "这是一个警告消息",
+			icon:"warn"	
+		});	
+	}
+	function op16_0(){
+		var a = $.dialog({
+			id: "a16_0",
+			title: "系统消息",
+			content: "您有一个新的消息",
+			icon:"msg"	
+		});	
+	}
+	function op16_1(){
+		var a = $.dialog({
+			id: "a16_1",
+			title: "系统消息",
+			content: "这是一个正确消息",
+			icon:"ok"	
+		});	
+	}
+	function op16_2(){
+		var a = $.dialog({
+			id: "a16_2",
+			title: "系统消息",
+			content: "欢迎订阅本站RSS消息",
+			icon:"rss"	
+		});	
+	}
+	function op16_3(){
+		var a = $.dialog({
+			id: "a16_3",
+			title: "系统消息",
+			content: "您的账户已锁定",
+			icon:"lock"	
+		});	
+	}
+	function op17(){
+		var a = $.dialog({
+			id: "a17",
+			title: "键盘ESC按键",
+			content: "当对话框获得焦点时，按下ESC键可以关闭对话框, esc参数默认是true",
+			esc: true
+		});	
+	}
+	function op18(){
+		var a = $.dialog({
+			id: "a18",
+			title: "屏幕已锁定",
+			content: "lock：true ，锁定屏幕",
+			lock: true,
+			ok:function(){
+				this.unlock();
+				return false;
+			},
+			okVal:"点击这里解锁屏幕"
+		});	
+	}
+	function op18_1(){
+		var a = $.dialog({
+			id: "a18_1",
+			title: "屏幕已锁定",
+			content: "通过更改 background: '颜色值' 改变锁屏颜色，默认#000(黑色)<br/><br/> 通过opacity: (浮点值) 来调整锁屏的透明度(0.0 —— 1.0之间) ",
+			lock: true,
+			background: "#0000FF",
+			opacity: .3
+		});	
+	}
+	function op19(){
+		var a = $.dialog({
+			id: "a19",
+			title: "静止定位",
+			content: "静止定位，支持IE6下静止定位，不随浏览器滚动条滚动，不闪烁; fixed 默认为false",
+			fixed: true,
+			height: 200
+		});		
+	}
+	function op20(){
+		var a = $.dialog({
+			id: "a20",
+			title: "坐标定位",
+			fixed: true,
+			content: "通过X(left)坐标和Y(top)坐标来定位",
+			left: "0%",
+			top: "0%"	
+		});	
+	}
+	function op20_1(){
+		var a = $.dialog({
+			id: "a20_1",
+			title: "坐标定位",
+			fixed: true,
+			content: "通过X(left)坐标和Y(top)坐标来定位",
+			left: "100%",
+			top: "100%"	
+		});
+	}
+	function op21(){
+		var a = $.dialog({
+			id: "a21",
+			content: "对话框叠加高度值(重要：此值不能超过浏览器最大限制)zIndex 默认值是1976",
+			zIndex: 20000,
+			width: "50%",
+			height: "50%"
+		});	
+	}
+	function op22(){
+		var a = $.dialog({
+			id: "a22",
+			content: "resize : 是否允许用户调节尺寸，默认是true",
+			resize : false
+		});	
+	}
+	function op23(){
+		var a = $.dialog({
+			id: "a23",
+			content: "drag : 是否允许用户拖动位置，默认是true",
+			drag : false
+		});	
+	}
+	function op24(){
+		var a = $.dialog({
+			id: "a24",
+			content: "cache : 是否缓存窗口内容页，默认是true",
+			cache : false
+		});
+	}
+</script>
+</head>
+<body>
+<div class="container r5px">
+    <div class="header"><h1>lhgDialog 4.0.0 DEMO 页面</h1></div>
+    <div class="article">
+        <h2>窗口的各种在线演示示例</h2>
+        <p>常规配置参数使用演示</p>
+        <ol>
+        	<li>
+            	<h3>普通调用，不带参数</h3>
+                <pre class="prettyprint">
+var a = $.dialog();</pre>
+                <button class="button blue" onclick="op1()">运行»</button>
+            </li>
+            <li>
+            	<h3>设置ID值，防止重复弹出，更便于日后取得窗口对象</h3>
+                <pre class="prettyprint">
+var a = $.dialog({ id: "a1", lock:true });</pre>
+				<button class="button green" onclick="op2()">运行»</button>
+            </li>
+            <li>
+            	<h3>支持HTML内容</h3>
+            	<pre class="prettyprint">
+/** content: html内容 */
+var a = $.dialog({ 
+    id: "a2" ,
+    content: "我是HTML内容"
+});				</pre>
+                <button class="button green" onclick="op3()">运行»</button>
+            </li>
+            <li>
+            	<h3>通过title属性更改标题内容</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({ 
+    id: "a3" ,
+    content: "我是HTML内容",
+    title: "我是新的Title"
+});				</pre>
+                <button class="button green" onclick="op4()">运行»</button>
+            </li>
+            <li>
+            	<h3>添加自定义按钮</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({ 
+    id: "a5" ,
+    content: "我是HTML内容",
+    button: (
+    	{
+            name:"上一步",
+            callback: function () {
+                this.content("这是上一步的内容");
+                return false;
+            },
+            focus: true
+        },
+        {
+            name:"下一步",
+            callback: function () {
+            	alert('你点击了下一步')
+            }
+        },
+        {
+            name: "无效按钮",
+            disabled: true
+        },
+    )
+});	            </pre>
+                <button class="button green" onclick="op5()">运行»</button>
+            </li>
+            <li>
+            	<h3>确定按钮回调函数，可通过okVal改变ok按钮的文本</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({ 
+    id: "a5" ,
+    content: "我是HTML内容",
+    ok: function(){
+    	alert("你点击了确定按钮");
+        this.content("通过返回值true,执行默认函数，返回false，可以阻止窗口关闭");
+		return false;
+    },
+    okVal:"我是OK按钮"
+});				</pre>
+                <button class="button green" onclick="op6()">运行»</button>
+            </li>
+            <li>
+            	<h3>取消按钮回调函数,可通过cancelVal改变cancel按钮的文本</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a7" ,
+    content: "我是HTML内容,我只有一个取消按钮，右上角关闭按钮，和右下角取消按钮，同属一个函数控制。",	
+    cancel:function(){
+        alert("你点击了取消按钮");
+    },
+    cancelVal:"我是取消按钮"
+});				</pre>
+                <button class="button green" onclick="op7()">运行»</button>
+            </li>
+            <li>
+            	<h3>对话框初始化后执行的函数 init</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a8" ,
+    content:"init对话框初始化后执行的函数",
+    init:function(){
+        alert("我是对话框初始化执行的函数");
+    }
+});				</pre>
+                <button class="button green" onclick="op8()">运行»</button>
+            </li>
+			<li>
+            	<h3>对话框关闭前执行的函数</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a9",
+    content: "对话框关闭前可执行回调函数close",
+    close:function(){
+    	alert("等我执行完了才关闭，可用户关闭后刷新父页面");
+    }	
+});				</pre>
+                <button class="button green" onclick="op9()">运行»</button>
+            </li>
+            <li>
+            	<h3>skin，多皮肤支持</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a10",
+    content: "可以同时使用多套皮肤",
+    skin:"我是全新的4.0.0皮肤"	
+});				</pre>
+                <button class="button green" onclick="op10()">运行»</button>
+            </li>
+            <li>
+            	<h3>是否支持对话框按钮聚焦,默认是true</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a11",
+    content: "注意看focus焦点到按钮上了",
+    button: [
+        {
+            name: "我是一个普通按钮",
+            focus: true,
+            callback: function(){
+                alert("焦点在我身上");
+                return false;	
+            }
+        }
+    ]
+    
+});	 			</pre>
+                <button class="button green" onclick="op11()">运行»</button>
+            </li>
+            <li>
+            	<h3>初始化后是否显示对话框&nbsp;<span class="colr">(有问题，未实现，JS已注释)</span></h3>
+            	<pre class="prettyprint">
+var a_op12 = $.dialog({
+    id: "a12",
+    content: "我显示出来了哦",
+    show: false	
+});	
+function op12(){
+	a_op12.show();
+}
+	            </pre>
+                <button class="button green" onclick="op12()">运行»</button>
+            </li>
+            <li>
+            	<h3>可调整宽度和高度</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a13",
+    content: "可以通过width和height指定初始宽度和高度,默认为auto(根据内容自动调整),单位支持px(默认)和%(百分比)",
+    width: '300px',
+    height: '80%'
+});				</pre>
+                <button class="button green" onclick="op13()">运行»</button>
+            </li>
+            <li>
+            	<h3>最小宽度限制和最小高度限制&nbsp;<span class="colr">(16号的版本测试，不起作用)</span></h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a14",
+    content: "通过minwidth和minheight可设置最小宽度和最小宽度，默认值( minWidth: 96,minHeight: 32)",
+    width: 400,
+    height: 300,
+    minWidht: 200,
+    minHeight: 200
+});				</pre>
+                <button class="button green" onclick="op14()">运行»</button>
+            </li>
+            <li>
+            	<h3>内容与边界填充距离</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a15" ,
+    title: "Android4.0照片",
+    cancel: false,
+    content: "&lt;img src='js/android.jpg' /&gt;",
+    padding: 0
+});	
+	            </pre>
+                <button class="button green" onclick="op15()">运行»</button>
+            </li>
+            <li>
+            	<h3>通过icon参数定义消息图标</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a16",
+    title: "系统消息",
+    content: "这是一个普通消息",
+    icon:"warn"	
+});				</pre>
+                <button class="button green" onclick="op16()">运行»</button>
+                <button class="button green" onclick="op16_0()">运行»</button>
+                <button class="button green" onclick="op16_1()">运行»</button>
+                <button class="button green" onclick="op16_2()">运行»</button>
+                <button class="button green" onclick="op16_3()">运行»</button>
+            </li>
+            <li>
+            	<h3>键盘ESC键，按下可关闭当前窗体</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a17",
+    title: "键盘ESC按键",
+    content: "当对话框获得焦点时，按下ESC键可以关闭对话框, esc参数默认是true",
+    esc: true
+});				</pre>
+                <button class="button green" onclick="op17()">运行»</button>
+            </li>
+            <li>
+            	<h3>lock/unlock 锁屏和解开锁屏功能&nbsp; <span class="colr">(16号的版本测试，有bug，当浏览器有滚动条后，锁屏只在屏幕最上端)</span></h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a18",
+    title: "屏幕已锁定",
+    content: "lock：true ，锁定屏幕",
+    lock: true,
+    ok:function(){
+    	this.unlock();
+        return false;
+    },
+    okVal:"点击这里解锁屏幕"
+});	 </pre>
+                <button class="button green" onclick="op18()">运行»</button>
+				<pre class="prettyprint">
+var a = $.dialog({
+    id: "a18_1",
+    title: "屏幕已锁定",
+    content: "通过更改 background: '颜色值' 改变锁屏颜色，默认#000(黑色); 通过opacity: (浮点值) 来调整锁屏的透明度(0.0 —— 1.0之间) ",
+    lock: true,
+    background: "#0000FF",
+    opacity: .3
+});			</pre>
+			<button class="button green" onclick="op18_1()">运行»</button>
+            </li>
+            <li>
+            	<h3>是否静止定位</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a19",
+    title: "静止定位",
+    fixed: true,
+    content: "静止定位，支持IE6下静止定位，不随浏览器滚动条滚动，不闪烁; fixed 默认为false",
+    fixed: true,
+    height: 200
+});				</pre>
+                <button class="button green" onclick="op19()">运行»</button>
+            </li>
+            <li>
+            	<h3>通过X(left)坐标和Y(top)坐标来定位</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a20",
+    title: "坐标定位",
+    fixed: true,
+    content: "通过X(left)坐标和Y(top)坐标来定位",
+    left: "0%",
+    top: "0%"	
+});				</pre>
+                <button class="button green" onclick="op20()">运行(右上角)»</button>
+                <button class="button green" onclick="op20_1()">运行(右下角)»</button>
+            </li>
+            <li>
+            	<h3></h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a21",
+    content: "对话框叠加高度值(重要：此值不能超过浏览器最大限制)zIndex 默认值是1976",
+    zIndex: 20000,
+    width: "50%",
+    height: "50%"
+});				</pre>
+                <button class="button green" onclick="op21()">运行»</button>
+            </li>
+            <li>
+            	<h3>resize : 是否允许用户调节尺寸</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a22",
+    content: "resize : 是否允许用户调节尺寸，默认是true",
+    resize : false
+});				</pre>
+                <button class="button green" onclick="op22()">运行»</button>
+            </li>
+            <li>
+            	<h3>drag : 是否允许用户拖动位置</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a23",
+    content: "drag : 是否允许用户拖动位置，默认是true",
+    drag : false
+});             </pre>
+                <button class="button green" onclick="op23()">运行»</button>
+            </li>
+            <li>
+            	<h3>cache : 是否缓存窗口内容页</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a24",
+    content: "cache : 是否缓存窗口内容页，默认是true",
+    cache : false
+});</pre>
+                <button class="button green" onclick="op24()">运行»</button>
+            </li>
+            <li>
+            	<h3></h3>
+            	<pre class="prettyprint">
+	            </pre>
+                <button class="button green" onclick="op()">运行»</button>
+            </li>
+        </ol>
+        <h2>更多API组合DEMO，请自行阅读API之后编写测试。</h2><br/>
+    </div>
+    <div class="footer"></div>
+
+</div>
+
+
+<script type="text/javascript">prettyPrint();</script>
+</body>
+<script type="text/javascript" src="../lhgdialog.js" ></script>
+<script type="text/javascript" src="js/demo.js"></script>
+</html>
