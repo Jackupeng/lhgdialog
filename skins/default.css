@@ -1,0 +1,35 @@
+﻿@charset "utf-8";
+/*!
+ * lhgcore Dialog Plugin StyleSheet
+ * Copyright (c) 2009 - 2011 By Li Hui Gang
+ */
+html{_background-image:url(about:blank);_background-attachment:fixed;}
+body{_margin:0;_height:100%;}/*IE6 BUG*/
+.ui_lock_scroll{*overflow:hidden;}
+.ui_lock_scroll body{overflow:hidden;padding-right:17px;}
+
+.ui_outer{text-align:left;}
+table.ui_border,table.ui_dialog{border:0;margin:0;border-collapse:collapse;width:auto;}
+.ui_lt,.ui_t,.ui_rt,.ui_l,.ui_c,.ui_r,.ui_lb,.ui_b,.ui_rb,.ui_header,.ui_tdIcon,.ui_main,.ui_footer {padding:0;}
+.ui_header,.ui_buttons button{font:12px/1.231 tahoma, arial, \5b8b\4f53, sans-serif;}
+.ui_title{overflow:hidden;text-overflow:ellipsis;}
+.ui_state_noTitle .ui_title {display:none;}
+.ui_close{display:block;position:absolute;text-decoration:none;outline:none; _cursor:pointer;}
+.ui_close:hover{text-decoration:none;}
+.ui_main{text-align:center;min-width:9em;min-width:0\9/*IE8 BUG*/;}
+.ui_content{display:inline-block;*zoom:1;*display:inline;text-align:left;border:none 0;}
+.ui_content.ui_state_full{display:block;width:100%;margin:0;padding:0!important;height:100%;}
+.ui_loading{width:96px;height:32px;text-align:left;text-indent:-999em;overflow:hidden;background:url(icons/loading.gif) no-repeat center center;}
+.ui_icon{vertical-align:middle;}
+.ui_icon div{width:48px;height:48px;margin:10px 0 10px 10px;background-position:center center;background-repeat:no-repeat;}
+.ui_buttons{padding:8px;text-align:right;white-space:nowrap;}
+
+.ui_l,.ui_b,.ui_r,.ui_t{background:#DDD;}
+.ui_lt,.ui_rt,.ui_lb,.ui_rb{background:#DDD;width:6px;height:6px;}
+.ui_inner{border:1px solid #666;background:#FFF;}
+.ui_titleBar{height:100%;position:relative;}
+.ui_title{background:#59ACFF;overflow:hidden;text-overflow: ellipsis;display:block;height:28px;line-height:28px;padding:0 5px;font-size:14px;}
+
+.ui_close { padding:0; top:4px; right:4px; width:21px; height:21px; line-height:21px; font-size:18px; color:#68767b; text-align:center; font-family: Helvetica, STHeiti; _font-family: '\u9ed1\u4f53', 'Book Antiqua', Palatino; text-shadow:0 1px 0 rgba(255, 255, 255, .9); }
+.ui_close:hover { color:#C72015; }
+.ui_close:active { box-shadow: none; }
