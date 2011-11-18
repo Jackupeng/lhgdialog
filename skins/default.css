@@ -1,6 +1,6 @@
 @charset "utf-8";
 /*
- * Title: lhgDialog skin
+ * Title: lhgDialog skin Default CSS 
  * CSS3 
  * URL: http://bbs.lhgcore.com/
  * (c)2011-2012 gumutianqi, http://bbs.lhgcore.com/
@@ -150,9 +150,9 @@ table.ui_border, table.ui_dialog {
 .ui_buttons button:hover {
 	text-decoration: none;
 	border-color: #666;
-	-webkit-box-shadow:1px 1px 10px #888;
+	-webkit-box-shadow:1px 1px 6px #888;
 	-webkit-transform:rotate(0deg);
-	-moz-box-shadow:1px 1px 10px #888;
+	-moz-box-shadow:1px 1px 6px #888;
 	-moz-transform:rotate(-0deg);
 }
 .ui_buttons button:active {
@@ -198,6 +198,7 @@ button.ui_state_highlight:active {
 }
 /* common Style end*/
 
+/***************************************************************华丽的分割线： default 默认皮肤 **************************/
 /* 内容区域css */
 .ui_inner {
 	background: #FFF;
@@ -214,10 +215,6 @@ button.ui_state_highlight:active {
 	-webkit-border-radius: .3em; 
 	-moz-border-radius: .3em;
 	border-radius: .3em;
-}
-.ui_lt, .ui_rt, .ui_lb, .ui_rb {
-	width: 8px;
-	height: 8px;
 }
 /* 边框使用 css3实现边框轻微圆角 */
 .ui_lt{
@@ -247,7 +244,8 @@ button.ui_state_highlight:active {
 	filter: alpha(opacity=50);
 }
 .ui_lt, .ui_lb, .ui_rt, .ui_rb {
-	width: 4px;height:.4em;	
+	width: 4px;
+	height:4px;	
 }
 
 
@@ -295,6 +293,7 @@ button.ui_state_highlight:active {
 
 .ui_state_focus .ui_title {
 	color: #4c5a5f;
+	color: rgba(0, 0, 0, .8)\9;
 }
 /* 拖动时的css */
 .ui_state_drag .ui_title {
@@ -388,4 +387,65 @@ button.ui_state_highlight:active {
 }
 .ui_state_noTitle .ui_dialog {
 	box-shadow: none;
+}
+
+/***************************************************************华丽的分割线：imac 默认皮肤 **************************/
+/* 内边框 */
+.imac .ui_inner {
+	background: #FFF;
+	border: 1px solid rgba(0, 0, 0, .2);	
+	border: 1px solid #ccc\9;
+	-webkit-box-shadow:1px 1px 10px #888;
+	-webkit-transform:rotate(0deg);
+	-moz-box-shadow:1px 1px 10px #888;
+	-moz-transform:rotate(-0deg);
+}
+/* 窗口四周边框 table布局，只需要设置一个tr，一个td */
+.imac .ui_lt, .imac .ui_lb, .imac .ui_rt, .imac .ui_rb {
+	width: 1px;height:.1em;
+	
+}
+/* 获取焦点后的标题 css */
+.imac .ui_state_focus .ui_title {
+	color: #4F4F4F;
+	color: rgba(0, 0, 0, .8)\9;
+}
+/* title css */
+.imac .ui_title {
+	color: #95a7ae;
+	font-family: Tahoma, Arial/9!important;
+	background-color: #CCC;
+	background: linear-gradient(top, #E9E9E9, #C7C7C7);
+	background: -moz-linear-gradient(top, #E9E9E9, #C7C7C7);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#E9E9E9), to(#C7C7C7));
+	filter:alpha(opacity=100 finishopacity=50 style=1 startx=0,starty=0,finishx=0,finishy=150) progid: DXImageTransform.Microsoft.gradient(startColorstr='#E9E9E9', endColorstr='#C7C7C7');
+	-ms-filter:alpha(opacity=100 finishopacity=50 style=1 startx=0,starty=0,finishx=0,finishy=150) progid: DXImageTransform.Microsoft.gradient(startColorstr='#E9E9E9', endColorstr='#C7C7C7');
+	border-top: 1px solid #E9E9E9;
+	border-top: 1px solid #C7C7C7\9;
+	border-bottom: 1px solid #C7C7C7;
+}
+/* 拖动时的css */
+.imac .ui_state_drag .ui_title {
+	background: linear-gradient(top, #C7C7C7, #E9E9E9);
+	background: -moz-linear-gradient(top, #C7C7C7, #E9E9E9);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#C7C7C7), to(#E9E9E9));
+	filter:alpha(opacity=100 finishopacity=50 style=1 startx=0,starty=0,finishx=0,finishy=150) progid: DXImageTransform.Microsoft.gradient(startColorstr='#C7C7C7', endColorstr='#E9E9E9');
+	-ms-filter:alpha(opacity=100 finishopacity=50 style=1 startx=0,starty=0,finishx=0,finishy=150) progid: DXImageTransform.Microsoft.gradient(startColorstr='#C7C7C7', endColorstr='#E9E9E9');
+	box-shadow: none;
+	border-top: 1px solid #C7C7C7;
+}
+/* 关闭按钮 css */
+.imac .ui_close {
+	padding: 0;
+	border: 0px;
+	top: 6px;
+	right: 6px;
+	width: 16px;
+	height: 16px;
+	line-height: 16px;
+	text-indent:-3000em;
+	background:url(mac.png) 0 -16px no-repeat!important;
+}
+.imac .ui_close:hover {
+	background:url(mac.png) -16px -16px no-repeat!important;
 }

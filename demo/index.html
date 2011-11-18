@@ -8,8 +8,18 @@
 <script src="js/jquery-1.7.min.js" type="text/javascript"></script>
 <script src="js/prettify/prettify.js" type="text/javascript"></script>
 <script type="text/javascript">
+	/** 多皮肤演示 */
+	function sk1(){
+		var a = $.dialog({
+			id: "sk1",
+			content: "我是第一个款带MAC风格的CSS简约皮肤",
+			skin: "imac"	
+		});
+	}
+	
+	/** 窗口参数DEMO演示 */
 	function op1(){
-		var a = $.dialog();
+		var a = $.dialog({skin: "default"});
 	}
 	function op2(){
 		var a = $.dialog({ id:'a1',lock: true });
@@ -138,10 +148,10 @@
 		var a = $.dialog({
 			id: "a14",
 			content: "通过minwidth和minheight可设置最小宽度和最小宽度，<br/><br/>默认值( minWidth: 96,minHeight: 32)",
-			width:	400,
-			height: 300,
-			minWidht: 200,
-			minHeight: 200
+			width:	200,
+			height: 200,
+			minWidth: 300,
+			minHeight: 300
 		});	
 	}
 	function op15(){
@@ -290,13 +300,26 @@
     <div class="header"><h1>lhgDialog 4.0.0 DEMO 页面</h1></div>
     <div class="article">
         <h2>窗口的各种在线演示示例</h2>
+        <p>多皮肤共存</p>
+        <ol>
+        	<li>
+            	<h3>Mac风格的CSS 简约皮肤</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "sk1",
+    content: "我是第一个款略带MAC风格的CSS简约皮肤，取名 ‘ imac ’ ",
+    skin: "imac"	
+});				</pre>
+                <button class="button blue" onclick="sk1()">运行»</button>
+            </li>
+        </ol>
         <p>常规配置参数使用演示</p>
         <ol>
         	<li>
             	<h3>普通调用，不带参数</h3>
                 <pre class="prettyprint">
 var a = $.dialog();</pre>
-                <button class="button blue" onclick="op1()">运行»</button>
+                <button class="button green" onclick="op1()">运行»</button>
             </li>
             <li>
             	<h3>设置ID值，防止重复弹出，更便于日后取得窗口对象</h3>
