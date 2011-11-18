@@ -1054,10 +1054,11 @@ lhgdialog.templates =
 									'<div class="ui_titleBar">' +
 										'<div class="ui_title"><span class="ui_title_icon"></span></div>' +
 										'<div class="ui_title_buttons">' +
-										    '<a class="ui_min" href="#" title="最小化"><b></b></a>'
-										'<a class="ui_close" href="javascript:void(0);">' +
-											'\xd7' +
-										'</a>' +
+										    '<a class="ui_min" href="javascript:/*lhgdialog*/" title="\u6700\u5C0F\u5316"><b></b></a>' +
+											'<a class="ui_max" href="javascript:/*lhgdialog*/" title="\u6700\u5927\u5316"><b></b></a>' +
+											'<a class="ui_restore" href="javascript:/*lhgdialog*/" title="\u8FD8\u539F" ><b class="ui_restore_b"></b><b class="ui_restore_t"></b>' +
+										    '<a class="ui_close" href="javascript:/*lhgdialog*/">\xd7</a>' +
+										'</div>' +
 									'</div>' +
 								'</td>' +
 							'</tr>' +
