@@ -127,15 +127,18 @@
 			
 		});	
 	}
-	/*
-	var a_op12 = $.dialog({
-		id: "a12",
-		content: "我显示出来了哦",
-		show:false
-	});
 	function op12(){
-		a_op12.show();
-	}*/
+		var a_op12 = $.dialog({
+			id: "a12",
+			content: "我显示出来了哦",
+		});
+	}
+	function op12_1(){
+		$.dialog.list["a12"].hide();
+	}
+	function op12_2(){
+		$.dialog.list["a12"].show().time(3);
+	}
 	function op13(){
 		var a = $.dialog({
 			id: "a13",
@@ -160,7 +163,7 @@
 			lock: true ,
 			title: "Android4.0照片",
 			content: "<img src='js/android.jpg'/>",
-			lock:true
+			padding: 0
 		});	
 	}
 	function op16(){
@@ -168,7 +171,7 @@
 			id: "a16",
 			title: "系统消息",
 			content: "这是一个警告消息",
-			icon:"warn"	
+			icon:"warn.png"	
 		});	
 	}
 	function op16_0(){
@@ -176,7 +179,7 @@
 			id: "a16_0",
 			title: "系统消息",
 			content: "您有一个新的消息",
-			icon:"msg"	
+			icon:"msg.png"	
 		});	
 	}
 	function op16_1(){
@@ -184,7 +187,7 @@
 			id: "a16_1",
 			title: "系统消息",
 			content: "这是一个正确消息",
-			icon:"ok"	
+			icon:"ok.png"	
 		});	
 	}
 	function op16_2(){
@@ -192,7 +195,7 @@
 			id: "a16_2",
 			title: "系统消息",
 			content: "欢迎订阅本站RSS消息",
-			icon:"rss"	
+			icon:"rss.png"	
 		});	
 	}
 	function op16_3(){
@@ -200,7 +203,7 @@
 			id: "a16_3",
 			title: "系统消息",
 			content: "您的账户已锁定",
-			icon:"lock"	
+			icon:"lock.png"	
 		});	
 	}
 	function op17(){
@@ -230,7 +233,7 @@
 			title: "屏幕已锁定",
 			content: "通过更改 background: '颜色值' 改变锁屏颜色，默认#000(黑色)<br/><br/> 通过opacity: (浮点值) 来调整锁屏的透明度(0.0 —— 1.0之间) ",
 			lock: true,
-			background: "#0000FF",
+			background: "#F00",
 			opacity: .3
 		});	
 	}
@@ -459,18 +462,18 @@ var a = $.dialog({
                 <button class="button green" onclick="op11()">运行»</button>
             </li>
             <li>
-            	<h3>初始化后是否显示对话框&nbsp;<span class="colr">(有问题，未实现，JS已注释)</span></h3>
-            	<pre class="prettyprint">
-var a_op12 = $.dialog({
-    id: "a12",
-    content: "我显示出来了哦",
-    show: false	
-});	
+            	<h3>可以自由控制对话框的显示与隐藏</h3>
+            	<pre class="prettyprint">	
 function op12(){
-	a_op12.show();
+	var a_op12 = $.dialog({
+        id: "a12",
+        content: "我显示出来了哦",
+	});
 }
 	            </pre>
                 <button class="button green" onclick="op12()">运行»</button>
+                <button class="button blue" onclick="op12_1()">隐藏»</button>
+                <button class="button blue" onclick="op12_2()">显示»</button>
             </li>
             <li>
             	<h3>可调整宽度和高度</h3>
@@ -502,7 +505,7 @@ var a = $.dialog({
 var a = $.dialog({
     id: "a15" ,
     title: "Android4.0照片",
-    cancel: false,
+    lock: true,
     content: "&lt;img src='js/android.jpg' /&gt;",
     padding: 0
 });	
@@ -556,7 +559,7 @@ var a = $.dialog({
     title: "屏幕已锁定",
     content: "通过更改 background: '颜色值' 改变锁屏颜色，默认#000(黑色); 通过opacity: (浮点值) 来调整锁屏的透明度(0.0 —— 1.0之间) ",
     lock: true,
-    background: "#0000FF",
+    background: "#F00",
     opacity: .3
 });			</pre>
 			<button class="button green" onclick="op18_1()">运行»</button>
