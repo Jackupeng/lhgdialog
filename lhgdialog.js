@@ -92,7 +92,7 @@ _doc, _top = (function(w)
 	return w['top'];
 })(window),
 
-_$doc = $(_doc), _$top = $(_top);
+_$doc = $(_doc), _$top = $(_top), _$html = $('html',_doc);
 
 /*! 开启IE6 CSS背景图片缓存 */
 try{
@@ -180,12 +180,14 @@ lhgdialog.fn =
 		that.opener = window;
 		
 		DOM.wrap.addClass( config.skin );
-		DOM.close[config.cancel===false?'hide':'show']();
 		DOM.icon[0].style.display = icon ? '' : 'none';
 		DOM.iconBg.html(iconBg || '');
 		DOM.rb.css('cursor', config.resize ? 'se-resize' : 'auto');
 		DOM.title.css('cursor', config.drag ? 'move' : 'auto');
-		DOM.content.css('padding', config.padding);
+		DOM.max[0].style.display = config.max ? 'inline-block' : 'none';
+		DOM.min[0].style.display = config.min ? 'inline-block' : 'none';
+		DOM.close[0].style.display = config.cancel===false ? 'none' : 'inline-block';
+		DOM.restore[0].style.display = 'none';
 		
 		that.show(true)
 		.button(config.button)
@@ -317,17 +319,15 @@ lhgdialog.fn =
 			scaleWidth = that._toNumber(width,maxWidth);
 			width = scaleWidth;
 			
+			wrapStyle.width = 'auto';
+			
 			if( typeof width === 'number' )
-			{
-				wrapStyle.width = 'auto';
 				style.width = Math.max(that.config.minWidth,width) + 'px';
-				wrapStyle.width = wrap[0].offsetWidth + 'px'; // 防止未定义宽度的表格遇到浏览器右边边界伸缩
-			}
 			else if( typeof width === 'string' )
-			{
 				style.width = width;
-				width === 'auto' && wrap.css( 'width', 'auto' );
-			}
+			
+			if( width !== 'auto' ) // 防止未定义宽度的表格遇到浏览器右边边界伸缩
+			    wrapStyle.width = wrap[0].offsetWidth + 'px';
 		}
 		
 		if( height )
@@ -508,6 +508,16 @@ lhgdialog.fn =
 		
 		that.unlock();
 		
+		if( that._minState )
+		{
+		    DOM.main.show();
+			DOM.footer.show();
+			DOM.dialog.removeAttr('style');
+		}
+		
+		if( that._rese )
+		    DOM.main.css({width:that._rese.w,height:that._rese.h});
+		
 		// 置空内容
 		wrap[0].className = wrap[0].style.cssText = '';
 		DOM.outer.removeClass('ui_state_focus');
@@ -591,7 +601,9 @@ lhgdialog.fn =
 			config = that.config,
 			style = lhgdialog.lockMask ? lhgdialog.lockMask.style : null,
 			positionType = _ie6 ? 'absolute' : 'fixed';
-			
+		
+		_$html.addClass('ui_lock_scroll');	
+		
 		if( !lhgdialog.lockMask )
 		{
 			frm = '<iframe src="about:blank" style="width:100%;height:100%;position:absolute;' +
@@ -616,7 +628,6 @@ lhgdialog.fn =
 		}
 		
 		$(lhgdialog.lockMask).css({ opacity:config.opacity, zIndex:index, display:'block' });
-		$('html',_doc).addClass('ui_lock_scroll');
 			
 		that.focus(true);
 		that.DOM.outer.addClass('ui_state_lock');
@@ -642,7 +653,7 @@ lhgdialog.fn =
 			else
 			{
 			    lhgdialog.lockMask.style.display = 'none';
-			    $('html',_doc).removeClass('ui_lock_scroll');
+			    _$html.removeClass('ui_lock_scroll');
 			}
 			
 			that.DOM.outer.removeClass('ui_state_lock');
@@ -674,7 +685,7 @@ lhgdialog.fn =
 		    $content = that.DOM.content,
 			config = that.config,
 			$loading = $('.ui_loading',$content[0]),
-		    initCss = 'position:absolute;border:none 0;background:transparent',
+		    initCss = 'position:absolute;left:-9999em;border:none 0;background:transparent',
 		    loadCss = 'width:100%;height:100%;border:none 0;';
 			
 		if( config.cache === false )
@@ -920,6 +931,104 @@ lhgdialog.fn =
 			that.position(left, top);
 	},
 	
+	// 这个方法以后移到上面去
+	max: function()
+	{
+		var that = this,
+		    DOM = that.DOM,
+			wrapStyle = DOM.wrap[0].style,
+			mainStyle = DOM.main[0].style,
+			rbStyle = DOM.rb[0].style,
+			titleStyle = DOM.title[0].style,
+			config = that.config,
+		    top = _$doc.scrollTop(),
+		    left = _$doc.scrollLeft();
+		
+		that._rese = {
+		    t: wrapStyle.top,
+			l: wrapStyle.left,
+			w: mainStyle.width,
+			h: mainStyle.height,
+			d: config.drag,
+			r: config.resize,
+			rc: rbStyle.cursor,
+			tc: titleStyle.cursor
+		};
+		
+		!that._lock && _$html.addClass('ui_lock_scroll');
+		_ie6 && _$html.addClass('ui_lock_fixed');
+		
+		DOM.wrap.css({ top:top + 'px', left:left + 'px' });
+		
+		that.size('100%', '100%')._setAbsolute();
+		config.drag = false;
+		config.resize = false;
+		rbStyle.cursor = 'auto';
+		titleStyle.cursor = 'auto';
+		
+		DOM.max.hide();
+		DOM.restore[0].style.display = 'inline-block';
+		
+		return that;
+	},
+	
+	restore: function()
+	{
+		var that = this,
+		    DOM = that.DOM,
+			rbStyle = DOM.rb[0].style,
+			titleStyle = DOM.title[0].style,
+			config = that.config;
+		
+		!that._lock && _$html.removeClass('ui_lock_scroll');
+		
+		if( _ie6 )
+		{
+		    _$html.removeClass('ui_lock_fixed');
+			that._top = that._rese.t;
+			that._left = that._rese.l;
+		}
+		
+		DOM.wrap.css({ top:that._rese.t, left:that._rese.l });
+		that.size(that._rese.w, that._rese.h)._autoPositionType();
+		config.drag = that._rese.d;
+		config.resize = that._rese.r;
+		rbStyle.cursor = that._rese.rc;
+		titleStyle.cursor = that._rese.tc;
+		
+		DOM.restore.hide();
+		DOM.max[0].style.display = 'inline-block';
+		
+		delete that._rese;
+		
+		return that;
+	},
+	
+	min: function()
+	{
+	    var that = this,
+		    DOM = that.DOM;
+			
+		if( !that._minState )
+		{
+		    DOM.main.hide();
+		    DOM.footer.hide();
+		    DOM.dialog[0].style.width = DOM.main[0].style.width;
+		
+		    that._minState = true;
+		}
+		else
+		{
+		    DOM.main.show();
+			DOM.footer.show();
+			DOM.dialog.removeAttr('style');
+			
+			that._minState = false;
+		}
+		
+		return that;
+	},
+	
 	_addEvent: function()
 	{
 		var resizeTimer,
@@ -935,7 +1044,7 @@ lhgdialog.fn =
 			resizeTimer = setTimeout(function()
 			{
 				that._reset(isIE);
-			}, 40);
+			}, 140);
 		};
 		_$top.bind('resize', that._winResize);
 		
@@ -948,6 +1057,21 @@ lhgdialog.fn =
 			if( target === DOM.close[0] )
 			{
 				that._click(config.cancelVal);
+				return false;
+			}
+			else if( target === DOM.max[0] || target === DOM.max_b[0] )
+			{
+			    that.max();
+				return false;
+			}
+			else if( target === DOM.restore[0] || target === DOM.restore_b[0] || target === DOM.restore_t[0] )
+			{
+			    that.restore();
+				return false;
+			}
+			else if( target === DOM.min[0] )
+			{
+			    that.min();
 				return false;
 			}
 			else
@@ -1029,6 +1153,33 @@ _top != window && $(window).bind('unload',function()
 	$('#lhgdg_dragMask',_doc)[0] && $('#lhgdg_dragMask',_doc).remove();
 });
 
+
+/**
+ * 跨框架数据共享接口
+ * @see		http://www.planeart.cn/?p=1554
+ * @param	{String}	存储的数据名
+ * @param	{Any}		将要存储的任意数据(无此项则返回被查询的数据，如果此值为false就删除指定名称的删除)
+ */
+lhgdialog.data = function( name, value )
+{
+    var top = lhgdialog.top,
+	    cache = top[_data] || {};
+	
+	top[_data] = cache;
+	
+	if( value === false )
+	{
+	    if(cache[name]) delete cache[name];
+	}
+	else if( value )
+	    cache[name] = value;
+	else
+	    return cache[name];
+	
+	return cache;
+};
+
+
 /*!
  * 窗口组件模板，基础皮肤自适应九宫格结构
  * 由网友[一丝冰凉] 制作提供 QQ:50167214
@@ -1054,10 +1205,10 @@ lhgdialog.templates =
 									'<div class="ui_titleBar">' +
 										'<div class="ui_title"><span class="ui_title_icon"></span></div>' +
 										'<div class="ui_title_buttons">' +
-										    '<a class="ui_min" href="javascript:/*lhgdialog*/" title="\u6700\u5C0F\u5316"><b></b></a>' +
-											'<a class="ui_max" href="javascript:/*lhgdialog*/" title="\u6700\u5927\u5316"><b></b></a>' +
-											'<a class="ui_restore" href="javascript:/*lhgdialog*/" title="\u8FD8\u539F" ><b class="ui_restore_b"></b><b class="ui_restore_t"></b>' +
-										    '<a class="ui_close" href="javascript:/*lhgdialog*/">\xd7</a>' +
+										    '<a class="ui_min" href="javascript:void(0);" title="\u6700\u5C0F\u5316"><b></b></a>' +
+											'<a class="ui_max" href="javascript:void(0);" title="\u6700\u5927\u5316"><b class="ui_max_b"></b></a>' +
+											'<a class="ui_restore" href="javascript:void(0);" title="\u8FD8\u539F" ><b class="ui_restore_b"></b><b class="ui_restore_t"></b>' +
+										    '<a class="ui_close" href="javascript:void(0);">\xd7</a>' +
 										'</div>' +
 									'</div>' +
 								'</td>' +
@@ -1110,7 +1261,6 @@ lhgdialog.setting =
 	height: 'auto',				// 内容高度
 	minWidth: 96,				// 最小宽度限制
 	minHeight: 32,				// 最小高度限制
-	padding: '20px 25px',		// 内容与边界填充距离
 	icon: null,					// 消息图标名称
 	path: _path,                // lhgdialog路径
 	lock: false,				// 是否锁屏
@@ -1120,6 +1270,8 @@ lhgdialog.setting =
 	fixed: false,				// 是否静止定位
 	left: '50%',				// X轴坐标
 	top: '38.2%',				// Y轴坐标
+	max: true,                  // 是否显示最大化按钮
+	min: true,                  // 是否显示最小化按钮
 	zIndex: 1976,				// 对话框叠加高度值(重要：此值不能超过浏览器最大限制)
 	resize: true,				// 是否允许用户调节尺寸
 	drag: true, 				// 是否允许用户拖动位置
@@ -1131,8 +1283,8 @@ window.lhgdialog = $.dialog = $.lhgdialog = lhgdialog;
 
 })( window.jQuery||window.lhgcore, this );
 
-
-/*!-----------------------------------------------
+/*!
+ *------------------------------------------------
  * 对话框模块-拖拽支持（可选外置模块）
  *------------------------------------------------
  */
@@ -1411,5 +1563,39 @@ if( lhgdialog.setting.extendDrag ) //lhgdialog.setting.extendDrag 此默认选�
 		};
 	});
 };
+
+})( window.jQuery||window.lhgcore, this.lhgdialog );
+
+/*!
+ *------------------------------------------------
+ * 对话框其它功能扩展模块（可选外置模块）
+ *------------------------------------------------
+ */
+;(function( $, lhgdialog, undefined ){
+
+/**
+ * 警告
+ * @param	{String}	消息内容
+ */
+lhgdialog.alert = function( content )
+{
+	return lhgdialog({
+		id: 'Alert',
+		zIndex: _zIndex(),
+		icon: 'warning',
+		fixed: true,
+		lock: true,
+		content: content,
+		ok: true
+	});
+};
+
+
+
+
+
+
+
+
 
 })( window.jQuery||window.lhgcore, this.lhgdialog );
