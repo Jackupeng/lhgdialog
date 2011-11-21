@@ -547,13 +547,15 @@ lhgdialog.fn =
 	 * 定时关闭
 	 * @param	{Number}	单位为秒, 无参数则停止计时器
 	 */
-	time: function( second )
+	time: function( second,  callback )
 	{
 		var that = this,
 			cancel = that.config.cancelVal,
 			timer = that._timer;
 			
 		timer && clearTimeout(timer);
+		
+		if( callback ) callback.call(that);
 		
 		if(second)
 		{
@@ -1205,9 +1207,9 @@ lhgdialog.templates =
 									'<div class="ui_titleBar">' +
 										'<div class="ui_title"><span class="ui_title_icon"></span></div>' +
 										'<div class="ui_title_buttons">' +
-										    '<a class="ui_min" href="javascript:void(0);" title="\u6700\u5C0F\u5316"><b></b></a>' +
+										    '<a class="ui_min" href="javascript:void(0);" title="\u6700\u5C0F\u5316"><b>&ndash;</b></a>' +
 											'<a class="ui_max" href="javascript:void(0);" title="\u6700\u5927\u5316"><b class="ui_max_b"></b></a>' +
-											'<a class="ui_restore" href="javascript:void(0);" title="\u8FD8\u539F" ><b class="ui_restore_b"></b><b class="ui_restore_t"></b>' +
+											'<a class="ui_restore" href="javascript:void(0);" title="\u8FD8\u539F" ><b class="ui_restore_b"></b><b class="ui_restore_t"></b></a>' +
 										    '<a class="ui_close" href="javascript:void(0);">\xd7</a>' +
 										'</div>' +
 									'</div>' +

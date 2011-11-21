@@ -43,7 +43,7 @@ table.ui_border, table.ui_dialog {
 	display:none; 
 }
 
-.ui_close { 
+.ui_close, .ui_min, .ui_max { 
 	display:block; position:absolute; 
 	text-decoration:none; 
 	outline:none; 
@@ -248,7 +248,6 @@ button.ui_state_highlight:active {
 	height:4px;	
 }
 
-
 .ui_state_lock .ui_lt, .ui_state_lock .ui_t, .ui_state_lock .ui_rt, .ui_state_lock .ui_l, .ui_state_lock .ui_r, .ui_state_lock .ui_lb, .ui_state_lock .ui_b, .ui_state_lock .ui_rb {
 	background: rgba(0, 0, 0, .3);
 	background: #ccc\9!important;
@@ -290,6 +289,10 @@ button.ui_state_highlight:active {
 	border-top: 1px solid #74BBF9\9;
 	border-bottom: 1px solid #b6bec5;
 }
+/** 标题前面的图片 **/
+.ui_title_icon{
+		
+}
 
 .ui_state_focus .ui_title {
 	color: #4c5a5f;
@@ -308,18 +311,14 @@ button.ui_state_highlight:active {
 .ui_state_drag .ui_titleBar {
 	box-shadow: none;
 }
-.ui_close {
+.ui_close, .ui_min, .ui_max {
 	padding: 0;
-	border:dotted 1px #999;
-	-webkit-border-radius: .3em; 
-	-moz-border-radius: .3em;
-	-o-border-radius: .3em;
-	border-radius: .3em;
+	border:dotted 0px #999;
 	top: 4px;
 	right: 4px;
-	width: 21px;
-	height: 21px;
-	line-height: 21px;
+	width: 16px;
+	height: 16px;
+	line-height: 16px;
 	font-size: 18px;
 	color: #68767b;
 	text-align: center;
@@ -388,6 +387,13 @@ button.ui_state_highlight:active {
 .ui_state_noTitle .ui_dialog {
 	box-shadow: none;
 }
+.ui_max {
+	right:22px;
+	color:#333;
+}
+.ui_min {
+	right:38px;
+}
 
 /***************************************************************华丽的分割线：imac 默认皮肤 **************************/
 /* 内边框 */
@@ -424,6 +430,18 @@ button.ui_state_highlight:active {
 	border-top: 1px solid #C7C7C7\9;
 	border-bottom: 1px solid #C7C7C7;
 }
+
+/** 标题前面的图片 **/
+.imac .ui_title_icon{
+	padding: 0;
+	border: solid 0px red;
+	top: 6px;
+	right: 6px;
+	width: 16px;
+	height: 16px;
+	line-height: 16px;
+}
+
 /* 拖动时的css */
 .imac .ui_state_drag .ui_title {
 	background: linear-gradient(top, #C7C7C7, #E9E9E9);
@@ -448,4 +466,27 @@ button.ui_state_highlight:active {
 }
 .imac .ui_close:hover {
 	background:url(mac.png) -16px -16px no-repeat!important;
+}
+.imac .ui_max, .imac .ui_min {
+	right:27px;
+	padding: 0;
+	border: 0px;
+	top: 6px;
+	width: 16px;
+	height: 16px;
+	line-height: 16px;
+	text-indent:-3000em;
+}
+.imac .ui_max {
+	background:url(mac.png) -16px -63px no-repeat!important;
+}
+.imac .ui_min {
+	right:50px;
+	background:url(mac.png) 0 -64px no-repeat!important;
+}
+.imac .ui_max:hover {
+	background:url(mac.png) -16px -80px no-repeat!important;
+}
+.imac .ui_min:hover {
+	background:url(mac.png) 0 -80px no-repeat!important;
 }

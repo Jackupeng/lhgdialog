@@ -13,7 +13,7 @@
 		var a = $.dialog({
 			id: "sk1",
 			content: "我是第一个款带MAC风格的CSS简约皮肤",
-			skin: "imac"	
+			skin: "imac"
 		});
 	}
 	
@@ -38,6 +38,7 @@
 		});
 	}
 	function op5(){
+		var timer = 3;
 		var a = $.dialog({ 
 			id: "a5" ,
 			content: "我是HTML内容",
@@ -53,7 +54,11 @@
 				{
 					name:"下一步",
 					callback: function () {
-						alert('你点击了下一步')
+						this.content('你点击了下一步,3秒后关闭');
+						this.time(timer, function(){ 
+							$.dialog.list["a5"].title("窗口将在 " + timer-- + " 秒后关闭");
+						});
+						return false;
 					}
 				},
 				{
@@ -296,6 +301,21 @@
 			cache : false
 		});
 	}
+	function op25(){
+		var a = $.dialog({
+			id: "a25",
+			content: "可在窗口初始化时作为参数使用，定时关闭",
+			time: 3
+		});	
+	}
+	function op25_1(){
+		var a = $.dialog({
+			id: "a25_1",
+			content: "将time作为函数调用时，可支持一个回调函数"
+		}).time(3, function(){
+			this.title("窗口将在3秒后关闭");
+		});
+	}
 </script>
 </head>
 <body>
@@ -353,7 +373,8 @@ var a = $.dialog({
             <li>
             	<h3>添加自定义按钮</h3>
             	<pre class="prettyprint">
-var a = $.dialog({ 
+var a = $.dialog({
+	var timer = 3;
     id: "a5" ,
     content: "我是HTML内容",
     button: (
@@ -368,7 +389,11 @@ var a = $.dialog({
         {
             name:"下一步",
             callback: function () {
-            	alert('你点击了下一步')
+                this.content('你点击了下一步,3秒后关闭');
+                this.time(timer, function(){ 
+                    $.dialog.list["a5"].title("窗口将在 " + timer-- + " 秒后关闭");
+                });
+                return false;
             }
         },
         {
@@ -632,6 +657,24 @@ var a = $.dialog({
     cache : false
 });</pre>
                 <button class="button green" onclick="op24()">运行»</button>
+            </li>
+            <li>
+            	<h3>time可定时关闭窗口，支持一个回调函数</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a25",
+    content: "可在窗口初始化时作为参数使用，定时关闭",
+    time: 3
+});</pre>
+                <button class="button green" onclick="op25()">运行»</button>
+                <pre class="prettyprint">
+var a = $.dialog({
+    id: "a25_1",
+    content: "将time作为函数调用时，可支持一个回调函数"
+}).time(3, function(){
+    this.title("窗口将在3秒后关闭");
+});</pre>
+                <button class="button green" onclick="op25_1()">运行»</button>
             </li>
             <li>
             	<h3></h3>
