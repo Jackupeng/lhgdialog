@@ -1,0 +1,248 @@
+﻿@charset "utf-8";
+/*
+*lhgdialog基础皮肤自适应九宫格结构
+*【一丝冰凉】作品
+*2011-11-15
+*QQ:50167214
+*/
+/*样式顺序：skin outer border lt t rt l c inner dialog header title-bar title title-buttons icon main content footer r lb b rb */
+/*基本重置*/
+body{_margin:0;/*_height:100%;IE6 BUG*/}
+body, button, input, select, textarea, .ui_content {
+	font: 12px/1.333 tahoma, arial, \5b8b\4f53, sans-serif;
+}/* for ie tahom字体在各个浏览器保持良好的统一*/
+
+.ui_lock_scroll{overflow:hidden;}
+
+
+/*QQ2011皮肤开始-结构层与样式层分离，方便制作皮肤*/
+/*结构层*/
+table.ui_border, table.ui_dialog {
+	width:auto;
+	*border-collapse:collapse;
+	border-spacing:0;
+}
+.ui_border td {
+	padding:0;
+}
+.ui_border {
+*margin:-1px 0;/*IE6-7 1px外边距bug*/
+}
+.ui_l, .ui_r, .ui_t, .ui_b {
+display:none;/*谷歌伤不起啊，必须写这句啊!否则有2px的空隙*/
+}
+.ui_lb, .ui_rb, .ui_lt, .ui_rt {
+	width:6px;
+	height:6px;
+	display:none;
+}
+.ui_rb{ display:block ; background:#CCC; width:10px; height:10px; position:absolute; bottom:-2px; right:-2px;}
+
+.ui_inner {
+	border:1px solid #5c5c5c;
+	background:#FFF;
+}
+/*对齐自适应*/
+.ui_main{min-width:10em; min-width:0\9/*IE8 BUG*/; text-align:center;}/*超过最小宽度居中对齐*/
+.ui_content,.aui_state_full{  display:inline-block; *display:inline; zoom:1; text-align:left; }/*小于最小宽度左对齐*/
+
+.ui_title_bar {
+	position:relative;
+	height: 100%;
+}
+.ui_title {
+	overflow:hidden;
+	text-overflow: ellipsis;
+	white-space:nowrap;/*firefox 不自动换行*/
+	display:block;
+	cursor:move;
+	height:30px;	/*标题栏高度*/
+	line-height:30px;
+	padding:0 135px 0 10px;/*防止IE6按钮错位*/
+	background:#7ac7e3;
+
+}
+.ui_title_icon {
+	display:inline-block;
+	height:100%;
+	min-width:16px;
+	width:16px;
+	margin-right:5px;
+	vertical-align:middle;
+}
+.ui_title_buttons {
+	position:absolute;
+	top:1px;
+	right:5px;
+	cursor:pointer;
+	font-size:0;/*opera 空隙修复*/
+	letter-spacing:-.5em; /*其他浏览器 空隙修复 宋体/Verdana为-.5em，Tahoma为-.333em，Arial为-.25em*/
+}
+
+.ui_min, .ui_max, .ui_close, .ui_res, .ui_rese{
+	text-decoration:none;
+	letter-spacing: normal; /* reset IE < 8 */
+	text-align:center;
+	display:inline-block;
+	vertical-align:top;
+	color:#FFF;
+	font-size:16px;
+	width:30px;
+	height:20px;
+	line-height:18px;/*按钮视觉居中*/
+}
+.ui_min, .ui_max, .ui_res, .ui_rese {
+	position:relative;
+}
+.ui_min b, .ui_max b, .ui_res_t, .ui_res_b {
+	display:block;
+	position:absolute;
+	overflow:hidden;
+	cursor:pointer;
+}
+.ui_min b {
+	top:10px;
+	left:10px;
+	width:10px;
+	height:2px;
+	border-bottom:2px solid #FFF;
+}
+.ui_max b {
+	top:6px;
+	left:10px;
+	width:8px;
+	height:5px;
+	border:1px solid #FFF;
+	border-top-width:2px;
+}
+.ui_res_t, .ui_res_b {
+	top:8px;
+	left:9px;
+	width:8px;
+	height:4px;
+	border:1px solid #FFF;
+	border-top-width:2px;
+}
+.ui_res_b {
+	top:5px;
+	left:11px;
+}
+.ui_res_t {
+	background:#7ac7e3;
+}
+.ui_res{ display:none;} /* 最大化还原按钮 */
+.ui_rese{ display:none; } /* 最小化还原按钮 */
+.ui_footer {
+	height:32px;
+	line-height:28px;
+	text-align:right;
+	background:#e1f3f9;
+}
+.ui_buttons{ padding-right:15px; display:inline-block;}
+.ui_buttons input {
+	height:24px;
+	width:70px;
+	padding-bottom:16px;
+	line-height:16px;
+	vertical-align:middle;
+}
+/**********
+样式层开始
+********/
+.ui_border {
+	box-shadow:0 0 5px rgba(0, 0, 0, .8);
+	border-radius:5px;
+}
+.ui_inner {
+	border:1px solid #5c5c5c;
+	border-radius:5px;
+}
+.ui_dialog {
+	border-radius:3px;
+	border:1px solid #68b5d8\9\0;/*修复IE9背景溢出*/
+	border-left-color:#3992be\9\0;
+	border-right-color:#95d7f1\9\0;
+}
+.ui_title {
+	border-radius:3px 3px 0 0;
+	font-size:14px;
+	font-weight:bold;
+	background: linear-gradient(left, #3992be, #95d7f1);
+	background: -webkit-gradient(linear, 0% 0%, 100% 0%, from(#3992be), to(#95d7f1));
+	background: -o-linear-gradient(left, #3992be, #95d7f1);
+	background: -moz-linear-gradient(left, #3992be, #95d7f1);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3992be', endColorstr='#95d7f1', gradientType=1);
+}
+/*灰色风格
+.ui_title {
+	border-radius:3px 3px 0 0;
+	font-size:12px;
+	font-weight:bold;
+	background: linear-gradient(top, #E8E8E8, #CCCCCC);
+	background: -webkit-gradient(linear, 0% 100%, 0% 0%, from(#E8E8E8), to(#CCCCCC));
+	background: -o-linear-gradient(top, #E8E8E8, #CCCCCC);
+	background: -moz-linear-gradient(top, #A8A8A8, #454545);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E8E8E8', endColorstr='#CCCCCC', gradientType=0);
+}
+.ui_title{ color:#FFF;}
+.ui_title-buttons{ top:5px;}
+.ui_title-buttons a{ border:none; color:#EEE;}
+.ui_restore-t{ background:#777;}
+.ui_footer{background: -moz-linear-gradient(left, #EEE, #DDD);}
+
+.ui_title {
+	border-radius:3px 3px 0 0;
+	font-size:12px;
+	font-weight:bold;
+	background: linear-gradient(top, #9ecdf2, #5495d6);
+	background: -webkit-gradient(linear, 0% 100%, 0% 0%, from(#9ecdf2), to(#5495d6));
+	background: -o-linear-gradient(top,#3D94F6 , #1E62D0);
+	background: -moz-linear-gradient(top, #0983d8, #419ad9);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#9ecdf2', endColorstr='#5495d6', gradientType=0);
+}*/
+
+.ui_title_icon {
+	background:url("http://0.web.qstatic.com/webqqpic/style/images/appmarket_icon.png") no-repeat left center;
+}
+.ui_min, .ui_max, .ui_close, .ui_res, .ui_rese {
+	border-left:1px solid #64a0b4;
+	border-bottom:1px solid #6db0c1;
+}
+.ui_rese{ font-size:12px; font-weight:600;}
+.ui_min {
+	border-radius:0 0 0 4px;
+}
+.ui_close {
+	border-radius:0 0 4px 0;
+	border-right:1px solid #3d90b5;
+	font-weight:600;
+}
+.ui_close:hover {
+	outline:none;
+	box-shadow:0 0 10px #e56e51;a31b07
+	background:#dd5538;/*不写会造出ie9以下背景闪动*/
+	background: linear-gradient(top, #dd5538, #ab9a9d);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#dd5538), to(#ab9a9d));
+	background: -moz-linear-gradient(top, #dd5538, #ab9a9d);
+	background:	-o-linear-gradient(top, #dd5538, #ab9a9d);
+ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dd5538', endColorstr='#94d6f0');/*IE 背景溢出bug*/
+}
+.ui_min:hover, .ui_max:hover, .ui_res:hover, .ui_res:hover .ui_res_t, .ui_rese:hover{
+	outline:none;
+	box-shadow:0 0 10px #00adfe;
+	background:#2c7fb1;/*不写会造出ie9以下背景闪动*/
+	background: linear-gradient(top, #3fcafd, #52bfe6);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#3fcafd), to(#52bfe6));
+	background: -moz-linear-gradient(top, #0bbdfd, #52bfe6);
+	background:-o-linear-gradient(top, #3fcafd, #76c0e0);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3fcafd', endColorstr='#52bfe6');/*IE 背景溢出bug*/
+}
+.ui_footer {
+	border-radius:0 0 4px 4px;
+	background: linear-gradient(left, #cad3df, #e1f3f9);
+	background: -webkit-gradient(linear, 0% 0%, 100% 0%, from(#cad3df), to(#e1f3f9));
+	background: -moz-linear-gradient(left, #cad3df, #e1f3f9);
+	background:-o-linear-gradient(left, #cad3df, #e1f3f9);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cad3df', endColorstr='#e1f3f9', gradientType=1);
+}
+/*QQ2011皮肤结束*/
