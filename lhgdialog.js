@@ -102,13 +102,16 @@ try{
 /*! 在最顶层页面添加样式文件 */
 $('head',_doc).append( '<link href="' + _path + 'skins/' + _skin + '.css" rel="stylesheet" type="text/css"/>' );
 
-$.fn.show = function(){
-    return this.css('display','block');
+$.fn.show = function(ib){
+    ib = ib ? 'inline-block' : 'block';
+	this[0].style.display = ib;
+	return this;
 };
 
 $.fn.hide = function()
 {
-    return this.css('display','none');
+    this[0].style.display = 'none';
+	return this;
 };
 
 /*!
@@ -171,7 +174,7 @@ lhgdialog.fn =
 	{
 	    var that = this, _url, DOM,
 		    icon = config.icon,
-			iconBg = icon && '<img src="' + config.path + '/skins/icons/' + icon + '"/>';
+			iconBg = icon && '<img src="' + config.path + 'skins/icons/' + icon + '"/>';
 		
 		that._isRun = true;
 		that.config = config;
@@ -184,10 +187,10 @@ lhgdialog.fn =
 		DOM.iconBg.html(iconBg || '');
 		DOM.rb.css('cursor', config.resize ? 'se-resize' : 'auto');
 		DOM.title.css('cursor', config.drag ? 'move' : 'auto');
-		DOM.max[0].style.display = config.max ? 'inline-block' : 'none';
-		DOM.min[0].style.display = config.min ? 'inline-block' : 'none';
-		DOM.close[0].style.display = config.cancel===false ? 'none' : 'inline-block';
-		DOM.restore[0].style.display = 'none';
+		DOM.max[config.max?'show':'hide'](true);
+		DOM.min[config.min?'show':'hide'](true);
+		DOM.close[config.cancel===false?'hide':'show'](true);
+		DOM.content.css('padding', config.padding);
 		
 		that.show(true)
 		.button(config.button)
@@ -509,14 +512,13 @@ lhgdialog.fn =
 		that.unlock();
 		
 		if( that._minState )
-		{
-		    DOM.main.show();
-			DOM.footer.show();
-			DOM.dialog.removeAttr('style');
-		}
+		    that._minReset();
 		
-		if( that._rese )
-		    DOM.main.css({width:that._rese.w,height:that._rese.h});
+		if( that._maxState )
+		{
+		    DOM.main.css({width:that._or.w,height:that._or.h});
+		    DOM.res.hide();
+		}
 		
 		// 置空内容
 		wrap[0].className = wrap[0].style.cssText = '';
@@ -547,15 +549,13 @@ lhgdialog.fn =
 	 * 定时关闭
 	 * @param	{Number}	单位为秒, 无参数则停止计时器
 	 */
-	time: function( second,  callback )
+	time: function( second )
 	{
 		var that = this,
 			cancel = that.config.cancelVal,
 			timer = that._timer;
 			
 		timer && clearTimeout(timer);
-		
-		if( callback ) callback.call(that);
 		
 		if(second)
 		{
@@ -599,7 +599,7 @@ lhgdialog.fn =
 	lock: function()
 	{
 		var that = this, frm,
-		    index = lhgdialog.setting.zIndex -1,
+		    index = lhgdialog.setting.zIndex - 1,
 			config = that.config,
 			style = lhgdialog.lockMask ? lhgdialog.lockMask.style : null,
 			positionType = _ie6 ? 'absolute' : 'fixed';
@@ -623,7 +623,7 @@ lhgdialog.fn =
 		
 		if( positionType === 'absolute' )
 		{
-		    style.width = _$doc.width();
+		    style.width = '100%';
 			style.height = _$doc.height();
 			style.top = _$doc.scrollTop();
 			style.left = _$doc.scrollLeft();
@@ -922,7 +922,7 @@ lhgdialog.fn =
 		
 		if(test)
 		{
-			// IE6~7 window.onresize bug
+			//IE6~7 window.onresize bug
 			newSize = that._winSize =  _$top.width() * _$top.height();
 			if( oldSize === newSize ) return;
 		};
@@ -946,62 +946,68 @@ lhgdialog.fn =
 		    top = _$doc.scrollTop(),
 		    left = _$doc.scrollLeft();
 		
-		that._rese = {
-		    t: wrapStyle.top,
-			l: wrapStyle.left,
-			w: mainStyle.width,
-			h: mainStyle.height,
-			d: config.drag,
-			r: config.resize,
-			rc: rbStyle.cursor,
-			tc: titleStyle.cursor
-		};
-		
-		!that._lock && _$html.addClass('ui_lock_scroll');
-		_ie6 && _$html.addClass('ui_lock_fixed');
-		
-		DOM.wrap.css({ top:top + 'px', left:left + 'px' });
-		
-		that.size('100%', '100%')._setAbsolute();
-		config.drag = false;
-		config.resize = false;
-		rbStyle.cursor = 'auto';
-		titleStyle.cursor = 'auto';
-		
-		DOM.max.hide();
-		DOM.restore[0].style.display = 'inline-block';
-		
-		return that;
-	},
-	
-	restore: function()
-	{
-		var that = this,
-		    DOM = that.DOM,
-			rbStyle = DOM.rb[0].style,
-			titleStyle = DOM.title[0].style,
-			config = that.config;
-		
-		!that._lock && _$html.removeClass('ui_lock_scroll');
-		
-		if( _ie6 )
+		if( !that._maxState )
 		{
-		    _$html.removeClass('ui_lock_fixed');
-			that._top = that._rese.t;
-			that._left = that._rese.l;
+		
+			if( that._minState )
+			{
+			    that._minReset();
+				DOM.min.show(true);
+				that._minState = false;
+			}
+				
+			that._or = {
+				t: wrapStyle.top,
+				l: wrapStyle.left,
+				w: mainStyle.width,
+				h: mainStyle.height,
+				d: config.drag,
+				r: config.resize,
+				rc: rbStyle.cursor,
+				tc: titleStyle.cursor
+			};
+			
+			!that._lock && _$html.addClass('ui_lock_scroll');
+			_ie6 && _$html.addClass('ui_lock_fixed');
+			
+			DOM.wrap.css({ top:top + 'px', left:left + 'px' });
+			
+			that.size('100%', '100%')._setAbsolute();
+			config.drag = false;
+			config.resize = false;
+			rbStyle.cursor = 'auto';
+			titleStyle.cursor = 'auto';
+			
+			DOM.max.hide();
+			DOM.res.show(true);
+			
+			that._maxState = true;
 		}
+		else
+		{
+		    !that._lock && _$html.removeClass('ui_lock_scroll');
+			
+			if( _ie6 )
+			{
+			    _$html.removeClass('ui_lock_fixed');
+				that._top = that._or.t;
+				that._left = that._or.l;
+			}
+			
+			DOM.wrap.css({ top:that._or.t, left:that._or.l });
+			that.size(that._or.w, that._or.h)._autoPositionType();
+			config.drag = that._or.d;
+		    config.resize = that._or.r;
+		    rbStyle.cursor = that._or.rc;
+		    titleStyle.cursor = that._or.tc;
 		
-		DOM.wrap.css({ top:that._rese.t, left:that._rese.l });
-		that.size(that._rese.w, that._rese.h)._autoPositionType();
-		config.drag = that._rese.d;
-		config.resize = that._rese.r;
-		rbStyle.cursor = that._rese.rc;
-		titleStyle.cursor = that._rese.tc;
-		
-		DOM.restore.hide();
-		DOM.max[0].style.display = 'inline-block';
-		
-		delete that._rese;
+		    DOM.res.hide();
+			DOM.max.show(true);
+			
+			delete that._or;
+			
+			that._maxState = false;
+		}
 		
 		return that;
 	},
@@ -1013,22 +1019,39 @@ lhgdialog.fn =
 			
 		if( !that._minState )
 		{
-		    DOM.main.hide();
+		    if( that._maxState )
+				that.max();
+			
+			DOM.main.hide();
 		    DOM.footer.hide();
 		    DOM.dialog[0].style.width = DOM.main[0].style.width;
+			DOM.rese.show(true);
+			DOM.min.hide();
+			DOM.rb.hide();
 		
 		    that._minState = true;
 		}
 		else
 		{
-		    DOM.main.show();
-			DOM.footer.show();
-			DOM.dialog.removeAttr('style');
+		    that._minReset();
+			DOM.min.show(true);
 			
 			that._minState = false;
 		}
 		
 		return that;
+	},
+	
+	_minReset: function()
+	{
+	    var that = this,
+		    DOM = that.DOM;
+			
+		DOM.main[0].style.display = '';
+		DOM.footer[0].style.display = '';
+		DOM.dialog.removeAttr('style');
+		DOM.rese.hide();
+		DOM.rb[0].style.display = 'block';
 	},
 	
 	_addEvent: function()
@@ -1061,17 +1084,13 @@ lhgdialog.fn =
 				that._click(config.cancelVal);
 				return false;
 			}
-			else if( target === DOM.max[0] || target === DOM.max_b[0] )
+			else if( target === DOM.max[0] || target === DOM.res[0] || target === DOM.max_b[0]
+			    || target === DOM.res_b[0] || target === DOM.res_t[0] )
 			{
 			    that.max();
 				return false;
 			}
-			else if( target === DOM.restore[0] || target === DOM.restore_b[0] || target === DOM.restore_t[0] )
-			{
-			    that.restore();
-				return false;
-			}
-			else if( target === DOM.min[0] )
+			else if( target === DOM.min[0] || target === DOM.rese[0] || target === DOM.min_b[0] )
 			{
 			    that.min();
 				return false;
@@ -1207,10 +1226,11 @@ lhgdialog.templates =
 									'<div class="ui_titleBar">' +
 										'<div class="ui_title"><span class="ui_title_icon"></span></div>' +
 										'<div class="ui_title_buttons">' +
-										    '<a class="ui_min" href="javascript:void(0);" title="\u6700\u5C0F\u5316"><b>&ndash;</b></a>' +
-											'<a class="ui_max" href="javascript:void(0);" title="\u6700\u5927\u5316"><b class="ui_max_b"></b></a>' +
-											'<a class="ui_restore" href="javascript:void(0);" title="\u8FD8\u539F" ><b class="ui_restore_b"></b><b class="ui_restore_t"></b></a>' +
-										    '<a class="ui_close" href="javascript:void(0);">\xd7</a>' +
+										    '<a class="ui_min" href="#" title="\u6700\u5C0F\u5316"><b class="ui_min_b"></b></a>' +
+											'<a class="ui_rese" href="#" title="恢复">△</a>' +
+											'<a class="ui_max" href="#" title="\u6700\u5927\u5316"><b class="ui_max_b"></b></a>' +
+											'<a class="ui_res" href="#" title="\u8FD8\u539F" ><b class="ui_res_b"></b><b class="ui_res_t"></b>' +
+										    '<a class="ui_close" href="#">\xd7</a>' +
 										'</div>' +
 									'</div>' +
 								'</td>' +
@@ -1269,6 +1289,7 @@ lhgdialog.setting =
 	parent: null,               // 打开子窗口的父窗口对象，主要用于多层锁屏窗口
 	background: '#000',			// 遮罩颜色
 	opacity: .7,				// 遮罩透明度
+	padding: '15px 20px',		// 内容与边界填充距离
 	fixed: false,				// 是否静止定位
 	left: '50%',				// X轴坐标
 	top: '38.2%',				// Y轴坐标
@@ -1546,7 +1567,7 @@ if( lhgdialog.setting.extendDrag ) //lhgdialog.setting.extendDrag 此默认选�
 			
 			if(positionType === 'absolute')
 			{
-				style.width = _$window.width() + 'px';
+				style.width = '100%';
 				style.height = _$window.height() + 'px';
 				style.left = _$document.scrollLeft() + 'px';
 				style.top = _$document.scrollTop() + 'px';
@@ -1575,6 +1596,11 @@ if( lhgdialog.setting.extendDrag ) //lhgdialog.setting.extendDrag 此默认选�
  */
 ;(function( $, lhgdialog, undefined ){
 
+var _zIndex = function()
+{
+    return lhgdialog.setting.zIndex;
+};
+
 /**
  * 警告
  * @param	{String}	消息内容
@@ -1584,7 +1610,7 @@ lhgdialog.alert = function( content )
 	return lhgdialog({
 		id: 'Alert',
 		zIndex: _zIndex(),
-		icon: 'warning',
+		icon: 'error.png',
 		fixed: true,
 		lock: true,
 		content: content,
