@@ -9,7 +9,9 @@
  
 /* common Style start */
 body { 
-	_margin:0; 
+	_margin:0;
+	overflow:auto;
+	overflow-x:hidden; /* 隐藏页面X方向滚动条 */
 	_height:100%; /*IE6 BUG*/ 
 }
 
