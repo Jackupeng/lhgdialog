@@ -176,6 +176,12 @@ lhgdialog.fn =
 		    icon = config.icon,
 			iconBg = icon && '<img src="' + config.path + 'skins/icons/' + icon + '"/>';
 		
+		if( icon )
+		{
+		    config.min = false;
+			config.max = false;
+		}
+		
 		that._isRun = true;
 		that.config = config;
 		that.DOM = DOM = that.DOM || that._getDOM();
@@ -239,7 +245,8 @@ lhgdialog.fn =
 		{
 		    if( _rurl.test(msg) )
 			{
-			    $content.html( loading );
+			    DOM.icon.hide();
+				$content.html( loading );
 				_url = msg.split('url:')[1];
 				that._setIframe( _url );
 			}
@@ -1022,12 +1029,13 @@ lhgdialog.fn =
 		    if( that._maxState )
 				that.max();
 			
+			that._minRz = that.config.resize;
 			DOM.main.hide();
 		    DOM.footer.hide();
 		    DOM.dialog[0].style.width = DOM.main[0].style.width;
 			DOM.rese.show(true);
 			DOM.min.hide();
-			DOM.rb.hide();
+			that.config.resize = false;
 		
 		    that._minState = true;
 		}
@@ -1035,6 +1043,8 @@ lhgdialog.fn =
 		{
 		    that._minReset();
 			DOM.min.show(true);
+			
+			delete that._minRz;
 			
 			that._minState = false;
 		}
@@ -1051,7 +1061,7 @@ lhgdialog.fn =
 		DOM.footer[0].style.display = '';
 		DOM.dialog.removeAttr('style');
 		DOM.rese.hide();
-		DOM.rb[0].style.display = 'block';
+		that.config.resize = that._minRz;
 	},
 	
 	_addEvent: function()
@@ -1092,7 +1102,7 @@ lhgdialog.fn =
 			}
 			else if( target === DOM.min[0] || target === DOM.rese[0] || target === DOM.min_b[0] )
 			{
-			    that.min();
+				that.min();
 				return false;
 			}
 			else
@@ -1103,10 +1113,10 @@ lhgdialog.fn =
 			
 			that._ie6SelectFix();
 			return false;
-		}).bind('mousedown',function()
-		{
-		    that.focus(true);
-		});
+		}).bind('mousedown',function(){ that.focus(true); });
+		
+		if( config.max )
+		    DOM.title.bind('dblclick', function(){that.max();});
 	},
 	
 	_removeEvent: function()
@@ -1115,6 +1125,7 @@ lhgdialog.fn =
 			DOM = that.DOM;
 		
 		DOM.wrap.unbind();
+		DOM.title.unbind();
 		_$top.unbind('resize', that._winResize);
 	}
 };
@@ -1289,7 +1300,7 @@ lhgdialog.setting =
 	parent: null,               // 打开子窗口的父窗口对象，主要用于多层锁屏窗口
 	background: '#000',			// 遮罩颜色
 	opacity: .7,				// 遮罩透明度
-	padding: '15px 20px',		// 内容与边界填充距离
+	padding: '20px 23px',		// 内容与边界填充距离
 	fixed: false,				// 是否静止定位
 	left: '50%',				// X轴坐标
 	top: '38.2%',				// Y轴坐标
@@ -1298,6 +1309,7 @@ lhgdialog.setting =
 	zIndex: 1976,				// 对话框叠加高度值(重要：此值不能超过浏览器最大限制)
 	resize: true,				// 是否允许用户调节尺寸
 	drag: true, 				// 是否允许用户拖动位置
+	dragLimit: false,           // 是否将窗口拖动限制到可视区域内
 	cache: true,                // 是否缓存窗口内容页
 	extendDrag: true            // 增加lhgdialog拖拽体验
 };
@@ -1495,10 +1507,22 @@ _use = function(event)
 			wh = _$window.height(),
 			dl = fixed ? 0 : _$document.scrollLeft(),
 			dt = fixed ? 0 : _$document.scrollTop(),
-			
-		// 坐标最大值限制
-		maxX = ww - ow + dl;
-		maxY = wh - oh + dt;
+			// 向下拖动时不能将标题栏拖出可视区域
+			th = title[0].offsetHeight || 20,
+			maxY, maxX;
+		
+		// 坐标最大值限制(在可视区域内，如果窗口随屏滚动那就进行限制)
+		if( config.dragLimit || fixed )
+		{
+		    maxX = ww - ow + dl;
+			maxY = wh - th + dt;
+		}
+		else
+		{
+		    maxY = wh - th + dt;
+			dl = -10000;
+			maxX = 10000;
+		}
 		
 		return {
 			minX: dl,
@@ -1605,25 +1629,104 @@ var _zIndex = function()
  * 警告
  * @param	{String}	消息内容
  */
-lhgdialog.alert = function( content )
+lhgdialog.alert = function( content, icon )
 {
 	return lhgdialog({
-		id: 'Alert',
+	    id: 'Alert',
 		zIndex: _zIndex(),
-		icon: 'error.png',
-		fixed: true,
+		icon: icon || 'warning.png',
 		lock: true,
-		content: content,
-		ok: true
+		ok: true,
+		resize: false,
+		content: content
 	});
 };
 
+/**
+ * 确认
+ * @param	{String}	消息内容
+ * @param	{Function}	确定按钮回调函数
+ * @param	{Function}	取消按钮回调函数
+ */
+lhgdialog.confirm = function( content, yes, no )
+{
+	return lhgdialog({
+		id: 'Confirm',
+		zIndex: _zIndex(),
+		icon: 'issue.png',
+		lock: true,
+		opacity: .1,
+		resize: false,
+		content: content,
+		ok: function(here){
+			return yes.call(this, here);
+		},
+		cancel: function(here){
+			return no && no.call(this, here);
+		}
+	});
+};
 
+/**
+ * 提问
+ * @param	{String}	提问内容
+ * @param	{Function}	回调函数. 接收参数：输入值
+ * @param	{String}	默认值
+ */
+lhgdialog.prompt = function( content, yes, value )
+{
+	value = value || '';
+	var input;
+	
+	return lhgdialog({
+		id: 'Prompt',
+		zIndex: _zIndex(),
+		icon: 'question',
+		lock: true,
+		opacity: .1,
+		resize: false,
+		content: [
+			'<div style="margin-bottom:5px;font-size:12px">',
+				content,
+			'</div>',
+			'<div>',
+				'<input value="',
+					value,
+				'" style="width:18em;padding:6px 4px" />',
+			'</div>'
+			].join(''),
+		init: function(){
+			input = $('input',this.DOM.content[0])[0];
+			input.select();
+			input.focus();
+		},
+		ok: function(here){
+			return yes && yes.call(this, input.value, here);
+		},
+		cancel: true
+	});
+};
 
-
-
-
-
-
+/**
+ * 短暂提示
+ * @param	{String}	提示内容
+ * @param	{Number}	显示时间 (默认1.5秒)
+ */
+lhgdialog.tips = function( content, time )
+{
+	return lhgdialog({
+		id: 'Tips',
+		zIndex: _zIndex(),
+		title: false,
+		cancel: false,
+		min: false,
+		max: false,
+		fixed: true,
+		lock: false,
+		resize: false
+	})
+	.content('<div style="padding: 0 1em;">' + content + '</div>')
+	.time(time || 1.5);
+};
 
 })( window.jQuery||window.lhgcore, this.lhgdialog );
