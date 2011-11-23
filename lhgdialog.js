@@ -1519,7 +1519,7 @@ _use = function(event)
 		}
 		else
 		{
-		    maxY = wh - th + dt;
+			maxY = wh - th + dt;
 			dl = -10000;
 			maxX = 10000;
 		}
@@ -1681,7 +1681,7 @@ lhgdialog.prompt = function( content, yes, value )
 	return lhgdialog({
 		id: 'Prompt',
 		zIndex: _zIndex(),
-		icon: 'question',
+		icon: 'msg.png',
 		lock: true,
 		opacity: .1,
 		resize: false,
