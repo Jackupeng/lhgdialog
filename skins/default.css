@@ -187,6 +187,10 @@ button.ui_state_highlight:active {
 	background: -moz-linear-gradient(top, #33bbee, #2288cc);
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#33bbee), to(#2288cc));
 }
+
+.ui_lock_scroll{ *overflow:hidden; }
+.ui_lock_scroll body { overflow:hidden; padding-right:17px; }
+.ui_lock_fixed body { padding-right:0; }
 /* common Style end*/
 
 /***************************************************************华丽的分割线： default 默认皮肤 **************************/

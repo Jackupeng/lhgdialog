@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>lhgDialog4.0.0 扩展功能演示</title>
+<link type="text/css" rel="stylesheet" href="js/prettify/prettify.css" />
+<link type="text/css" rel="stylesheet" href="js/demo.css" />
+<script src="js/jquery-1.7.min.js" type="text/javascript"></script>
+<script src="js/prettify/prettify.js" type="text/javascript"></script>
+<script type="text/javascript">
+	function op_b1(){
+		var b = lhgdialog.alert("这是一个alert消息哦");
+	}
+	function op_b2(){
+		var b = lhgdialog.confirm("你确定要使用lhgDialog4.0.0么？",
+			function(){
+				lhgdialog.tips("你点击了确定按钮。");
+			},function(){
+				lhgdialog.tips("你点击了关闭");
+			}
+		);
+	}
+	function op_b3(){
+		lhgdialog.prompt("你愿意为 lhgDialog 4.0.0 支付多少授权费？",
+			function(val){
+				lhgdialog.tips("感谢你的买单,你支付了：" + val + " $(美元),美元哦", 3);
+			},
+			"请输入数字"
+		);	
+	}
+	function op_b4(){
+		lhgdialog.tips("非常感谢你们长期以来，对LHGCore.JS的支持。", 3);	
+	}
+</script>
+</head>
+<body>
+<div class="title_top r5px">
+	<ul>
+    	<li class="button orange" target="_blank"><a href="http://bbs.lhgcore.com/">返回论坛</a></li>
+		<li class="button blue"><a href="index.html">在线演示</a></li>
+    	<li class="button green"><a href="extents.html">扩展演示</a></li>
+    </ul>
+</div>
+<div class="container r5px">
+<div id="gads">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4209163873016654";
+/* gads_demo_首页2 */
+google_ad_slot = "4818004114";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+    <div class="header"><h1 class="colr">感谢你们对LHGCore.JS的长期支持，用你们手里的鼠标轻轻的点击一下上面的广告，继续支持我们，我们将做的更好！！！</h1></div>
+    <div class="article">
+        <h2>窗口的各种扩展功能在线演示示例</h2>
+        <ol>
+        	<li>
+            	<h3>Alert消息演示</h3>
+            	<pre class="prettyprint">
+/**
+ * 警告
+ * @param	{String}	消息内容
+ * @param	{String}	消息图片，默认是warning.png
+ */
+API: lhgdialog.alert = function( content, icon );
+                </pre>
+                <pre class="prettyprint">
+var b = lhgdialog.alert("这是一个alert消息哦");
+				</pre>
+                <button class="button green" onclick="op_b1()">运行»</button>
+            </li>
+             <li>
+            	<h3>Comfim消息演示</h3>
+                <pre class="prettyprint">
+/**
+ * 确认
+ * @param	{String}	消息内容
+ * @param	{Function}	确定按钮回调函数
+ * @param	{Function}	取消按钮回调函数
+ */
+lhgdialog.confirm = function( content, yes, no );
+				</pre>
+            	<pre class="prettyprint">
+var b = lhgdialog.confirm("你确定要使用lhgDialog4.0.0么？",
+    function(){
+        lhgdialog.tips("你点击了确定按钮。");
+    },function(){
+        lhgdialog.tips("你点击了关闭");
+    }
+);				</pre>
+                <button class="button green" onclick="op_b2()">运行»</button>
+            </li>
+            <li>
+            	<h3>Prompt 提问提示框</h3>
+            	<pre class="prettyprint">
+/**
+ * 提问
+ * @param	{String}	提问内容
+ * @param	{Function}	回调函数. 接收参数：输入值
+ * @param	{String}	默认值
+ */
+lhgdialog.prompt = function( content, yes, value );
+				</pre>
+                <pre class="prettyprint">
+lhgdialog.prompt("你愿意为 lhgDialog 4.0.0 支付多少授权费？",
+    function(val){
+        lhgdialog.tips("感谢你的买单,你支付了：" + val +" RMB(人民币)", 3);
+    },
+    "请输入数字"
+);				</pre>
+                <button class="button green" onclick="op_b3()">运行»</button>
+            </li>
+             <li>
+            	<h3>Tips 提示框</h3>
+            	<pre class="prettyprint">
+/**
+ * 短暂提示
+ * @param	{String}	提示内容
+ * @param	{Number}	显示时间 (默认1.5秒)
+ */
+lhgdialog.tips = function( content, time );
+				</pre>
+                <pre class="prettyprint">
+lhgdialog.tips("非常感谢你们长期以来，对LHGCore.JS的支持。", 3);	
+                </pre>
+                <button class="button green" onclick="op_b4()">运行»</button>
+            </li>
+        </ol>
+        
+ 		<br/>
+        	 <h2>lhgDialog 4.x 更多扩展功能，请期待。。。。</h2>
+        <br/>
+        <h2>更多API组合DEMO，请自行阅读API之后编写测试。</h2><br/>
+<div id="gads">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4209163873016654";
+/* gads_demo_首页4 */
+google_ad_slot = "7579909069";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="header"><h1 class="colr">感谢你们对LHGCore.JS的长期支持，用你们手里的鼠标轻轻的点击一下上面的广告，继续支持我们，我们将做的更好！！！</h1></div>
+    </div>
+    <div class="footer"></div>
+
+</div>
+<script type="text/javascript">prettyPrint();</script>
+</body>
+<script type="text/javascript" src="../lhgdialog.js" ></script>
+<script type="text/javascript" src="js/demo.js"></script>

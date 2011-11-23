@@ -50,6 +50,9 @@ blockquote:before, blockquote:after, q:before, q:after {
 
 body{background-color:#eee;color:#000;font:12px Tahoma,arial,sans-serif;padding:10px 0;}
 pre{font-family:"Courier New",Courier,monospace; margin:10px 0 10px 0;}
+.title_top{ width:900px; background:#fff;margin:auto;border:1px solid #d3d3d3; height:45px; margin-bottom:15px;}
+.title_top ul li{ float:left; list-style:none; padding:0px; margin:7px 5px 0 10px; width:80px; height:28px; line-height:28px; vertical-align:middle;}
+.title_top ul li a{ font-size:14px; font-weight:bold; color:#FFF; text-decoration:none; }
 .container{width:900px;background:#fff;margin:auto;border:1px solid #d3d3d3;}
 .article h2{background-color:#F2F2F2; color:#FF4314; font-size:14px;padding: 0 10px;margin:0 10px 0 10px;line-height:30px;}
 .article p{ font-size:14px; padding:10px; }
@@ -59,6 +62,7 @@ pre{font-family:"Courier New",Courier,monospace; margin:10px 0 10px 0;}
 .header{  font-weight:bold; height:50px; line-height:50px; vertical-align:middle; font-size:14px; margin-left:30px;}
 .line{height:2px;background:#3B62A7;font-size:0;margin:5px 20px;}
 
+#gads{ width:728px; height:90px; margin:auto; }
 .colr { color:red;}
 
 /* button DOM Style */

@@ -135,7 +135,7 @@
 	function op12(){
 		var a_op12 = $.dialog({
 			id: "a12",
-			content: "我显示出来了哦",
+			content: "我显示出来了哦"
 		});
 	}
 	function op12_1(){
@@ -176,7 +176,7 @@
 			id: "a16",
 			title: "系统消息",
 			content: "这是一个警告消息",
-			icon:"warn.png"	
+			icon:"warning.png"	
 		});	
 	}
 	function op16_0(){
@@ -316,13 +316,56 @@
 			this.title("窗口将在3秒后关闭");
 		});
 	}
+	function op26(){
+		var a = $.dialog({
+			id: "a26",
+			content: "我没有最大化和最小化按钮,默认支持，你可以更改默认参数配置哦",
+			title:"支持最大最小化功能",
+			min: false,
+			max: false
+		})	
+	}
+	function op27(){
+		var a = $.dialog({
+			id: "a27",
+			content: "是否将窗口拖动限制到可视区域内,默认是false",
+			title:"支持最大最小化功能",
+			min: false,
+			max: true,
+			dragLimit: true,
+			width: "50%",
+			height: "50%"
+		}) 
+	}
 </script>
 </head>
 <body>
+<div class="title_top r5px">
+	<ul>
+    	<li class="button orange" target="_blank"><a href="http://bbs.lhgcore.com/">返回论坛</a></li>
+		<li class="button green"><a href="index.html">在线演示</a></li>
+    	<li class="button blue"><a href="extents.html">扩展演示</a></li>
+    </ul>
+</div>
+
 <div class="container r5px">
-    <div class="header"><h1>lhgDialog 4.0.0 DEMO 页面</h1></div>
+<div id="gads">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4209163873016654";
+/* gads_demo_首页1 */
+google_ad_slot = "7928197413";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+    <div class="header"><h1 class="colr">感谢你们对LHGCore.JS的长期支持，用你们手里的鼠标轻轻的点击一下上面的广告，继续支持我们，我们将做的更好！！！</h1></div>
     <div class="article">
         <h2>窗口的各种在线演示示例</h2>
+        <!--
         <p>多皮肤共存</p>
         <ol>
         	<li>
@@ -336,6 +379,7 @@ var a = $.dialog({
                 <button class="button blue" onclick="sk1()">运行»</button>
             </li>
         </ol>
+        -->
         <p>常规配置参数使用演示</p>
         <ol>
         	<li>
@@ -512,7 +556,7 @@ var a = $.dialog({
                 <button class="button green" onclick="op13()">运行»</button>
             </li>
             <li>
-            	<h3>最小宽度限制和最小高度限制&nbsp;<span class="colr">(16号的版本测试，不起作用)</span></h3>
+            	<h3>最小宽度限制和最小高度限制</span></h3>
             	<pre class="prettyprint">
 var a = $.dialog({
     id: "a14",
@@ -525,7 +569,7 @@ var a = $.dialog({
                 <button class="button green" onclick="op14()">运行»</button>
             </li>
             <li>
-            	<h3>内容与边界填充距离</h3>
+            	<h3>内容与边界填充距离( 注意图片加上width和height，否则出现位置偏移 )</h3>
             	<pre class="prettyprint">
 var a = $.dialog({
     id: "a15" ,
@@ -564,7 +608,7 @@ var a = $.dialog({
                 <button class="button green" onclick="op17()">运行»</button>
             </li>
             <li>
-            	<h3>lock/unlock 锁屏和解开锁屏功能&nbsp; <span class="colr">(16号的版本测试，有bug，当浏览器有滚动条后，锁屏只在屏幕最上端)</span></h3>
+            	<h3>lock/unlock 锁屏和解开锁屏功能</h3>
             	<pre class="prettyprint">
 var a = $.dialog({
     id: "a18",
@@ -677,13 +721,51 @@ var a = $.dialog({
                 <button class="button green" onclick="op25_1()">运行»</button>
             </li>
             <li>
-            	<h3></h3>
+            	<h3>是否显示最大化按钮,最小化按钮</h3>
             	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a26",
+    content: "我没有最大化和最小化按钮,默认支持，你可以更改默认参数配置哦",
+    title:"支持最大最小化功能",
+    min: false,
+    max: false
+})             
 	            </pre>
-                <button class="button green" onclick="op()">运行»</button>
+                <button class="button green" onclick="op26()">运行»</button>
+            </li>
+            <li>
+            	<h3>是否将窗口拖动限制到可视区域内,默认是false</h3>
+            	<pre class="prettyprint">
+var a = $.dialog({
+    id: "a27",
+    content: "是否将窗口拖动限制到可视区域内,默认是false",
+    title:"支持最大最小化功能",
+    min: false,
+    max: true,
+    dragLimit: true,
+    width: "50%",
+    height: "50%"
+})       
+	            </pre>
+                <button class="button green" onclick="op27()">运行»</button>
             </li>
         </ol>
+        <br/><br/>
         <h2>更多API组合DEMO，请自行阅读API之后编写测试。</h2><br/>
+<div id="gads">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4209163873016654";
+/* gads_demo_首页3 */
+google_ad_slot = "2866430416";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="header"><h1 class="colr">感谢你们对LHGCore.JS的长期支持，用你们手里的鼠标轻轻的点击一下上面的广告，继续支持我们，我们将做的更好！！！</h1></div>
     </div>
     <div class="footer"></div>
 
