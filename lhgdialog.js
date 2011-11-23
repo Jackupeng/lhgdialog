@@ -174,7 +174,7 @@ lhgdialog.fn =
 	{
 	    var that = this, _url, DOM,
 		    icon = config.icon,
-			iconBg = icon && '<img src="' + config.path + 'skins/icons/' + icon + '"/>';
+			iconBg = icon && config.path + 'skins/icons/' + icon
 		
 		if( icon )
 		{
@@ -190,7 +190,7 @@ lhgdialog.fn =
 		
 		DOM.wrap.addClass( config.skin );
 		DOM.icon[0].style.display = icon ? '' : 'none';
-		DOM.iconBg.html(iconBg || '');
+		DOM.iconBg.attr('src',iconBg);
 		DOM.rb.css('cursor', config.resize ? 'se-resize' : 'auto');
 		DOM.title.css('cursor', config.drag ? 'move' : 'auto');
 		DOM.max[config.max?'show':'hide'](true);
@@ -288,19 +288,19 @@ lhgdialog.fn =
 		if( text === undefined ) return this;
 		
 		var DOM = this.DOM,
-			wrap = DOM.wrap,
+			outer = DOM.outer,
 			title = DOM.title,
-			className = 'ui_state_noTitle';
+			className = 'ui_state_tips';
 		
 		if( text === false )
 		{
 			title.hide().html('');
-			wrap.addClass(className);
+			outer.addClass(className);
 		}
 		else
 		{
 			title.show().html(text || '');
-			wrap.removeClass(className);
+			outer.removeClass(className);
 		};
 		
 		return this;
@@ -525,6 +525,7 @@ lhgdialog.fn =
 		{
 		    DOM.main.css({width:that._or.w,height:that._or.h});
 		    DOM.res.hide();
+			_$html.removeClass('ui_lock_scroll ui_lock_fixed');
 		}
 		
 		// 置空内容
@@ -1116,7 +1117,7 @@ lhgdialog.fn =
 		}).bind('mousedown',function(){ that.focus(true); });
 		
 		if( config.max )
-		    DOM.title.bind('dblclick', function(){that.max();});
+		    DOM.title.bind('dblclick', function(){that.max();return false;});
 	},
 	
 	_removeEvent: function()
@@ -1238,17 +1239,17 @@ lhgdialog.templates =
 										'<div class="ui_title"><span class="ui_title_icon"></span></div>' +
 										'<div class="ui_title_buttons">' +
 										    '<a class="ui_min" href="#" title="\u6700\u5C0F\u5316"><b class="ui_min_b"></b></a>' +
-											'<a class="ui_rese" href="#" title="恢复">△</a>' +
+											'<a class="ui_rese" href="#" title="\u6062\u590D">▽</a>' +
 											'<a class="ui_max" href="#" title="\u6700\u5927\u5316"><b class="ui_max_b"></b></a>' +
-											'<a class="ui_res" href="#" title="\u8FD8\u539F" ><b class="ui_res_b"></b><b class="ui_res_t"></b>' +
-										    '<a class="ui_close" href="#">\xd7</a>' +
+											'<a class="ui_res" href="#" title="\u8FD8\u539F"><b class="ui_res_b"></b><b class="ui_res_t"></b>' +
+										    '<a class="ui_close" href="#" title="\u5173\u95ED(esc\u952E)">\xd7</a>' +
 										'</div>' +
 									'</div>' +
 								'</td>' +
 							'</tr>' +
 							'<tr>' +
 								'<td class="ui_icon">' +
-									'<div class="ui_iconBg"></div>' +
+									'<img src="" class="ui_iconBg"/>' + 
 								'</td>' +
 								'<td class="ui_main">' +
 									'<div class="ui_content"></div>' +
@@ -1311,7 +1312,7 @@ lhgdialog.setting =
 	drag: true, 				// 是否允许用户拖动位置
 	dragLimit: false,           // 是否将窗口拖动限制到可视区域内
 	cache: true,                // 是否缓存窗口内容页
-	extendDrag: true            // 增加lhgdialog拖拽体验
+	extendDrag: false            // 增加lhgdialog拖拽体验
 };
 
 window.lhgdialog = $.dialog = $.lhgdialog = lhgdialog;
@@ -1508,14 +1509,13 @@ _use = function(event)
 			dl = fixed ? 0 : _$document.scrollLeft(),
 			dt = fixed ? 0 : _$document.scrollTop(),
 			// 向下拖动时不能将标题栏拖出可视区域
-			th = title[0].offsetHeight || 20,
-			maxY, maxX;
+			th = title[0].offsetHeight || 20;
 		
 		// 坐标最大值限制(在可视区域内，如果窗口随屏滚动那就进行限制)
 		if( config.dragLimit || fixed )
 		{
 		    maxX = ww - ow + dl;
-			maxY = wh - th + dt;
+			maxY = wh - oh + dt;
 		}
 		else
 		{
