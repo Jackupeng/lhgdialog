@@ -174,7 +174,11 @@ lhgdialog.fn =
 	{
 	    var that = this, _url, DOM,
 		    icon = config.icon,
-			iconBg = icon && config.path + 'skins/icons/' + icon
+			iconBg = icon && config.path + 'skins/icons/' + icon,
+			
+			ticon = config.titleIcon 
+			? { backgroundImage: 'url(\'' + config.path + '/skins/icons/' + ticon + '\')' }
+			: { display:'none' }
 		
 		if( icon )
 		{
@@ -191,6 +195,7 @@ lhgdialog.fn =
 		DOM.wrap.addClass( config.skin );
 		DOM.icon[0].style.display = icon ? '' : 'none';
 		DOM.iconBg.attr('src',iconBg);
+		DOM.title_icon.css( ticon );
 		DOM.rb.css('cursor', config.resize ? 'se-resize' : 'auto');
 		DOM.title.css('cursor', config.drag ? 'move' : 'auto');
 		DOM.max[config.max?'show':'hide'](true);
@@ -201,13 +206,11 @@ lhgdialog.fn =
 		that.show(true)
 		.button(config.button)
 		.title(config.title)
-		.content(config.content, true);
-		
-		if( !_rurl.test(config.content) )
-		    that.size(config.width, config.height);
-		
-		that.position(config.left, config.top);
-		that.focus(config.foucs).time(config.time);
+		.content(config.content, true)
+		.size(config.width, config.height)
+		.position(config.left, config.top)
+		.focus(config.foucs)
+		.time(config.time);
 		
 		config.lock && that.lock();
 		
@@ -299,6 +302,7 @@ lhgdialog.fn =
 		}
 		else
 		{
+			text = title.html() + text;
 			title.show().html(text || '');
 			outer.removeClass(className);
 		};
@@ -525,7 +529,9 @@ lhgdialog.fn =
 		{
 		    DOM.main.css({width:that._or.w,height:that._or.h});
 		    DOM.res.hide();
-			_$html.removeClass('ui_lock_scroll ui_lock_fixed');
+			
+			if( that.parent && !that.parent._lock() )
+			    _$html.removeClass('ui_lock_scroll ui_lock_fixed');
 		}
 		
 		// 置空内容
@@ -692,7 +698,7 @@ lhgdialog.fn =
 	_setIframe: function( url )
 	{
 	    var that = this, $iframe, iwin, $idoc, ibody, iWidth, iHeight,
-		    $content = that.DOM.content,
+		    $content = that.DOM.content, srcTimer,
 			config = that.config,
 			$loading = $('.ui_loading',$content[0]),
 		    initCss = 'position:absolute;left:-9999em;border:none 0;background:transparent',
@@ -705,14 +711,15 @@ lhgdialog.fn =
 			url = ret + ((ret === url) ? (/\?/.test(url) ? '&' : '?') + '_=' + ts : '');
 		}
 		
-		$iframe = $('<iframe name="' + config.id + '" frameborder="0" src="' + url +
-		    '" allowtransparency="true" style="' + initCss + '"><\/iframe>',_doc);
+		$iframe = $('<iframe name="' + config.id + '" frameborder="0" src="" ' +
+		    'allowtransparency="true" style="' + initCss + '"><\/iframe>',_doc);
 		
 		that.iframe = $iframe[0];
-		
 		$content[0].appendChild( $iframe[0] );
 		
-		that.origin = $iframe[0].contentWindow;
+		setTimeout(function(){
+		    $iframe.attr('src', url);
+		}, 1);
 		
 		var load = that._fmLoad = function()
 		{
@@ -721,7 +728,7 @@ lhgdialog.fn =
 			$loading[0] && $loading.hide();
 			
 			try{
-			    iwin = $iframe[0].contentWindow;
+			    iwin = that.iwin = $iframe[0].contentWindow;
 				$idoc = $(iwin.document);
 				ibody = iwin.document.body;
 			}catch(e){
@@ -1280,7 +1287,8 @@ lhgdialog.templates =
 lhgdialog.setting =
 {
     content: '<div class="ui_loading"><span>loading...</span></div>',
-	title: '新窗口',		    // 标题. 默认'新窗口'
+	title: '\u89C6\u7A97 ',     // 标题. 默认'视窗'
+	titleIcon: null,            // 标题栏左边的小图标
 	button: null,				// 自定义按钮
 	ok: null,					// 确定按钮回调函数
 	cancel: null,				// 取消按钮回调函数
@@ -1300,8 +1308,8 @@ lhgdialog.setting =
 	lock: false,				// 是否锁屏
 	parent: null,               // 打开子窗口的父窗口对象，主要用于多层锁屏窗口
 	background: '#000',			// 遮罩颜色
-	opacity: .7,				// 遮罩透明度
-	padding: '20px 23px',		// 内容与边界填充距离
+	opacity: .3,				// 遮罩透明度
+	padding: '15px 10px',		// 内容与边界填充距离
 	fixed: false,				// 是否静止定位
 	left: '50%',				// X轴坐标
 	top: '38.2%',				// Y轴坐标
@@ -1310,9 +1318,9 @@ lhgdialog.setting =
 	zIndex: 1976,				// 对话框叠加高度值(重要：此值不能超过浏览器最大限制)
 	resize: true,				// 是否允许用户调节尺寸
 	drag: true, 				// 是否允许用户拖动位置
-	dragLimit: false,           // 是否将窗口拖动限制到可视区域内
+	limit: false,               // 是否将窗口拖动限制到可视区域内
 	cache: true,                // 是否缓存窗口内容页
-	extendDrag: false            // 增加lhgdialog拖拽体验
+	extendDrag: false           // 增加lhgdialog拖拽体验
 };
 
 window.lhgdialog = $.dialog = $.lhgdialog = lhgdialog;
@@ -1519,7 +1527,7 @@ _use = function(event)
 		}
 		else
 		{
-			maxY = wh - th + dt;
+		    maxY = wh - th + dt;
 			dl = -10000;
 			maxX = 10000;
 		}
@@ -1629,10 +1637,11 @@ var _zIndex = function()
  * 警告
  * @param	{String}	消息内容
  */
-lhgdialog.alert = function( content, icon )
+lhgdialog.alert = function( content, icon, title )
 {
 	return lhgdialog({
-	    id: 'Alert',
+		title: title || '',
+		id: 'Alert',
 		zIndex: _zIndex(),
 		icon: icon || 'warning.png',
 		lock: true,
@@ -1648,12 +1657,13 @@ lhgdialog.alert = function( content, icon )
  * @param	{Function}	确定按钮回调函数
  * @param	{Function}	取消按钮回调函数
  */
-lhgdialog.confirm = function( content, yes, no )
+lhgdialog.confirm = function( content, yes, no, icon, title )
 {
 	return lhgdialog({
+		title: title || '',
 		id: 'Confirm',
 		zIndex: _zIndex(),
-		icon: 'issue.png',
+		icon: icon || 'issue.png',
 		lock: true,
 		opacity: .1,
 		resize: false,
@@ -1673,15 +1683,16 @@ lhgdialog.confirm = function( content, yes, no )
  * @param	{Function}	回调函数. 接收参数：输入值
  * @param	{String}	默认值
  */
-lhgdialog.prompt = function( content, yes, value )
+lhgdialog.prompt = function( content, yes, value, icon, title )
 {
 	value = value || '';
 	var input;
 	
 	return lhgdialog({
+		title: title || '',
 		id: 'Prompt',
 		zIndex: _zIndex(),
-		icon: 'msg.png',
+		icon: icon || 'issue.png',
 		lock: true,
 		opacity: .1,
 		resize: false,

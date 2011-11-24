@@ -3,10 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>lhgDialog 4.0.0 beta1 版本测试</title>
-<link type="text/css" rel="stylesheet" href="js/prettify/prettify.css" />
-<link type="text/css" rel="stylesheet" href="js/demo.css" />
-<script src="js/jquery-1.7.min.js" type="text/javascript"></script>
-<script src="js/prettify/prettify.js" type="text/javascript"></script>
+<link type="text/css" rel="stylesheet" href="demo/js/prettify/prettify.css" />
+<link type="text/css" rel="stylesheet" href="demo/js/demo.css" />
+<script src="demo/js/jquery-1.7.min.js" type="text/javascript"></script>
+<script src="demo/js/prettify/prettify.js" type="text/javascript"></script>
 <script type="text/javascript">
 	/** 多皮肤演示 */
 	function sk1(){
@@ -29,6 +29,17 @@
 			id: "a2" ,
 			content: "我是HTML内容"
 		});
+	}
+	function op3_1(){
+		var a = $.dialog({ 
+			id: "a3_1" ,
+			title: "欢迎使用手机帐族",
+			content: "url:http://m.zonezu.com/",
+			width:	300,
+			height: 400,
+			minWidth: 320,
+			minHeight: 450
+		});	
 	}
 	function op4(){
 		var a = $.dialog({ 
@@ -167,7 +178,7 @@
 			id: "a15" ,
 			lock: true ,
 			title: "Android4.0照片",
-			content: "<img src='js/android.jpg' width='600' height='404' />",
+			content: "<img src='demo/js/android.jpg' width='600' height='404' />",
 			padding: 0
 		});	
 	}
@@ -343,8 +354,10 @@
 <div class="title_top r5px">
 	<ul>
     	<li class="button orange" target="_blank"><a href="http://bbs.lhgcore.com/">返回论坛</a></li>
+        <li class="button blue"><a href="http://bbs.lhgcore.com/thread-40-1-1.html">返回帖子</a></li>
+        <li class="button blue"><a href="http://bbs.lhgcore.com/thread-40-1-1.html">提交Bug</a></li>
 		<li class="button green"><a href="index.html">在线演示</a></li>
-    	<li class="button blue"><a href="extents.html">扩展演示</a></li>
+    	<li class="button blue"><a href="demo/extents.html">扩展演示</a></li>
     </ul>
 </div>
 
@@ -395,7 +408,7 @@ var a = $.dialog({ id: "a1", lock:true });</pre>
 				<button class="button green" onclick="op2()">运行»</button>
             </li>
             <li>
-            	<h3>支持HTML内容</h3>
+            	<h3>支持HTML内容,支持page外部页面<span class="colr">(*)</span></h3>
             	<pre class="prettyprint">
 /** content: html内容 */
 var a = $.dialog({ 
@@ -403,6 +416,18 @@ var a = $.dialog({
     content: "我是HTML内容"
 });				</pre>
                 <button class="button green" onclick="op3()">运行»</button>
+                <pre class="prettyprint">
+/** content: url:外部页面 */
+var a = $.dialog({ 
+    id: "a3_1" ,
+    title: "欢迎使用手机帐族",
+    content: "url:http://m.zonezu.com/",
+    width: 200,
+    height: 200,
+    minWidth: 320,
+    minHeight: 450
+});				</pre>
+				<button class="button green" onclick="op3_1()">运行»</button>
             </li>
             <li>
             	<h3>通过title属性更改标题内容</h3>
@@ -575,7 +600,7 @@ var a = $.dialog({
     id: "a15" ,
     title: "Android4.0照片",
     lock: true,
-    content: "&lt;img src='js/android.jpg' width='600' height='404' /&gt;",
+    content: "&lt;img src='demo/js/android.jpg' width='600' height='404' /&gt;",
     padding: 0
 });	
 	            </pre>
@@ -774,6 +799,5 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <script type="text/javascript">prettyPrint();</script>
 </body>
-<script type="text/javascript" src="../lhgdialog.js" ></script>
-<script type="text/javascript" src="js/demo.js"></script>
+<script type="text/javascript" src="lhgdialog.js" ></script>
 </html>
