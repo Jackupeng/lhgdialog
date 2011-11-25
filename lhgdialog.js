@@ -566,13 +566,15 @@ lhgdialog.fn =
 	 * 定时关闭
 	 * @param	{Number}	单位为秒, 无参数则停止计时器
 	 */
-	time: function( second )
+	time: function( second, callback )
 	{
 		var that = this,
 			cancel = that.config.cancelVal,
 			timer = that._timer;
 			
 		timer && clearTimeout(timer);
+		
+		if( callback ) callback.call(that);
 		
 		if(second)
 		{
