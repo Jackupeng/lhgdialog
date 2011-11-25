@@ -10,7 +10,7 @@ html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pr
     outline: 0;
 	-moz-outline-style: none;
     font-size: 100%;
-    vertical-align: baseline;
+    vertical-align: middle;
     background: transparent;
 }
 input {vertical-align: middle\9;}
@@ -47,7 +47,7 @@ blockquote:before, blockquote:after, q:before, q:after {
     -o-border-radius: 10px;
     border-radius: 10px;
 }
-
+.bodyf{ background-color:#FFF;color:#000;font:12px Tahoma,arial,sans-serif;}
 body{background-color:#eee;color:#000;font:12px Tahoma,arial,sans-serif;padding:10px 0;}
 pre{font-family:"Courier New",Courier,monospace; margin:10px 0 10px 0;}
 .title_top{ width:900px; background:#fff;margin:auto;border:1px solid #d3d3d3; height:45px; margin-bottom:15px;}
@@ -63,7 +63,10 @@ pre{font-family:"Courier New",Courier,monospace; margin:10px 0 10px 0;}
 .line{height:2px;background:#3B62A7;font-size:0;margin:5px 20px;}
 
 #gads{ width:728px; height:90px; margin:auto; }
-.colr { color:red;}
+.colr { color:red; }
+.colb { color: blue; }
+
+.text { width:200px; height:24px; line-height:24px; vertical-align:middle; font-size:12px; }
 
 /* button DOM Style */
 .button {

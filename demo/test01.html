@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>test01</title>
+<link type="text/css" rel="stylesheet" href="js/demo.css" />
+<script src="js/jquery-1.7.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+var api = frameElement.api, W = api.opener, D = document;
+
+$(function(){
+	var val = W.$.dialog.data('txt01');
+	alert(val);
+	$("#txt01").val(val);	
+});
+
+</script>
+</head>
+<body class="bodyf">
+<br/>
+<div>下面的文本框显示调用页面传过来的数据</div>
+
+<br/>
+
+<input type="text" class="text" id="txt01" />
+
+</body>
+</html>
