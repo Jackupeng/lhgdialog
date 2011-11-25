@@ -47,7 +47,7 @@ display:none;/*谷歌伤不起啊，必须写这句啊!否则有2px的空隙*/
 .ui_main{min-width:10em; min-width:0\9/*IE8 BUG*/; text-align:center;}/*超过最小宽度居中对齐*/
 .ui_content{  display:inline-block; *display:inline; zoom:1; text-align:left; }/*小于最小宽度左对齐*/
 .ui_content.ui_state_full { display:block; width:100%;height:100%;margin:0; padding:0!important;}/*加载iframe时设置为0*/
-.ui_loading { width:96px; height:32px; text-align:left; text-indent:-999em; overflow:hidden; background:url(icons/loading.gif) no-repeat center center; }
+.ui_loading { width:96px; height:32px; text-align:left;vertical-align:middle; text-indent:-999em; overflow:hidden; background:url(icons/loading.gif) no-repeat center center; }
 .ui_title_bar {
 	position:relative;
 	height: 100%;

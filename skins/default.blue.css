@@ -74,6 +74,7 @@ table.ui_border, table.ui_dialog {
 	text-indent:-999em; 
 	overflow:hidden; 
 	background:url(icons/loading.gif) no-repeat center center; 
+	vertical-align:middle;
 }
 
 .ui_icon { 
