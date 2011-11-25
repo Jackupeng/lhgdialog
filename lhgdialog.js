@@ -8,6 +8,7 @@
 
 $.noop = $.noop || function(){}; // jQuery 1.3.2
 var _ie6 = window.VBArray && !window.XMLHttpRequest,
+    _isIE = 'CollectGarbage' in window,
     _isMobile = 'createTouch' in document && !('onmousemove' in document.documentElement)
 	    || /(iPhone|iPad|iPod)/i.test(navigator.userAgent),
 	_count = 0,
@@ -251,7 +252,7 @@ lhgdialog.fn =
 			    DOM.icon.hide();
 				$content.html( loading );
 				_url = msg.split('url:')[1];
-				that._setIframe( _url );
+				that._iframe( _url );
 			}
 			else
 			    $content.html( msg );
@@ -530,9 +531,11 @@ lhgdialog.fn =
 		    DOM.main.css({width:that._or.w,height:that._or.h});
 		    DOM.res.hide();
 			
-			if( that.parent && !that.parent._lock() )
+			if( !that.parent || (that.parent && !that.parent._lock) )
 			    _$html.removeClass('ui_lock_scroll ui_lock_fixed');
 		}
+		
+		if( that._frmTimer ) clearTimeout(that._frmTimer);
 		
 		// 置空内容
 		wrap[0].className = wrap[0].style.cssText = '';
@@ -615,36 +618,42 @@ lhgdialog.fn =
 		var that = this, frm,
 		    index = lhgdialog.setting.zIndex - 1,
 			config = that.config,
-			style = lhgdialog.lockMask ? lhgdialog.lockMask.style : null,
+			mask = $('#lockMask',_doc)[0] || null,
+			style = mask ? mask.style : '',
 			positionType = _ie6 ? 'absolute' : 'fixed';
+			opac = $.browser.msie
 		
-		_$html.addClass('ui_lock_scroll');	
+		_$html.addClass('ui_lock_scroll');
 		
-		if( !lhgdialog.lockMask )
+		if( !mask )
 		{
 			frm = '<iframe src="about:blank" style="width:100%;height:100%;position:absolute;' +
 			    'top:0;left:0;z-index:-1;filter:alpha(opacity=0)"></iframe>';
 				
-			lhgdialog.lockMask = _doc.createElement('div');
-			style = lhgdialog.lockMask.style;
-			style.cssText = 'position:' + positionType + ';background:' + config.background +
-			    ';left:0;top:0;width:100%;height:100%;overflow:hidden;';
+			mask = _doc.createElement('div');
+			style = mask.style;
+			mask.id = 'lockMask';
 			
-			_doc.body.appendChild( lhgdialog.lockMask );
+			style.cssText = 'position:' + positionType + ';left:0;top:0;width:100%;height:100%;overflow:hidden;';
+			$(mask).css({ opacity:config.opacity, background:config.background });
 			
-			if( _ie6 ) lhgdialog.lockMask.innerHTML = frm;
+			_doc.body.appendChild( mask );
+			if( _ie6 ) mask.innerHTML = frm;
 		}
 		
 		if( positionType === 'absolute' )
 		{
-		    style.width = '100%';
+		    style.width = _$doc.width();
 			style.height = _$doc.height();
 			style.top = _$doc.scrollTop();
 			style.left = _$doc.scrollLeft();
 		}
 		
-		$(lhgdialog.lockMask).css({ opacity:config.opacity, zIndex:index, display:'block' });
-			
+		that._lockTimer = setTimeout(function(){
+			style.display = '';
+		    style.zIndex = index;
+		}, 1);
+		
 		that.focus(true);
 		that.DOM.outer.addClass('ui_state_lock');
 		
@@ -657,22 +666,137 @@ lhgdialog.fn =
 	unlock: function()
 	{
 		var that = this,
-		    config = that.config;
+		    config = that.config,
+			mask = $('#lockMask',_doc)[0];
 		
-		if( lhgdialog.lockMask && that._lock )
+		if( mask && that._lock )
 		{
 		    if( config.parent && config.parent._lock )
 			{
 			    var index = config.parent.DOM.wrap[0].style.zIndex;
-				lhgdialog.lockMask.style.zIndex = parseInt(index,10) - 1;
+				mask.style.zIndex = parseInt(index,10) - 1;
 			}
 			else
 			{
-			    lhgdialog.lockMask.style.display = 'none';
+			    mask.style.display = 'none';
 			    _$html.removeClass('ui_lock_scroll');
 			}
 			
 			that.DOM.outer.removeClass('ui_state_lock');
+		}
+		
+		if( that._lockTimer ) clearTimeout(that._lockTimer);
+		
+		return that;
+	},
+	
+	max: function()
+	{
+		var that = this,
+		    DOM = that.DOM,
+			wrapStyle = DOM.wrap[0].style,
+			mainStyle = DOM.main[0].style,
+			rbStyle = DOM.rb[0].style,
+			titleStyle = DOM.title[0].style,
+			config = that.config,
+		    top = _$doc.scrollTop(),
+		    left = _$doc.scrollLeft();
+		
+		if( !that._maxState )
+		{
+		
+			if( that._minState )
+			{
+			    that._minReset();
+				DOM.min.show(true);
+				that._minState = false;
+			}
+				
+			that._or = {
+				t: wrapStyle.top,
+				l: wrapStyle.left,
+				w: mainStyle.width,
+				h: mainStyle.height,
+				d: config.drag,
+				r: config.resize,
+				rc: rbStyle.cursor,
+				tc: titleStyle.cursor
+			};
+			
+			!that._lock && _$html.addClass('ui_lock_scroll');
+			_ie6 && _$html.addClass('ui_lock_fixed');
+			
+			DOM.wrap.css({ top:top + 'px', left:left + 'px' });
+			
+			that.size('100%', '100%')._setAbsolute();
+			config.drag = false;
+			config.resize = false;
+			rbStyle.cursor = 'auto';
+			titleStyle.cursor = 'auto';
+			
+			DOM.max.hide();
+			DOM.res.show(true);
+			
+			that._maxState = true;
+		}
+		else
+		{
+		    !that._lock && _$html.removeClass('ui_lock_scroll');
+			
+			if( _ie6 )
+			{
+			    _$html.removeClass('ui_lock_fixed');
+				that._top = that._or.t;
+				that._left = that._or.l;
+			}
+			
+			DOM.wrap.css({ top:that._or.t, left:that._or.l });
+			that.size(that._or.w, that._or.h)._autoPositionType();
+			config.drag = that._or.d;
+		    config.resize = that._or.r;
+		    rbStyle.cursor = that._or.rc;
+		    titleStyle.cursor = that._or.tc;
+		
+		    DOM.res.hide();
+			DOM.max.show(true);
+			
+			delete that._or;
+			
+			that._maxState = false;
+		}
+		
+		return that;
+	},
+	
+	min: function()
+	{
+	    var that = this,
+		    DOM = that.DOM;
+			
+		if( !that._minState )
+		{
+		    if( that._maxState )
+				that.max();
+			
+			that._minRz = that.config.resize;
+			DOM.main.hide();
+		    DOM.footer.hide();
+		    DOM.dialog[0].style.width = DOM.main[0].style.width;
+			DOM.rese.show(true);
+			DOM.min.hide();
+			DOM.rb[0].style.cursor = 'auto';
+			that.config.resize = false;
+		
+		    that._minState = true;
+		}
+		else
+		{
+		    that._minReset();
+			DOM.min.show(true);
+			
+			delete that._minRz;
+			
+			that._minState = false;
 		}
 		
 		return that;
@@ -695,7 +819,7 @@ lhgdialog.fn =
 		return null;
 	},
 	
-	_setIframe: function( url )
+	_iframe: function( url )
 	{
 	    var that = this, $iframe, iwin, $idoc, ibody, iWidth, iHeight,
 		    $content = that.DOM.content, srcTimer,
@@ -717,7 +841,7 @@ lhgdialog.fn =
 		that.iframe = $iframe[0];
 		$content[0].appendChild( $iframe[0] );
 		
-		setTimeout(function(){
+		that._frmTimer = setTimeout(function(){
 		    $iframe.attr('src', url);
 		}, 1);
 		
@@ -948,118 +1072,6 @@ lhgdialog.fn =
 			that.position(left, top);
 	},
 	
-	// 这个方法以后移到上面去
-	max: function()
-	{
-		var that = this,
-		    DOM = that.DOM,
-			wrapStyle = DOM.wrap[0].style,
-			mainStyle = DOM.main[0].style,
-			rbStyle = DOM.rb[0].style,
-			titleStyle = DOM.title[0].style,
-			config = that.config,
-		    top = _$doc.scrollTop(),
-		    left = _$doc.scrollLeft();
-		
-		if( !that._maxState )
-		{
-		
-			if( that._minState )
-			{
-			    that._minReset();
-				DOM.min.show(true);
-				that._minState = false;
-			}
-				
-			that._or = {
-				t: wrapStyle.top,
-				l: wrapStyle.left,
-				w: mainStyle.width,
-				h: mainStyle.height,
-				d: config.drag,
-				r: config.resize,
-				rc: rbStyle.cursor,
-				tc: titleStyle.cursor
-			};
-			
-			!that._lock && _$html.addClass('ui_lock_scroll');
-			_ie6 && _$html.addClass('ui_lock_fixed');
-			
-			DOM.wrap.css({ top:top + 'px', left:left + 'px' });
-			
-			that.size('100%', '100%')._setAbsolute();
-			config.drag = false;
-			config.resize = false;
-			rbStyle.cursor = 'auto';
-			titleStyle.cursor = 'auto';
-			
-			DOM.max.hide();
-			DOM.res.show(true);
-			
-			that._maxState = true;
-		}
-		else
-		{
-		    !that._lock && _$html.removeClass('ui_lock_scroll');
-			
-			if( _ie6 )
-			{
-			    _$html.removeClass('ui_lock_fixed');
-				that._top = that._or.t;
-				that._left = that._or.l;
-			}
-			
-			DOM.wrap.css({ top:that._or.t, left:that._or.l });
-			that.size(that._or.w, that._or.h)._autoPositionType();
-			config.drag = that._or.d;
-		    config.resize = that._or.r;
-		    rbStyle.cursor = that._or.rc;
-		    titleStyle.cursor = that._or.tc;
-		
-		    DOM.res.hide();
-			DOM.max.show(true);
-			
-			delete that._or;
-			
-			that._maxState = false;
-		}
-		
-		return that;
-	},
-	
-	min: function()
-	{
-	    var that = this,
-		    DOM = that.DOM;
-			
-		if( !that._minState )
-		{
-		    if( that._maxState )
-				that.max();
-			
-			that._minRz = that.config.resize;
-			DOM.main.hide();
-		    DOM.footer.hide();
-		    DOM.dialog[0].style.width = DOM.main[0].style.width;
-			DOM.rese.show(true);
-			DOM.min.hide();
-			that.config.resize = false;
-		
-		    that._minState = true;
-		}
-		else
-		{
-		    that._minReset();
-			DOM.min.show(true);
-			
-			delete that._minRz;
-			
-			that._minState = false;
-		}
-		
-		return that;
-	},
-	
 	_minReset: function()
 	{
 	    var that = this,
@@ -1070,6 +1082,7 @@ lhgdialog.fn =
 		DOM.dialog.removeAttr('style');
 		DOM.rese.hide();
 		that.config.resize = that._minRz;
+		DOM.rb[0].style.cursor = that._minRz ? 'se-resize' : 'auto';
 	},
 	
 	_addEvent: function()
@@ -1077,7 +1090,6 @@ lhgdialog.fn =
 		var resizeTimer,
 			that = this,
 			config = that.config,
-			isIE = 'CollectGarbage' in window,
 			DOM = that.DOM;
 		
 		// 窗口调节事件
@@ -1086,7 +1098,7 @@ lhgdialog.fn =
 			resizeTimer && clearTimeout(resizeTimer);
 			resizeTimer = setTimeout(function()
 			{
-				that._reset(isIE);
+				that._reset(_isIE);
 			}, 140);
 		};
 		_$top.bind('resize', that._winResize);
@@ -1124,7 +1136,7 @@ lhgdialog.fn =
 		}).bind('mousedown',function(){ that.focus(true); });
 		
 		if( config.max )
-		    DOM.title.bind('dblclick', function(){that.max();return false;});
+		    DOM.title.bind('dblclick',function(){ that.max();return false; });
 	},
 	
 	_removeEvent: function()
@@ -1140,9 +1152,6 @@ lhgdialog.fn =
 
 /*! 此对象用来存储获得焦点的窗口对象实例 */
 lhgdialog.focus = null;
-
-/*! 公用的遮罩层 */
-lhgdialog.lockMask = null;
 
 /*! 最高层的 window 对象 */
 lhgdialog.top = _top;
@@ -1189,8 +1198,8 @@ _top != window && $(window).bind('unload',function()
 		}
 	}
 	_box && _box.DOM.wrap.remove();
-	lhgdialog.lockMask && $(lhgdialog.lockMask).remove();
-	$('#lhgdg_dragMask',_doc)[0] && $('#lhgdg_dragMask',_doc).remove();
+	$('#lockMask',_doc)[0] && $('#lockMask',_doc).remove();
+	$('#dragMask',_doc)[0] && $('#dragMask',_doc).remove();
 });
 
 
@@ -1211,7 +1220,7 @@ lhgdialog.data = function( name, value )
 	{
 	    if(cache[name]) delete cache[name];
 	}
-	else if( value )
+	else if( value || value === '' )
 	    cache[name] = value;
 	else
 	    return cache[name];
@@ -1320,7 +1329,7 @@ lhgdialog.setting =
 	drag: true, 				// 是否允许用户拖动位置
 	limit: false,               // 是否将窗口拖动限制到可视区域内
 	cache: true,                // 是否缓存窗口内容页
-	extendDrag: false           // 增加lhgdialog拖拽体验
+	extendDrag: true           // 增加lhgdialog拖拽体验
 };
 
 window.lhgdialog = $.dialog = $.lhgdialog = lhgdialog;
@@ -1567,57 +1576,59 @@ _$document.bind('mousedown',function(event){
  * 对超大对话框拖动优化
  * --------------------------------------
  */
+$(function(){
+
 if( lhgdialog.setting.extendDrag ) //lhgdialog.setting.extendDrag 此默认选项只能使用全局设置
 {
-	$(function(){
-		var event = lhgdialog.dragEvent;
-		if( !event ) return;
+	var event = lhgdialog.dragEvent;
+	if( !event ) return;
+	
+	var dragEvent = event.prototype,
+		mask = _$document[0].createElement('div'),
+		style = mask.style,
+		positionType = _ie6 ? 'absolute' : 'fixed';
+	
+	style.cssText = 'display:none;position:' + positionType + ';left:0;top:0;width:100%;height:100%;'
+	+ 'cursor:move;filter:alpha(opacity=0);opacity:0;background:#FFF';
+	
+	mask.id = 'dragMask';
+	_$document[0].body.appendChild(mask);
+	
+	dragEvent._start = dragEvent.start;
+	dragEvent._end = dragEvent.end;
+	
+	dragEvent.start = function()
+	{
+		var api = lhgdialog.focus,
+			main = api.DOM.main[0],
+			iframe = api.iframe;
 		
-		var dragEvent = event.prototype,
-			mask = _$document[0].createElement('div'),
-			style = mask.style,
-			positionType = _ie6 ? 'absolute' : 'fixed';
+		dragEvent._start.apply(this, arguments);
+		style.display = 'block';
+		style.zIndex = lhgdialog.setting.zIndex + 3;
 		
-		style.cssText = 'display:none;position:' + positionType + ';left:0;top:0;width:100%;height:100%;'
-		+ 'cursor:move;filter:alpha(opacity=0);opacity:0;background:#FFF';
-		
-		mask.id = 'lhgdg_dragMask';
-		_$document[0].body.appendChild(mask);
-		
-		dragEvent._start = dragEvent.start;
-		dragEvent._end = dragEvent.end;
-		
-		dragEvent.start = function()
+		if(positionType === 'absolute')
 		{
-			var api = lhgdialog.focus,
-				main = api.DOM.main[0],
-				iframe = api.iframe;
-			
-			dragEvent._start.apply(this, arguments);
-			style.display = 'block';
-			style.zIndex = lhgdialog.setting.zIndex + 3;
-			
-			if(positionType === 'absolute')
-			{
-				style.width = '100%';
-				style.height = _$window.height() + 'px';
-				style.left = _$document.scrollLeft() + 'px';
-				style.top = _$document.scrollTop() + 'px';
-			};
-			
-			if( iframe && main.offsetWidth * main.offsetHeight > 307200 )
-				main.style.visibility = 'hidden';
+			style.width = '100%';
+			style.height = _$window.height() + 'px';
+			style.left = _$document.scrollLeft() + 'px';
+			style.top = _$document.scrollTop() + 'px';
 		};
 		
-		dragEvent.end = function()
-		{
-			var api = lhgdialog.focus;
-			dragEvent._end.apply(this, arguments);
-			style.display = 'none';
-			if(api) api.DOM.main[0].style.visibility = 'visible';
-		};
-	});
-};
+		if( iframe && main.offsetWidth * main.offsetHeight > 307200 )
+			main.style.visibility = 'hidden';
+	};
+	
+	dragEvent.end = function()
+	{
+		var api = lhgdialog.focus;
+		dragEvent._end.apply(this, arguments);
+		style.display = 'none';
+		if(api) api.DOM.main[0].style.visibility = 'visible';
+	};
+}
+
+});
 
 })( window.jQuery||window.lhgcore, this.lhgdialog );
 
