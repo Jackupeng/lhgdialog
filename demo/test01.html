@@ -10,8 +10,12 @@ var api = frameElement.api, W = api.opener, D = document;
 
 $(function(){
 	var val = W.$.dialog.data('txt01');
-	alert(val);
-	$("#txt01").val(val);	
+	$("#txt01").val(val);
+	
+	function va2(){
+		var txt = $("#txt01").val();
+		
+	}
 });
 
 </script>
@@ -23,6 +27,10 @@ $(function(){
 <br/>
 
 <input type="text" class="text" id="txt01" />
+<br /><br />
+<input type="text" class="text" id="txt02" />
+<button class="button green" onclick="va2()">点击传回调用页面»</button>
+
 
 </body>
 </html>

@@ -1214,9 +1214,9 @@ _top != window && $(window).bind('unload',function()
 lhgdialog.data = function( name, value )
 {
     var top = lhgdialog.top,
-	    cache = top[_data] || {};
+	    cache = top['_data'] || {};
 	
-	top[_data] = cache;
+	top['_data'] = cache;
 	
 	if( value === false )
 	{
