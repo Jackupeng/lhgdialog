@@ -15,11 +15,42 @@ function op2(){
     var b = J.dialog({ id:'a2' });
 	
 }
+function op3(){
+	var c = J.dialog({
+		id:'a3',
+		lock:true,
+		content:"我是op3" ,
+		ok: function(){
+			this.hide();	
+		}
+	});	
+}
+function op4(){
+	var c = J.dialog({
+		id:'a4',
+		lock:true,
+		content:"我是o4,测试，测试测试哦<br/><br>测试close函数。" ,
+		ok: function(){
+			this.close();	
+		},
+		okVal: "点击这里登录",
+		close:function(){
+			J.dialog.tips("请先登录");
+			return false;
+		}
+	});	
+}
+
 	</script>
 </head>
 
 <body>
     <input type="button" value="op1" onclick="op1();"/>
 	<input type="button" value="op2" onclick="op2();"/>
+    
+    <br/><br/><br/>
+    <input type="button" value="op3" onclick="op3();"/>
+ 	<br/>
+    <input type="button" value="op4" onclick="op4();"/>
 </body>
 </html>
