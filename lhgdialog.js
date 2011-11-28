@@ -1801,7 +1801,7 @@ lhgdialog.prompt = function( content, yes, value, icon, title )
  * @param	{String}	提示内容
  * @param	{Number}	显示时间 (默认1.5秒)
  */
-lhgdialog.tips = function( content, time )
+lhgdialog.tips = function( content, time, icon )
 {
 	return lhgdialog({
 		id: 'Tips',
@@ -1812,7 +1812,8 @@ lhgdialog.tips = function( content, time )
 		max: false,
 		fixed: true,
 		lock: false,
-		resize: false
+		resize: false,
+		icon: icon || "i.png"
 	})
 	.content('<div style="padding: 0 1em;">' + content + '</div>')
 	.time(time || 1.5);
