@@ -19,7 +19,7 @@
 	
 	/** 窗口参数DEMO演示 */
 	function op1(){
-		var a = $.dialog({skin: "default"});
+		var a = $.dialog();
 	}
 	function op2(){
 		var a = $.dialog({ id:'a1',lock: true });
@@ -27,7 +27,7 @@
 	function op3(){
 		var a = $.dialog({ 
 			id: "a2" ,
-			content: "我是HTML内容"
+			content: "我是HTML内容<a href='http://www.baidu.com'>百度</a>"
 		});
 	}
 	function op3_1(){
@@ -376,7 +376,7 @@
         <li class="button blue"><a target="_blank" href="http://bbs.lhgcore.com/thread-40-1-1.html">提交Bug</a></li>
 		<li class="button green"><a href="index.html">在线演示</a></li>
     	<li class="button blue"><a href="demo/extents.html">扩展演示</a></li>
-        <li class="button green"><a href="demo/valuedemo.html">传值演示</a></li>
+        <li class="button blue"><a href="demo/valuedemo.html">传值演示</a></li>
     </ul>
 </div>
 

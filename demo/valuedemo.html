@@ -18,6 +18,26 @@
 		});	
 		$.dialog.data( "txt01", $("#txt1").val() );	
 	}
+	function va2(){
+		$.dialog.data("islogin", false);
+		var a = $.dialog({
+			id: "va_2",
+			title: "lhgDialog登录",
+			content: "url:test02.html",
+			resize: false,
+			max: false,
+			drag: false,
+			lock: true,
+			close: function(){
+				if( !$.dialog.data("islogin") ){
+					$.dialog.tips("LHGCore.JS提示：请先登录!", 3, "hits.png");
+					return false;
+				}else{
+					return true	
+				}
+			}
+		});	
+	}
 </script>
 </head>
 <body>
@@ -56,10 +76,50 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
         	<li>
             	<h3>将调用页面的数据传到弹出窗口中</h3>
             	<pre class="prettyprint">
-                
-			</pre>
+/** 调用页面JS */
+var a = $.dialog({
+    id: "va_1",
+    title: "窗口取值",
+    content: "url:test01.html",
+    width: 350,
+    height: 200
+    });	
+$.dialog.data( "txt01", $("#txt1").val() );</pre>
+				<pre class="prettyprint">
+/** test01.html 页面JS 调用页面通过( var api = frameElement.api, W = api.opener, D = document; 获取Window对象) */
+var val = W.$.dialog.data('txt01');
+$("#txt01").val(val);
+                </pre>
 				<input type="text" class="text" value="我都使用lhgDialog4了" id="txt1" />
                 <button class="button green" onclick="va1()">运行»</button>
+            </li>
+            <li>
+            	<h3>将调用页面的数据传到弹出窗口中</h3>
+                <pre class="prettyprint">
+/** 调用页面JS */
+$.dialog.data("islogin", false);
+var a = $.dialog({
+    id: "va_2",
+    title: "lhgDialog登录",
+    content: "url:test02.html",
+    resize: false,
+    max: false,
+    drag: false,
+    lock: true,
+    close: function(){
+        if( !$.dialog.data("islogin") ){
+            $.dialog.tips("LHGCore.JS提示：请先登录!", 3, "hits.png");
+            return false;
+        }else{
+            return true	
+        }
+    }
+});	</pre>
+                <pre class="prettyprint">
+/** 弹出登录页面代码 */
+/** 弹出页面代码较为多，主要配合jquery_validation插件做了验证 */
+                </pre>
+                <button class="button green" onclick="va2()">运行登录»</button>
             </li>
 		</ol>
         <br/><br/>
