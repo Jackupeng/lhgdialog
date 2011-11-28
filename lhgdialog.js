@@ -78,12 +78,13 @@ _skin = _getArgs('skin') || 'default',
 _doc, _top = (function(w)
 {
 	try{
-	    _doc = w['top'].document;
-		_doc.getElementsByTagName;
+	    _doc = w['top'].document;  // 跨域|无权限
+		_doc.getElementsByTagName; // chrome 浏览器本地安全限制
 	}catch(e){
 	    _doc = w.document; return w;
 	}
 	
+	// 如果指定参数self为true则不跨框架弹出，或为框架集则无法显示第三方元素
 	if( _getArgs('self') === 'true' ||
 	    _doc.getElementsByTagName('frameset').length > 0 )
 	{
@@ -117,7 +118,6 @@ $.fn.hide = function()
 
 /*!
  * lhgdialog 入口函数
- * 还有待改进，先使用着
  */
 var lhgdialog = function( config, ok, cancel )
 {
@@ -135,6 +135,7 @@ var lhgdialog = function( config, ok, cancel )
 	
 	config.id = config.id || _expando + _count;
 	
+	// 如果定义了id参数则返回存在此id的窗口对象
 	api = lhgdialog.list[config.id];
 	if(api) return api.focus();
 	
@@ -159,6 +160,7 @@ var lhgdialog = function( config, ok, cancel )
 		callback: config.cancel
 	});
 	
+	// zIndex全局配置
 	lhgdialog.setting.zIndex = config.zIndex;
 	
 	_count++;
@@ -177,10 +179,12 @@ lhgdialog.fn =
 		    icon = config.icon,
 			iconBg = icon && config.path + 'skins/icons/' + icon,
 			
+			// 标题栏左边的图标
 			ticon = config.titleIcon 
-			? { backgroundImage: 'url(\'' + config.path + '/skins/icons/' + ticon + '\')' }
+			? { backgroundImage: 'url(\'' + config.path + 'skins/icons/' + config.titleIcon + '\')' }
 			: { display:'none' }
 		
+		// 假如提示性图标为真默认不显示最小化和最大化按钮
 		if( icon )
 		{
 		    config.min = false;
@@ -191,17 +195,18 @@ lhgdialog.fn =
 		that.config = config;
 		that.DOM = DOM = that.DOM || that._getDOM();
 		
+		// 定义属性opener为引当前加载页面的window对象
 		that.opener = window;
 		
-		DOM.wrap.addClass( config.skin );
+		DOM.wrap.addClass( config.skin ); // 多皮肤共存
 		DOM.icon[0].style.display = icon ? '' : 'none';
-		DOM.iconBg.attr('src',iconBg);
+		DOM.icon_bg.attr('src',iconBg || '');
 		DOM.title_icon.css( ticon );
 		DOM.rb.css('cursor', config.resize ? 'se-resize' : 'auto');
 		DOM.title.css('cursor', config.drag ? 'move' : 'auto');
 		DOM.max[config.max?'show':'hide'](true);
 		DOM.min[config.min?'show':'hide'](true);
-		DOM.close[config.cancel===false?'hide':'show'](true);
+		DOM.close[config.cancel===false?'hide':'show'](true); //当cancel参数为false时隐藏关闭按钮
 		DOM.content.css('padding', config.padding);
 		
 		that.show(true)
@@ -210,7 +215,7 @@ lhgdialog.fn =
 		.content(config.content, true)
 		.size(config.width, config.height)
 		.position(config.left, config.top)
-		.focus(config.foucs)
+		.focus()
 		.time(config.time);
 		
 		config.lock && that.lock();
@@ -220,6 +225,7 @@ lhgdialog.fn =
 		
 		_box = null;
 		
+		// 假如加载的是单独页面的内容页config.init函数会在内容页加载完成后执行，这里就不执行了
 		if( !_rurl.test(config.content) )
 		{
 		    config.init && config.init.call( that, window );
@@ -228,6 +234,11 @@ lhgdialog.fn =
 		return that;
 	},
 	
+	/*!
+	 * 设置内容
+	 * @param	{String}	内容 (如果内容前3个字符为‘url:’就加载单独页面的内容页)
+	 * @return	{this}		如果无参数则返回对象本身
+	 */
 	content: function( msg )
 	{
 	    if( msg === undefined ) return this;
@@ -247,7 +258,8 @@ lhgdialog.fn =
 		
 		if( typeof msg === 'string' )
 		{
-		    if( _rurl.test(msg) )
+		    // 假如内容中前3个字符为'url:'就加载相对路径的单独页面的内容页
+			if( _rurl.test(msg) )
 			{
 			    DOM.icon.hide();
 				$content.html( loading );
@@ -292,20 +304,20 @@ lhgdialog.fn =
 		if( text === undefined ) return this;
 		
 		var DOM = this.DOM,
-			outer = DOM.outer,
+			border = DOM.border,
 			title = DOM.title,
 			className = 'ui_state_tips';
 		
 		if( text === false )
 		{
 			title.hide().html('');
-			outer.addClass(className);
+			border.addClass(className);
 		}
 		else
 		{
 			text = title.html() + text;
 			title.show().html(text || '');
-			outer.removeClass(className);
+			border.removeClass(className);
 		};
 		
 		return this;
@@ -491,7 +503,7 @@ lhgdialog.fn =
 		return this;
 	},
 	
-	/** 关闭对话框 */
+	/*! 关闭对话框 */
 	close: function()
 	{
 		if( !this._isRun ) return this;
@@ -504,16 +516,20 @@ lhgdialog.fn =
 		
 		that.time();
 		
+		// 当使用iframe方式加载内容页时的处理代码
 		if( that.iframe )
 		{
 			if( typeof  fn === 'function' && fn.call(that, that.iframe.contentWindow, window) === false )
 			    return that;
-				
+			
+			// 重要！需要重置iframe地址，否则下次出现的对话框在IE6、7无法聚焦input
+			// IE删除iframe后，iframe仍然会留在内存中出现上述问题，置换src是最容易解决的方法
 			$(that.iframe).css('display', 'none')
 			.unbind('load', that._fmLoad)
 			.attr('src', 'about:blank').remove();
 			
 			DOM.content.removeClass('ui_state_full');
+			if( that._frmTimer ) clearTimeout(that._frmTimer);
 		}
 		else
 		{
@@ -534,8 +550,6 @@ lhgdialog.fn =
 			if( !that.parent || (that.parent && !that.parent._lock) )
 			    _$html.removeClass('ui_lock_scroll ui_lock_fixed');
 		}
-		
-		if( that._frmTimer ) clearTimeout(that._frmTimer);
 		
 		// 置空内容
 		wrap[0].className = wrap[0].style.cssText = '';
@@ -562,9 +576,10 @@ lhgdialog.fn =
 		return that;
 	},
 	
-	/**
+	/*!
 	 * 定时关闭
 	 * @param	{Number}	单位为秒, 无参数则停止计时器
+	 * @param   {Function}  关闭窗口前执行的回调函数
 	 */
 	time: function( second, callback )
 	{
@@ -573,7 +588,6 @@ lhgdialog.fn =
 			timer = that._timer;
 			
 		timer && clearTimeout(timer);
-		
 		if( callback ) callback.call(that);
 		
 		if(second)
@@ -603,7 +617,7 @@ lhgdialog.fn =
 		DOM.outer.addClass('ui_state_focus');
 		
 		// 添加焦点
-		if(!arguments[0])
+		if(that.config.focus)
 		{
 			try {
 				elemFocus = that._focus && that._focus[0] || DOM.close[0];
@@ -614,7 +628,10 @@ lhgdialog.fn =
 		return that;
 	},
 	
-	/*! 设置屏锁 */
+	/*!
+	 * 设置屏锁 
+	 * 所有窗口都共用一个遮罩层
+	 */
 	lock: function()
 	{
 		var that = this, frm,
@@ -625,6 +642,7 @@ lhgdialog.fn =
 			positionType = _ie6 ? 'absolute' : 'fixed';
 			opac = $.browser.msie
 		
+		// 消除滚动条
 		_$html.addClass('ui_lock_scroll');
 		
 		if( !mask )
@@ -651,12 +669,17 @@ lhgdialog.fn =
 			style.left = _$doc.scrollLeft();
 		}
 		
+		// 延迟显示遮罩层，防止显示遮罩层时左上角有小方块区域
 		that._lockTimer = setTimeout(function(){
 			style.display = '';
 		    style.zIndex = index;
 		}, 1);
 		
-		that.focus(true);
+		// $(mask).bind('dblclick',function(){
+		    // that._click(config.cancelVal);
+		// }); 此方法还是有问题
+		
+		that.focus();
 		that.DOM.outer.addClass('ui_state_lock');
 		
 		that._lock = true;
@@ -673,7 +696,8 @@ lhgdialog.fn =
 		
 		if( mask && that._lock )
 		{
-		    if( config.parent && config.parent._lock )
+		    // 无限级锁屏
+			if( config.parent && config.parent._lock )
 			{
 			    var index = config.parent.DOM.wrap[0].style.zIndex;
 				mask.style.zIndex = parseInt(index,10) - 1;
@@ -692,6 +716,9 @@ lhgdialog.fn =
 		return that;
 	},
 	
+	/*!
+	 * 最大化窗口
+	 */
 	max: function()
 	{
 		var that = this,
@@ -713,7 +740,8 @@ lhgdialog.fn =
 				DOM.min.show(true);
 				that._minState = false;
 			}
-				
+			
+			// 存储最大化窗口前的状态
 			that._or = {
 				t: wrapStyle.top,
 				l: wrapStyle.left,
@@ -725,6 +753,7 @@ lhgdialog.fn =
 				tc: titleStyle.cursor
 			};
 			
+			// 最大化时去除滚动条
 			!that._lock && _$html.addClass('ui_lock_scroll');
 			_ie6 && _$html.addClass('ui_lock_fixed');
 			
@@ -770,6 +799,9 @@ lhgdialog.fn =
 		return that;
 	},
 	
+	/*!
+	 * 最小化窗口
+	 */
 	min: function()
 	{
 	    var that = this,
@@ -804,6 +836,15 @@ lhgdialog.fn =
 		return that;
 	},
 	
+	/*!
+	 * 获取指定id的几种对象
+	 * @param {String} 指定的id
+	 * @param {String} 指定要返回的类型
+	 *        'window' 默认值，返回iframe加载的内容页的window对象
+	 *        'object' 返回指定id的窗口对象
+	 *        'dom' 返回指定id的窗口的DOM对象
+	 * @return {Object|null}
+	 */
 	get: function( id, type )
 	{
 	    type = type || 'window';
@@ -811,7 +852,7 @@ lhgdialog.fn =
 		if( lhgdialog.list[id] )
 		{
 			if( type === 'window' )
-			    return lhgdialog.list[id].origin || null;
+			    return lhgdialog.list[id].iwin || null;
 			else if( type === 'object' )
 			    return lhgdialog.list[id];
 			else if( type === 'dom' )
@@ -821,6 +862,9 @@ lhgdialog.fn =
 		return null;
 	},
 	
+	/*!
+	 * 设置iframe方式加载内容页
+	 */
 	_iframe: function( url )
 	{
 	    var that = this, $iframe, iwin, $idoc, ibody, iWidth, iHeight,
@@ -829,7 +873,8 @@ lhgdialog.fn =
 			$loading = $('.ui_loading',$content[0]),
 		    initCss = 'position:absolute;left:-9999em;border:none 0;background:transparent',
 		    loadCss = 'width:100%;height:100%;border:none 0;';
-			
+		
+		// 是否允许缓存. 默认true
 		if( config.cache === false )
 		{
 			var ts = (new Date).getTime(),
@@ -843,25 +888,27 @@ lhgdialog.fn =
 		that.iframe = $iframe[0];
 		$content[0].appendChild( $iframe[0] );
 		
+		// 延迟加载iframe的src属性，IE6下不延迟加载会出现加载进度条的BUG
 		that._frmTimer = setTimeout(function(){
 		    $iframe.attr('src', url);
 		}, 1);
 		
+		// iframe中页面加载完成后执行的函数
 		var load = that._fmLoad = function()
 		{
 			$content.addClass('ui_state_full');
-			
 			$loading[0] && $loading.hide();
 			
 			try{
-			    iwin = that.iwin = $iframe[0].contentWindow;
+			    iwin = that.iwin = $iframe[0].contentWindow; // 定义窗口对象iwin属性为内容页的window对象
 				$idoc = $(iwin.document);
 				ibody = iwin.document.body;
-			}catch(e){
+			}catch(e){// 跨域
 			    $iframe[0].style.cssText = loadCss;
+				that.position( config.left, config.top );
 				return;
 			}
-			
+			// 获取iframe内部尺寸
 			iWidth = config.width === 'auto'
 			? $idoc.width() + (_ie6 ? 0 : parseInt($(ibody).css('marginLeft')))
 			: config.width;
@@ -869,21 +916,23 @@ lhgdialog.fn =
 			iHeight = config.height === 'auto'
 			? $idoc.height() : config.height;
 			
+			// 适应iframe尺寸
 			setTimeout(function(){
 			    $iframe[0].style.cssText = loadCss;
-			},0);
+			},0);// setTimeout: 防止IE6~7对话框样式渲染异常
 			
 			that.size( iWidth, iHeight )
 			.position( config.left, config.top );
 			
 			$idoc.bind('mousedown',function()
 			{
-			    that.focus(true);
+			    that.focus();
 			});
 			
 			config.init && config.init.call( that, iwin, _top );
 		};
-
+		
+		// 绑定iframe元素api属性为窗口自身对象，在内容页中此属性很重要
 		that.iframe.api = that;
 		$iframe.bind( 'load', load );
 	},
@@ -1041,7 +1090,7 @@ lhgdialog.fn =
 		style.position = 'absolute';
 	},
 	
-	// 按钮回调函数触发
+	/*! 按钮回调函数触发 */
 	_click: function( name )
 	{ 
 		var that = this,
@@ -1050,7 +1099,7 @@ lhgdialog.fn =
 			that.close() : that;
 	},
 	
-	// 重置位置与尺寸
+	/*! 重置位置与尺寸 */
 	_reset: function( test )
 	{
 		var newSize,
@@ -1074,6 +1123,7 @@ lhgdialog.fn =
 			that.position(left, top);
 	},
 	
+	/*! 最化小后还原时设置 */
 	_minReset: function()
 	{
 	    var that = this,
@@ -1087,6 +1137,7 @@ lhgdialog.fn =
 		DOM.rb[0].style.cursor = that._minRz ? 'se-resize' : 'auto';
 	},
 	
+	/*! 事件代理 */
 	_addEvent: function()
 	{
 		var resizeTimer,
@@ -1105,6 +1156,7 @@ lhgdialog.fn =
 		};
 		_$top.bind('resize', that._winResize);
 		
+		// 监听点击
 		DOM.wrap.bind('click',function(event)
 		{
 			var target = event.target, callbackID;
@@ -1135,12 +1187,14 @@ lhgdialog.fn =
 			
 			that._ie6SelectFix();
 			return false;
-		}).bind('mousedown',function(){ that.focus(true); });
+		}).bind('mousedown',function(){ that.focus(); });
 		
+		// 双击标题栏最大化还窗口事件
 		if( config.max )
 		    DOM.title.bind('dblclick',function(){ that.max();return false; });
 	},
 	
+	/*!  卸载事件代理 */
 	_removeEvent: function()
 	{
 		var that = this,
@@ -1150,6 +1204,16 @@ lhgdialog.fn =
 		DOM.title.unbind();
 		_$top.unbind('resize', that._winResize);
 	}
+};
+
+$.fn.dialog = $.fn.lhgdialog = function()
+{
+	var config = arguments;
+	this.bind('click', function(){
+		lhgdialog.apply(this, config);
+		return false;
+	});
+	return this;
 };
 
 /*! 此对象用来存储获得焦点的窗口对象实例 */
@@ -1175,6 +1239,7 @@ _$doc.bind('keydown',function(event)
 	keyCode === 27 && api._click(api.config.cancelVal);
 });
 
+/*! 触发浏览器预先缓存背景图片 */
 $(function()
 {
 	setTimeout(function()
@@ -1218,12 +1283,12 @@ lhgdialog.data = function( name, value )
 	
 	top['_data'] = cache;
 	
-	if( value === false )
+	if( value !== undefined )
+	    cache[name] = value;
+	else if( value === false )
 	{
 	    if(cache[name]) delete cache[name];
 	}
-	else if( value || value === '' )
-	    cache[name] = value;
 	else
 	    return cache[name];
 	
@@ -1253,7 +1318,7 @@ lhgdialog.templates =
 						'<tbody>' +
 							'<tr>' +
 								'<td colspan="2" class="ui_header">' +
-									'<div class="ui_titleBar">' +
+									'<div class="ui_title_bar">' +
 										'<div class="ui_title"><span class="ui_title_icon"></span></div>' +
 										'<div class="ui_title_buttons">' +
 										    '<a class="ui_min" href="#" title="\u6700\u5C0F\u5316"><b class="ui_min_b"></b></a>' +
@@ -1267,7 +1332,7 @@ lhgdialog.templates =
 							'</tr>' +
 							'<tr>' +
 								'<td class="ui_icon">' +
-									'<img src="" class="ui_iconBg"/>' + 
+									'<img src="" class="ui_icon_bg"/>' + 
 								'</td>' +
 								'<td class="ui_main">' +
 									'<div class="ui_content"></div>' +
@@ -1318,8 +1383,8 @@ lhgdialog.setting =
 	path: _path,                // lhgdialog路径
 	lock: false,				// 是否锁屏
 	parent: null,               // 打开子窗口的父窗口对象，主要用于多层锁屏窗口
-	background: '#000',			// 遮罩颜色
-	opacity: .3,				// 遮罩透明度
+	background: '#FFF',			// 遮罩颜色
+	opacity: .5,				// 遮罩透明度
 	padding: '15px 10px',		// 内容与边界填充距离
 	fixed: false,				// 是否静止定位
 	left: '50%',				// X轴坐标
@@ -1331,7 +1396,7 @@ lhgdialog.setting =
 	drag: true, 				// 是否允许用户拖动位置
 	limit: false,               // 是否将窗口拖动限制到可视区域内
 	cache: true,                // 是否缓存窗口内容页
-	extendDrag: true           // 增加lhgdialog拖拽体验
+	extendDrag: true            // 增加lhgdialog拖拽体验
 };
 
 window.lhgdialog = $.dialog = $.lhgdialog = lhgdialog;
