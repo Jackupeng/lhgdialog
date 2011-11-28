@@ -315,7 +315,6 @@ lhgdialog.fn =
 		}
 		else
 		{
-			text = title.html() + text;
 			title.show().html(text || '');
 			border.removeClass(className);
 		};
@@ -491,7 +490,7 @@ lhgdialog.fn =
 	show: function()
 	{
 		this.DOM.wrap.show();
-		!arguments[0] && this._lock && $(lhgdialog.lockMask).show();
+		!arguments[0] && this._lock && $('#lockMask',_doc).show();
 		return this;
 	},
 	
@@ -499,7 +498,7 @@ lhgdialog.fn =
 	hide: function()
 	{
 	    this.DOM.wrap.hide();
-		!arguments[0] && this._lock && $(lhgdialog.lockMask).hide();
+		!arguments[0] && this._lock && $('#lockMask',_doc).hide();
 		return this;
 	},
 	
@@ -1596,7 +1595,7 @@ _use = function(event)
 			th = title[0].offsetHeight || 20;
 		
 		// 坐标最大值限制(在可视区域内，如果窗口随屏滚动那就进行限制)
-		if( config.dragLimit || fixed )
+		if( config.limit || fixed )
 		{
 		    maxX = ww - ow + dl;
 			maxY = wh - oh + dt;
@@ -1813,7 +1812,7 @@ lhgdialog.tips = function( content, time, icon )
 		fixed: true,
 		lock: false,
 		resize: false,
-		icon: icon || "i.png"
+		icon: icon || 'i.png'
 	})
 	.content('<div style="padding: 0 1em;">' + content + '</div>')
 	.time(time || 1.5);
