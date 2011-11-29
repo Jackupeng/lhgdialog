@@ -554,7 +554,7 @@ lhgdialog.fn =
 		// 置空内容
 		wrap[0].className = wrap[0].style.cssText = '';
 		DOM.outer.removeClass('ui_state_focus');
-		DOM.title.html('');
+		DOM.title_txt.html('');
 		DOM.content.html('');
 		DOM.buttons.html('');
 		
