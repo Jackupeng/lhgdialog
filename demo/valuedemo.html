@@ -23,19 +23,14 @@
 		var a = $.dialog({
 			id: "va_2",
 			title: "lhgDialog登录",
+			titleIcon: "lhg.png",
 			content: "url:test02.html",
 			resize: false,
 			max: false,
+			min: false,
 			drag: false,
 			lock: true,
-			close: function(){
-				if( !$.dialog.data("islogin") ){
-					$.dialog.tips("LHGCore.JS提示：请先登录!", 3, "hits.png");
-					return false;
-				}else{
-					return true	
-				}
-			}
+			cancel: false
 		});	
 	}
 </script>
@@ -94,7 +89,7 @@ $("#txt01").val(val);
                 <button class="button green" onclick="va1()">运行»</button>
             </li>
             <li>
-            	<h3>将调用页面的数据传到弹出窗口中</h3>
+            	<h3>完整的登录演示页面</h3>
                 <pre class="prettyprint">
 /** 调用页面JS */
 $.dialog.data("islogin", false);
@@ -106,14 +101,7 @@ var a = $.dialog({
     max: false,
     drag: false,
     lock: true,
-    close: function(){
-        if( !$.dialog.data("islogin") ){
-            $.dialog.tips("LHGCore.JS提示：请先登录!", 3, "hits.png");
-            return false;
-        }else{
-            return true	
-        }
-    }
+    cancel: false
 });	</pre>
                 <pre class="prettyprint">
 /** 弹出登录页面代码 */
