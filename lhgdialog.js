@@ -391,7 +391,7 @@ lhgdialog.fn =
 			docTop = _$doc.scrollTop(),
 			dl = isFixed ? 0 : docLeft,
 			dt = isFixed ? 0 : docTop,
-			ww = _$top.width(),
+			ww = _$top.width() - 2,
 			wh = _$top.height(),
 			ow = wrap.offsetWidth,
 			oh = wrap.offsetHeight,
@@ -1622,7 +1622,7 @@ _$document.bind('mousedown',function(event){
 		DOM = api.DOM,
 	    config = api.config;
 	
-	if( config.drag !== false && target === DOM.title[0]
+	if( config.drag !== false && (target === DOM.title[0] || target === DOM.title_icon[0] || target === DOM.title_txt[0])
 	|| config.resize !== false && target === DOM.rb[0] )
 	{
 	    _dragEvent = _dragEvent || new lhgdialog.dragEvent();
