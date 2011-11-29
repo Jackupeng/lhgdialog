@@ -22,7 +22,7 @@
 		var a = $.dialog();
 	}
 	function op2(){
-		var a = $.dialog({ id:'a1',lock: true });
+		var a = $.dialog({ id:'a1'}).lock(function(){ a.close(); });
 	}
 	function op3(){
 		var a = $.dialog({ 
@@ -71,7 +71,7 @@
 		var a = $.dialog({ 
 			id: "a5" ,
 			content: "我是HTML内容",
-			button: [
+			button: (
 				{
 					name:"上一步",
 					callback: function () {
@@ -94,7 +94,7 @@
 					name: "无效按钮",
 					disabled: true
 				}
-			]
+			)
 		});	
 	}
 	function op6(){
@@ -265,10 +265,11 @@
 		var a = $.dialog({
 			id: "a18_1",
 			title: "屏幕已锁定",
-			content: "通过更改 background: '颜色值' 改变锁屏颜色，默认#000(黑色)<br/><br/> 通过opacity: (浮点值) 来调整锁屏的透明度(0.0 —— 1.0之间) ",
-			lock: true,
+			content: "lock可以通过一个回调函数，来实现双击遮罩层时执行的事件",
 			background: "#F00",
 			opacity: .3
+		}).lock(function(){
+			alert("我是一个回调函数");	
 		});	
 	}
 	function op19(){
@@ -348,10 +349,11 @@
 	function op26(){
 		var a = $.dialog({
 			id: "a26",
-			content: "我没有最大化和最小化按钮,默认支持，你可以更改默认参数配置哦",
+			content: "我没有最大化和最小化按钮,默认支持，你可以更改默认参数配置哦,我可已做为强制登录框，我连关闭也隐藏了哦",
 			title:"支持最大最小化功能",
 			min: false,
-			max: false
+			max: false,
+			cancel:false
 		})	
 	}
 	function op27(){
@@ -361,7 +363,7 @@
 			title:"支持最大最小化功能",
 			min: false,
 			max: true,
-			dragLimit: true,
+			limit: true,
 			width: "50%",
 			height: "50%"
 		}) 
@@ -772,12 +774,12 @@ var a = $.dialog({
             	<pre class="prettyprint">
 var a = $.dialog({
     id: "a26",
-    content: "我没有最大化和最小化按钮,默认支持，你可以更改默认参数配置哦",
+    content: "我没有最大化和最小化按钮,默认支持，你可以更改默认参数配置哦,我可已做为强制登录框，我连关闭也隐藏了哦",
     title:"支持最大最小化功能",
     min: false,
-    max: false
-})             
-	            </pre>
+    max: false,
+    cancel:false
+})              </pre>
                 <button class="button green" onclick="op26()">运行»</button>
             </li>
             <li>
@@ -789,7 +791,7 @@ var a = $.dialog({
     title:"支持最大最小化功能",
     min: false,
     max: true,
-    dragLimit: true,
+    limit: true,
     width: "50%",
     height: "50%"
 })       
