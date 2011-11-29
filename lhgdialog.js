@@ -307,7 +307,7 @@ lhgdialog.fn =
 			border = DOM.border,
 			title = DOM.title,
 			className = 'ui_state_tips';
-		
+			
 		if( text === false )
 		{
 			title.hide().html('');
@@ -315,7 +315,8 @@ lhgdialog.fn =
 		}
 		else
 		{
-			title.show().html(text || '');
+			title.show();
+			DOM.title_txt.html(text || '');
 			border.removeClass(className);
 		};
 		
@@ -662,8 +663,8 @@ lhgdialog.fn =
 		
 		if( positionType === 'absolute' )
 		{
-		    style.width = _$doc.width();
-			style.height = _$doc.height();
+		    style.width = _$top.width();
+			style.height = _$top.height();
 			style.top = _$doc.scrollTop();
 			style.left = _$doc.scrollLeft();
 		}
@@ -673,10 +674,6 @@ lhgdialog.fn =
 			style.display = '';
 		    style.zIndex = index;
 		}, 1);
-		
-		// $(mask).bind('dblclick',function(){
-		    // that._click(config.cancelVal);
-		// }); 此方法还是有问题
 		
 		that.focus();
 		that.DOM.outer.addClass('ui_state_lock');
@@ -1098,30 +1095,6 @@ lhgdialog.fn =
 			that.close() : that;
 	},
 	
-	/*! 重置位置与尺寸 */
-	_reset: function( test )
-	{
-		var newSize,
-			that = this,
-			oldSize = that._winSize || _$top.width() * _$top.height(),
-			width = that._width,
-			height = that._height,
-			left = that._left,
-			top = that._top;
-		
-		if(test)
-		{
-			//IE6~7 window.onresize bug
-			newSize = that._winSize =  _$top.width() * _$top.height();
-			if( oldSize === newSize ) return;
-		};
-		
-		if(width || height) that.size(width, height);
-		
-		if(left || top)
-			that.position(left, top);
-	},
-	
 	/*! 最化小后还原时设置 */
 	_minReset: function()
 	{
@@ -1134,6 +1107,41 @@ lhgdialog.fn =
 		DOM.rese.hide();
 		that.config.resize = that._minRz;
 		DOM.rb[0].style.cursor = that._minRz ? 'se-resize' : 'auto';
+	},
+	
+	/*! 重置位置与尺寸 */
+	_reset: function( test )
+	{
+		var newSize,
+			that = this,
+			tw = _$top.width(),
+			tt = _$top.height(),
+			oldSize = that._winSize || tw * tt,
+			oldWidth = that._lockDocW || tw,
+			width = that._width,
+			height = that._height,
+			left = that._left,
+			top = that._top;
+		
+		if(test)
+		{
+			//IE6下遮罩大小改变
+			if( that._lock && _ie6 )
+			    $('#lockMask',_doc).css({ width:tw + 'px', height:tt + 'px' });
+			
+			newWidth = that._lockDocW = tw;
+			//IE6~7 window.onresize bug
+			newSize = that._winSize =  tw * tt;
+			if( oldSize === newSize ) return;
+		};
+		
+		if(width || height) that.size(width, height);
+		
+		//IE9以下的IE会在关闭遮罩时使之前打开的窗口回到原位的BUG 
+		if( test && Math.abs(oldWidth - newWidth) === 17 ) return;
+		
+		if(left || top)
+			that.position(left, top);
 	},
 	
 	/*! 事件代理 */
@@ -1273,7 +1281,7 @@ _top != window && $(window).bind('unload',function()
  * 跨框架数据共享接口
  * @see		http://www.planeart.cn/?p=1554
  * @param	{String}	存储的数据名
- * @param	{Any}		将要存储的任意数据(无此项则返回被查询的数据，如果此值为false就删除指定名称的删除)
+ * @param	{Any}		将要存储的任意数据(无此项则返回被查询的数据，如果此值为false就删除指定名称的数据)
  */
 lhgdialog.data = function( name, value )
 {
@@ -1318,7 +1326,7 @@ lhgdialog.templates =
 							'<tr>' +
 								'<td colspan="2" class="ui_header">' +
 									'<div class="ui_title_bar">' +
-										'<div class="ui_title"><span class="ui_title_icon"></span></div>' +
+										'<div class="ui_title"><span class="ui_title_icon"></span><b class="ui_title_txt"></b></div>' +
 										'<div class="ui_title_buttons">' +
 										    '<a class="ui_min" href="#" title="\u6700\u5C0F\u5316"><b class="ui_min_b"></b></a>' +
 											'<a class="ui_rese" href="#" title="\u6062\u590D">▽</a>' +
@@ -1382,8 +1390,8 @@ lhgdialog.setting =
 	path: _path,                // lhgdialog路径
 	lock: false,				// 是否锁屏
 	parent: null,               // 打开子窗口的父窗口对象，主要用于多层锁屏窗口
-	background: '#FFF',			// 遮罩颜色
-	opacity: .5,				// 遮罩透明度
+	background: '#DCE2F1',		// 遮罩颜色
+	opacity: .6,				// 遮罩透明度
 	padding: '15px 10px',		// 内容与边界填充距离
 	fixed: false,				// 是否静止定位
 	left: '50%',				// X轴坐标
@@ -1393,7 +1401,6 @@ lhgdialog.setting =
 	zIndex: 1976,				// 对话框叠加高度值(重要：此值不能超过浏览器最大限制)
 	resize: true,				// 是否允许用户调节尺寸
 	drag: true, 				// 是否允许用户拖动位置
-	limit: false,               // 是否将窗口拖动限制到可视区域内
 	cache: true,                // 是否缓存窗口内容页
 	extendDrag: true            // 增加lhgdialog拖拽体验
 };
@@ -1586,26 +1593,15 @@ _use = function(event)
 			wrap = api.DOM.wrap[0],
 			fixed = wrap.style.position === 'fixed',
 			ow = wrap.offsetWidth,
-			oh = wrap.offsetHeight,
-			ww = _$window.width(),
+			// 向下拖动时不能将标题栏拖出可视区域
+			oh = title[0].offsetHeight || 20, //wrap.offsetHeight,
+			ww = _$window.width() - 2,
 			wh = _$window.height(),
 			dl = fixed ? 0 : _$document.scrollLeft(),
-			dt = fixed ? 0 : _$document.scrollTop(),
-			// 向下拖动时不能将标题栏拖出可视区域
-			th = title[0].offsetHeight || 20;
-		
-		// 坐标最大值限制(在可视区域内，如果窗口随屏滚动那就进行限制)
-		if( config.limit || fixed )
-		{
-		    maxX = ww - ow + dl;
-			maxY = wh - oh + dt;
-		}
-		else
-		{
-		    maxY = wh - th + dt;
-			dl = -10000;
-			maxX = 10000;
-		}
+			dt = fixed ? 0 : _$document.scrollTop();
+		// 坐标最大值限制(在可视区域内)	
+		maxX = ww - ow + dl;
+		maxY = wh - oh + dt;
 		
 		return {
 			minX: dl,
@@ -1655,7 +1651,7 @@ if( lhgdialog.setting.extendDrag ) //lhgdialog.setting.extendDrag 此默认选�
 		positionType = _ie6 ? 'absolute' : 'fixed';
 	
 	style.cssText = 'display:none;position:' + positionType + ';left:0;top:0;width:100%;height:100%;'
-	+ 'cursor:move;filter:alpha(opacity=0);opacity:0;background:#FFF';
+	+ 'cursor:move;filter:alpha(opacity=0);opacity:0;background:#FFF;pointer-events:none;';
 	
 	mask.id = 'dragMask';
 	_$document[0].body.appendChild(mask);
