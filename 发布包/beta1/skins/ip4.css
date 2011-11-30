@@ -1,0 +1,107 @@
+﻿@charset "utf-8";
+/*
+ * lhgdialog mac皮肤
+ * 2011-11-29
+ * QQ:50167214
+ * (C) 2009-2011 【一丝冰凉】, http://t.qq.com/yisibl
+ * This is licensed under the GNU LGPL, version 2.1 or later.
+ * For details, see: http://creativecommons.org/licenses/LGPL/2.1/
+ */
+
+/*制作新皮肤从这里开始复制*/
+/*基本重置*/
+body{ _margin:0;/*IE6 BUG*/ }
+.ui_lock_scroll body { overflow:hidden; }/*隐藏锁屏和全屏时滚动条*/
+.ui_lock_scroll { *overflow:hidden;}
+
+/*结构层*/
+.ui_outer { text-align:left; }
+.ui_content, .ui_title, .ui_buttons button { font: 12px/1.333 tahoma, arial, \5b8b\4f53, sans-serif; }/*tahom字体在各个浏览器保持良好的统一*/
+table.ui_border, table.ui_dialog { width:auto; border-spacing:0; *border-collapse:collapse;/*现代浏览器有bug，参见【一丝冰凉】微博*/}
+.ui_border td, .ui_dialog td { padding:0; }
+.ui_dialog{background:#FFF;}
+/*标题部分开始*/
+.ui_title { overflow:hidden; text-overflow: ellipsis; white-space:nowrap;/*firefox 不自动换行*/ display:block; cursor:move; padding:0 100px 0 6px;/*防止IE6按钮错位*/ }
+.ui_title_icon { display: inline-block; height:100%; min-width:16px; width:16px; margin-right:5px; vertical-align:middle; background-position: center center; background-repeat:no-repeat; }
+.ui_title_buttons { position:absolute; cursor:pointer; font-size:0;/*opera 空隙修复*/ letter-spacing:-.5em; /*其他浏览器 空隙修复 宋体/Verdana为-.5em，Tahoma为-.333em，Arial为-.25em*/ }
+/*标题部分结束*/
+
+/*对齐自适应*/
+.ui_main { min-width:12em; min-width:0\9/*IE8 BUG*/; text-align:center; }/*超过最小宽度居中对齐*/
+.ui_content { display:inline-block; *display:inline;
+zoom:1; text-align:left; }/*小于最小宽度左对齐*/
+.ui_content.ui_state_full { display:block; width:100%; height:100%; margin:0; padding:0!important;}/*加载iframe时设置为0*/
+.ui_content.ui_state_full iframe{border-radius:0 0 5px 5px;/*实验性属性*/}
+.ui_loading { width:96px; height:32px; text-align:left; text-indent:-9999em; overflow:hidden; background:url(icons/loading.gif) no-repeat center center; }/*加载中*/
+.ui_icon_bg { margin:20px 0 20px 15px; }/*图标外边距*/
+.ui_state_tips .ui_main{ min-width:3em;}/*tips最小宽度*/
+.ui_state_tips .ui_content{ padding:8px 10px!important; margin-top:-2px;}/*tips适宜的边距和视觉居中*/
+.ui_state_tips .ui_icon_bg { margin:5px 0 8px 9px; }/*tips主体图标边距控制*/
+.ui_state_tips .ui_title, .ui_state_tips .ui_title_buttons, .ui_state_tips .ui_lt, .ui_state_tips .ui_rt { display:none; }/*隐藏无需显示结构*/
+/*按钮结构部分*/
+.ui_buttons { padding:4px 8px 4px; text-align:right; white-space:nowrap; }
+
+.ui_buttons button { margin-left:10px; padding: 4px 10px; cursor: pointer; display: inline-block; text-align: center; line-height: 1; *padding:4px 10px; *height:2em; letter-spacing:2px; overflow:visible; *width:1;
+}
+.ui_buttons button::-moz-focus-inner {border:0; padding:0; margin:0; }
+/*按钮结构开始*/
+/*标题纯CSS按钮开始*/
+.ui_min, .ui_max, .ui_close, .ui_res, .ui_rese { text-decoration:none; letter-spacing: normal; /* reset IE < 8 */ text-align:center; display:inline-block; *display:inline; zoom:1; vertical-align:top; font-family:tahoma, arial, \5b8b\4f53, sans-serif; }
+.ui_min, .ui_max, .ui_res { position:relative; }
+.ui_min b, .ui_max b, .ui_res_t, .ui_res_b { display:block; position:absolute; overflow:hidden; cursor:pointer; }
+.ui_res, .ui_rese { display:none; } /*默认隐藏 回复和 还原按钮*/
+.ui_close { font-weight:600; }/*兼容IE6*/
+/*标题按钮结束*/
+/*制作新皮肤到这里结束复制*/
+
+
+/************样式层开始************/
+.ui_title_bar { position:relative; height: 100%; }
+.ui_dialog { border:1px solid #888; border-radius:5px; box-shadow:0 1px 6px rgba(0, 0, 0, .6); -moz-transition:-moz-box-shadow linear .2s;
+-webkit-transition: -webkit-box-shadow linear .2s;
+transition: -webkit-box-shadow linear .2s;
+}
+.ui_state_lock .ui_dialog{box-shadow:0 3px 18px rgba(0, 0, 0, .5);}/*锁屏时遮罩*/
+.ui_state_drag .ui_dialog, .ui_state_lock.ui_state_drag .ui_dialog { box-shadow:none; }/*拖动时隐藏阴影，通过css3实现渐变动画*/
+.ui_content { color:#666; }/*失去焦点*/
+.ui_state_focus .ui_content { color:#1e1e1e; }/*获得焦点*/
+.ui_state_focus .ui_title { color:#505050; }
+.ui_t, .ui_b, .ui_l, .ui_r {}/*上下左右四个边框*/
+.ui_lb, .ui_rb, .ui_lt, .ui_rt {/*皮肤四个角*/ width:0; height:0;	*width:1px;/*IE6-7设为0会有偏移*/*height:1px; }/*隐藏边框*/
+.ui_rb { display:block; width:12px; height:12px; position:absolute; bottom:-2px; right:-2px; }/*右下角拖动优化*/
+.ui_title { border-top:1px solid #f5f5f5; border-bottom:1px solid #e6e6e6; font-size:14px; font-weight:bold; height:28px; line-height:28px; border-radius:4px 4px 0 0; color:#838383; background:#ebebeb; background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#ebebeb), to(#c3c3c3)); background:-moz-linear-gradient(top, rgb(235,235,235), rgb(195,195,195) ); background:-o-linear-gradient(top, #ebebeb, #c3c3c3); filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#c3c3c3');
+border-radius:4px 4px 0 0; text-shadow: 0 1px 1px #FFF;}
+.ui_state_drag .ui_title { background:#ebebeb; background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#c3c3c3), to(#ebebeb)); background:-moz-linear-gradient(top, #c3c3c3, #ebebeb); background:-o-linear-gradient(top, #c3c3c3, #ebebeb); filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#c3c3c3', endColorstr='#ebebeb');
+}
+.ui_title_bar { border-bottom:1px solid #aaaaaa; }
+.ui_buttons { border-top:1px solid #bebebe; border-bottom:1px solid #DDD; border-radius:0 0 4px 4px; background:#f5f5f5; background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f5f5f5), to(#d7d7d7)); background:-moz-linear-gradient(top, rgb(245,245,245), rgb(215,215,215)); background:-o-linear-gradient(top, #f5f5f5, #d7d7d7); filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5', endColorstr='#d7d7d7');
+border-radius:0 0 4px 4px;}
+.ui_footer { border-radius:0 0 9px 9px; }/*底部td*/
+/*标题纯CSS按钮定位部分*/
+.ui_min, .ui_max, .ui_close, .ui_res, .ui_rese {  margin-left:3px; color:#636363; font-size:20px; width:22px; height:22px; line-height:18px;/*按钮视觉居中*/ }
+.ui_min b { top:10px; left:5px; width:12px; height:2px; border-bottom:2px solid #636363; }
+.ui_max b { top:5px; left:5px; width:10px; height:7px; }
+.ui_res_t, .ui_res_b { top:8px; left:4px; width:10px; height:6px; }
+.ui_res_t, .ui_res_b, .ui_max b { border:1px solid #636363; border-top-width:3px; }
+.ui_res_b { top:4px; left:7px; }
+/*标题纯CSS按钮定位部分结束*/
+.ui_title_buttons { top:3px; right:5px; }
+.ui_res_t { background:#DDD; }/*还原按钮底部框背景与标题背景融合*/
+.ui_min, .ui_rese { font-size:14px; font-weight:600; line-height:20px; *line-height:22px; /*最小化 恢复按钮*/}
+.ui_close{ vertical-align:baseline; *line-height:22px; *font-size:22px;  *margin-left:0;}/*IE6关闭按钮垂直居中*/
+.ui_close:hover, .ui_close:focus { color:#bf160b; outline:0 none; }
+.ui_rese:hover{color:#2492FF;}
+.ui_min:hover b, .ui_max:hover b, .ui_res:hover b, .ui_rese:hover b { border-color:#2492FF; }
+/*标题按钮结束*/
+
+/*Tips 部分开始*/
+/*基本重置*/
+.ui_state_tips , .ui_state_tips .ui_inner, .ui_state_tips .ui_dialog, .ui_state_tips .ui_title_bar { border:0 none; background:none; box-shadow:none; border-radius:0; filter:none; }
+.ui_state_tips .ui_content { font-weight:bold; font-size:14px; color:#666; text-align:center; }
+.ui_state_focus .ui_state_tips .ui_content { color:#323232; }/*高亮字体颜色*/
+/*Tips(图片背景，IE6也支持圆角) End*/
+.ui_state_tips .ui_dialog, .ui_state_tips .ui_l, .ui_state_tips .ui_r { background-image: url( "icons/gb_tip_layer.png" ); _background-image:url("icons/gb_tip_layer_ie6.png"); background-repeat:no-repeat; }/*共用背景图片*/
+.ui_state_tips .ui_l { background-position:-6px 0; left:-5px; width:5px; top:0; }/*左侧背景侧样式*/
+.ui_state_tips .ui_r { background-position:0 0; right:-6px; width:5px; top:0; }/*右侧背景样式*/
+.ui_state_tips .ui_dialog { background-position: 0 -54px; background-repeat: repeat-x; height:54px; overflow:hidden; }/*主体内容背景*/
+/*mac皮肤结束*/
