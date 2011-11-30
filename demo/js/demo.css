@@ -1,8 +1,5 @@
 @charset "utf-8";
 /* CSS Document */
-
-*{ margin:0; padding:0; }
-*{ word-wrap:break-word; }
 html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video {
     margin: 0;
     padding: 0;
@@ -70,6 +67,21 @@ pre{font-family:"Courier New",Courier,monospace; margin:10px 0 10px 0;}
 .colb { color: blue; }
 
 .text { width:200px; height:24px; line-height:24px; vertical-align:middle; font-size:12px; }
+
+/*行变色表格*/
+table.skintabs, .skintabs th, .skintabs td { border-width: 1px; border-style: solid; margin: 0; font-family:'Microsoft Yahei', Tahoma, Arial!important; font-family:'宋体', Tahoma, Arial; }
+table.skintabs { table-layout: fixed; width: 100%; margin-bottom: 6px; padding: 0 1px 1px 0; border-spacing: 0; border-collapse: separate; *border-collapse:collapse; border-color: #abb8ce; background: #EDEDED; }
+.skintabs th { padding: 5px 4px; font-weight: bold; border-color: #f8f8f8 #abb8ce #abb8ce #f8f8f8; text-align: left; text-shadow: 1px 1px 0 #e4edfb; vertical-align: middle; background: #d0dbee; }
+.skintabs thead th { text-align:center; }
+.skintabs th strong { color:#090; border-bottom:1px dashed #090;  text-decoration:underline; }
+.skintabs td { padding:0; }
+.skintabs th.separate { text-align:center; border-color: #E1F196 #AECD1B #AECD1B #F3FAD6; background-color: #f3f7fd; }
+.skintabs td { padding: 4px; font: 12px/18px Consolas, "Courier New", Courier, monospace; text-align: left; vertical-align: top; }
+.skintabs td { border-color: #f8f8f8 #abb8ce #abb8ce #f8f8f8; background: #e0e8f5; }
+.skintabs tr.odd th { background: #dbe4f4; }
+.skintabs tr.odd td { background: #e6eef9; }
+.skintabs br { margin-bottom:1.8em; }
+table.skintabs .parameter, table.skintabs .type, table.skintabs .default { width:7em; }
 
 /* button DOM Style */
 .button {

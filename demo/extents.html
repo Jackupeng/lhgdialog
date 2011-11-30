@@ -31,6 +31,9 @@
 	function op_b4(){
 		lhgdialog.tips("非常感谢你们长期以来，对LHGCore.JS的支持。", 3);	
 	}
+	function op_b5(){
+		lhgdialog.tips("正在加载数据，请等待", 3, "loading.gif");	
+	}
 </script>
 </head>
 <body>
@@ -129,9 +132,12 @@ lhgdialog.prompt("你愿意为 lhgDialog 4.0.0 支付多少授权费？",
 lhgdialog.tips = function( content, time );
 				</pre>
                 <pre class="prettyprint">
-lhgdialog.tips("非常感谢你们长期以来，对LHGCore.JS的支持。", 3);	
+lhgdialog.tips("非常感谢你们长期以来，对LHGCore.JS的支持。", 3);
+
+lhgdialog.tips("正在加载数据，请等待", 3, "loading.gif");		
                 </pre>
                 <button class="button green" onclick="op_b4()">运行»</button>
+                <button class="button green" onclick="op_b5()">运行»</button>
             </li>
         </ol>
         

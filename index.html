@@ -8,12 +8,40 @@
 <script src="demo/js/jquery-1.7.min.js" type="text/javascript"></script>
 <script src="demo/js/prettify/prettify.js" type="text/javascript"></script>
 <script type="text/javascript">
+	var _search = window.location.search,lhg_skins,_Skin_tmpl;
+	if(_search){
+		lhg_skins = _search.split("=")[1];
+	}
+	document.write('<scr'+'ipt src="lhgdialog.js?skin=' + (lhg_skins || 'default') +'"></sc'+'ript>');
+	var _Skin_tmpl  = function (data) {
+		var html = ['<table class="skintabs" style="width:480px"><tbody>'];
+		for (var i = 0, length = data.length; i < length; i ++) {
+			html.push('<tr class="');
+			html.push(i%2 ? 'odd' : '');
+			html.push('"><th style="width:7em"><a href="?skin=');
+			html.push(data[i].name);
+			html.push('">');
+			html.push(data[i].name);
+			html.push('</a></th><td>');
+			html.push(data[i].about);
+			html.push('</td></tr>');
+		};
+		html.push('</tbody></table>');
+		return html.join('');
+	}([
+		{ name: 'default', about: '默认皮肤' },
+		{ name: 'ip4', about: '仿iphone皮肤' },
+		{ name: 'blue', about: '蓝色简约风格皮肤,大气十足' }
+	]);
+
+
 	/** 多皮肤演示 */
 	function sk1(){
 		var a = $.dialog({
 			id: "sk1",
-			content: "我是第一个款带MAC风格的CSS简约皮肤",
-			skin: "imac"
+			title: "丰富多彩的皮肤",
+			titleIcon: "lhg.png",
+			content: _Skin_tmpl,
 		});
 	}
 	
@@ -66,12 +94,20 @@
 			title: "我是新的Title"
 		});
 	}
+	function op55(){
+		var a = $.dialog({ 
+			id: "a_icon" ,
+			titleIcon: "lhg.png",
+			content: "我可以自由定制标题栏小图标哦",
+			title: "看我左边的图标"
+		});		
+	}
 	function op5(){
 		var timer = 3;
 		var a = $.dialog({ 
 			id: "a5" ,
 			content: "我是HTML内容",
-			button: (
+			button: [
 				{
 					name:"上一步",
 					callback: function () {
@@ -94,7 +130,7 @@
 					name: "无效按钮",
 					disabled: true
 				}
-			)
+			]
 		});	
 	}
 	function op6(){
@@ -363,7 +399,6 @@
 			title:"支持最大最小化功能",
 			min: false,
 			max: true,
-			limit: true,
 			width: "50%",
 			height: "50%"
 		}) 
@@ -399,21 +434,20 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     <div class="header"><h1 class="colr">感谢你们对LHGCore.JS的长期支持，用你们手里的鼠标轻轻的点击一下上面的广告，继续支持我们，我们将做的更好！！！</h1></div>
     <div class="article">
         <h2>窗口的各种在线演示示例</h2>
-        <!--
         <p>多皮肤共存</p>
         <ol>
         	<li>
-            	<h3>Mac风格的CSS 简约皮肤</h3>
+            	<h3>多皮肤演示</h3>
             	<pre class="prettyprint">
 var a = $.dialog({
-    id: "sk1",
-    content: "我是第一个款略带MAC风格的CSS简约皮肤，取名 ‘ imac ’ ",
-    skin: "imac"	
+	id: "sk1",
+	title: "丰富多彩的皮肤",
+	titleIcon: "lhg.png",
+	content: _Skin_tmpl,
 });				</pre>
-                <button class="button blue" onclick="sk1()">运行»</button>
+                <button class="button orange" onclick="sk1()">运行多皮肤»</button>
             </li>
         </ol>
-        -->
         <p>常规配置参数使用演示</p>
         <ol>
         	<li>
@@ -464,13 +498,24 @@ var a = $.dialog({
                 <button class="button green" onclick="op4()">运行»</button>
             </li>
             <li>
+            	<h3>可以自由设置titleIcon参数，改变标题栏左上角的图标</h3>
+                <pre class="prettyprint">
+var a = $.dialog({ 
+    id: "a_icon" ,
+    titleIcon: "",
+    content: "我可以自由定制标题栏小图标哦",
+    title: "看我左边的图标"
+});				</pre>
+				<button class="button green" onclick="op55()">运行»</button>
+            </li>
+            <li>
             	<h3>添加自定义按钮</h3>
             	<pre class="prettyprint">
 var a = $.dialog({
 	var timer = 3;
     id: "a5" ,
     content: "我是HTML内容",
-    button: (
+    button: [
     	{
             name:"上一步",
             callback: function () {
@@ -493,7 +538,7 @@ var a = $.dialog({
             name: "无效按钮",
             disabled: true
         },
-    )
+    ]
 });	            </pre>
                 <button class="button green" onclick="op5()">运行»</button>
             </li>
@@ -808,5 +853,4 @@ var a = $.dialog({
 
 <script type="text/javascript">prettyPrint();</script>
 </body>
-<script type="text/javascript" src="lhgdialog.js" ></script>
 </html>
