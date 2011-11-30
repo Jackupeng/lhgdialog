@@ -1,0 +1,179 @@
+@charset "utf-8";
+/*
+ * lhgdialog discuz皮肤
+ * 2011-11-29
+ * QQ:50167214
+ * (C) 2009-2011 【一丝冰凉】, http://t.qq.com/yisibl
+ * This is licensed under the GNU LGPL, version 2.1 or later.
+ * For details, see: http://creativecommons.org/licenses/LGPL/2.1/
+ */
+/*制作新皮肤从这里开始复制*/
+/*基本重置*/
+body { _margin:0;/*IE6 BUG*/ }
+.ui_lock_scroll body { overflow:hidden;  }/*隐藏锁屏和全屏时滚动条*/
+.ui_lock_scroll { *overflow:hidden;}
+/*结构层*/
+.ui_outer { text-align:left; }/*最外层div*/
+.ui_content, .ui_title, .ui_buttons button { font: 12px/1.333 tahoma, arial, \5b8b\4f53, sans-serif; }/*tahom字体在各个浏览器保持良好的统一*/
+table.ui_border, table.ui_dialog { width:auto; border-spacing:0; *border-collapse:collapse;/*现代浏览器有bug，参见【一丝冰凉】微博*/}
+.ui_border td, .ui_dialog td { padding:0; }
+
+.ui_dialog { background:#FFF; }/*主体背景*/
+/*标题部分开始*/
+.ui_title { overflow:hidden; text-overflow: ellipsis; white-space:nowrap;/*firefox 不自动换行*/ display:block; cursor:move; padding:0 100px 0 5px;/*防止IE6按钮错位*/ }
+.ui_title_icon { display: inline-block; height:100%; min-width:16px; width:16px; margin-right:5px; vertical-align:middle; background-position: center center; background-repeat:no-repeat; }
+.ui_title_buttons { position:absolute; cursor:pointer; font-size:0;/*opera 空隙修复*/ letter-spacing:-.5em; /*其他浏览器 空隙修复 宋体/Verdana为-.5em，Tahoma为-.333em，Arial为-.25em*/ }
+/*标题部分结束*/
+
+/*对齐自适应*/
+.ui_main { min-width:12em; min-width:0\9/*IE8 BUG*/; text-align:center; }/*超过最小宽度居中对齐*/
+.ui_content { display:inline-block; *display:inline;zoom:1; text-align:left; }/*小于最小宽度左对齐*/
+.ui_content.ui_state_full { display:block; width:100%; height:100%; margin:0; padding:0!important; }/*加载iframe时设置为0*/
+.ui_content.ui_state_full iframe { border-radius:0 0 5px 5px;/*实验性属性*/ }
+.ui_loading { width:96px; height:32px; text-align:left; text-indent:-9999em; overflow:hidden; background:url(icons/loading.gif) no-repeat center center; }/*加载中*/
+.ui_icon_bg { margin:20px 0 20px 15px; }/*图标外边距*/
+.ui_state_tips .ui_main { min-width:3em; }/*tips最小宽度*/
+.ui_state_tips .ui_content { padding:8px 10px!important; margin-top:-2px; }/*tips适宜的边距和视觉居中*/
+.ui_state_tips .ui_icon_bg { margin:5px 0 6px 9px; }/*tips主体图标边距控制*/
+.ui_state_tips .ui_title, .ui_state_tips .ui_title_buttons{ display:none; }/*隐藏无需显示结构*/
+
+/*标题纯CSS按钮开始
+* min 最小化，max最大化，res还原，rese恢复，close关闭*/
+.ui_min, .ui_max, .ui_close, .ui_res, .ui_rese { text-decoration:none; letter-spacing: normal; text-align:center;
+ display:inline-block; *display:inline; zoom:1; vertical-align:top; font-family:tahoma, arial, \5b8b\4f53, sans-serif; }
+.ui_min, .ui_max, .ui_res,.ui_rese { position:relative; }
+.ui_min b, .ui_max b, .ui_res_t, .ui_res_b ,.ui_rese_b,.ui_rese_t{ display:block; position:absolute; overflow:hidden; cursor:pointer; }
+.ui_res, .ui_rese { display:none; } /*默认隐藏 回复和 还原按钮*/
+.ui_close { font-weight:600; }/*兼容IE6*/
+/*标题按钮结束*/
+/*标题纯CSS按钮定位部分*/
+.ui_min, .ui_max, .ui_close, .ui_res, .ui_rese {  margin-left:3px; color:#888; font-size:20px; width:22px; height:22px; line-height:18px;/*按钮视觉居中*/
+ border-radius:3px;}
+.ui_min, .ui_rese { margin-left:0;}
+.ui_min b { top:10px; left:5px; width:12px; height:2px; border-bottom:2px solid #888; }
+.ui_max b { top:5px; left:5px; width:10px; height:7px; }
+.ui_res_t, .ui_res_b,.ui_rese_b,.ui_rese_t { top:8px; left:3px; width:10px; height:5px; }
+.ui_res_b,.ui_rese_b { top:4px; left:6px; }
+.ui_res_t, .ui_res_b,.ui_rese_b,.ui_rese_t, .ui_max b { border:1px solid #888; border-top-width:3px; }
+/*标题纯CSS按钮定位部分结束*/
+.ui_title_buttons { top:3px; right:5px; }
+.ui_res_t,.ui_rese_t { background:#FFF; }/*还原按钮底部框背景与标题背景融合*/
+.ui_res:hover b,.ui_rese:hover b{ background:#039ed0;}
+.ui_min, .ui_rese { font-size:14px; font-weight:600; line-height:20px; *line-height:22px; /*最小化 恢复按钮*/}
+.ui_close{ vertical-align:baseline; *line-height:22px; *font-size:22px;  *margin-left:0;}/*IE6关闭按钮垂直居中*/
+.ui_close:hover, .ui_close:focus { color:#FFF; outline:0 none; background:#c72327; }
+.ui_rese:hover{color:#555;}
+.ui_min:hover b, .ui_max:hover b, .ui_res:hover b, .ui_rese:hover b { border-color:#FFF; }
+.ui_min:hover,.ui_max:hover,.ui_res:hover,.ui_rese:hover { background:#039ed0; }
+/*标题按钮结束*/
+
+
+/*制作新皮肤到这里结束复制*/
+
+/************样式层开始************/
+.ui_inner {border:1px solid #a0a0a0;}
+.ui_border{ border-radius:5px; box-shadow:0 1px 5px rgba(0,0,0,.9);-moz-transition:-moz-box-shadow linear .2s;
+-webkit-transition: -webkit-box-shadow linear .2s;
+transition: -webkit-box-shadow linear .2s;}
+.ui_state_lock .ui_border{box-shadow:0 3px 12px rgba(0, 0, 0, .5);}/*锁屏时遮罩*/
+.ui_state_drag .ui_border, .ui_state_lock.ui_state_drag .ui_border { box-shadow:none;}/*拖动时隐藏阴影，通过css3实现渐变动画*/
+
+.ui_lt, .ui_rt, .ui_lb, .ui_rb { width:8px; height:8px; display:block;/*防止改变浏览器大小挤压窗口边框*/}/*边框宽度*/
+.ui_lt{ border-radius:5px 0 0 0;}.ui_rt{ border-radius:0 5px 0 0;}.ui_rb{ border-radius:0 0 5px 0;}.ui_lb{ border-radius:0 0 0 5px;}
+.ui_lt, .ui_rt, .ui_l, .ui_r, .ui_lb, .ui_b, .ui_t, .ui_rb { background:rgba(0, 0, 0, .2); background:#000\9; filter:alpha(opacity=20);}/*边框透明度*/
+
+
+/*************标题栏样式*********/
+.ui_title_bar { position:relative; height:100%;}
+.ui_title { height:30px; line-height:30px; font-size:14px; font-weight:bold; color:#888; border-bottom:1px solid #DDD\9;}
+.ui_title:after{ content:""; display:block; height:8px; width:100%;  position:absolute; top:26px; left:0;
+background: -moz-radial-gradient(center, ellipse cover,  #b5b5b5 10%, #FFFFFF 75%); /* FF3.6+ */
+background: -webkit-radial-gradient(center, ellipse cover,  #b5b5b5 10%,#FFFFFF 75%); /* Chrome10+,Safari5.1+ */
+background: -o-radial-gradient(center, ellipse cover,  #b5b5b5 10%,#FFFFFF 75%); /* Opera 12+ */
+background: -ms-radial-gradient(center, ellipse cover,  #b5b5b5 10%,#FFFFFF 75%); /* IE10+ */
+background: radial-gradient(center, ellipse cover,  #b5b5b5 10%,#FFFFFF 75%); /* W3C */
+}
+.ui_title:before{ content:""; display:block; height:5px; width:100%;  position:absolute; top:26px; left:0; background:#FFF; z-index:1;}
+
+.ui_state_focus .ui_title { color:#336699; }
+.ui_state_drag .ui_title { border-top-color:#4E84C0; }
+
+.ui_content { color:#666; }
+.ui_state_focus .ui_content { color:#000; }
+/*底部按钮样式*/
+/*按钮结构部分*/
+.ui_buttons {white-space:nowrap; padding:8px; text-align:right; background-color:#F6F6F6; border-top:solid 1px #DADEE5; }
+.ui_buttons button::-moz-focus-inner { border:0; padding:0; margin:0; }
+/*按钮结构部分结束*/
+.ui_buttons button {
+	padding: 6px 10px 7px 12px; *padding:6px 10px 4px;
+	 margin-left:10px; cursor: pointer; display: inline-block; text-align: center; line-height: 1;
+ *height:2em; *width:1; letter-spacing:3px; overflow:visible;
+	color: #333;
+	border: solid 1px #999;
+	border-radius: 5px;
+	border-radius: 0\9;/*IE9渐变溢出*/
+	background: #DDD;
+	background: linear-gradient(top, #FAFAFA, #E4E4E4);
+	background: -moz-linear-gradient(top, #FAFAFA, #E4E4E4);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FAFAFA), to(#E4E4E4));
+	background: -o-linear-gradient(top, #FAFAFA, #E4E4E4);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FAFAFA', endColorstr='#E4E4E4');
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 1);
+	box-shadow: 0 1px 0 rgba(255, 255, 255, .7), 0 -1px 0 rgba(0, 0, 0, .09);
+-moz-transition:-moz-box-shadow linear .2s;
+ -webkit-transition: -webkit-box-shadow linear .2s;
+transition: box-shadow linear .2s;
+}
+.ui_buttons button:focus {
+	outline:0 none;
+	border-color:#2258e1;
+	box-shadow:0 2px 6px #0e78c9;
+}
+.ui_buttons button:hover {
+	color:#000;
+	border-color:#666;
+	box-shadow:none;
+}
+.ui_buttons button:active {
+	border-color:#666;
+	background: linear-gradient(top, #FAFAFA, #E4E4E4);
+	background: -moz-linear-gradient(top, #FAFAFA, #E4E4E4);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FAFAFA), to(#E4E4E4));
+	background: -o-linear-gradient(top, #FAFAFA, #E4E4E4);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FAFAFA', endColorstr='#E4E4E4');
+}
+.ui_buttons button[disabled] {
+	cursor:default;
+	color:#666;
+	background:#DDD;
+	border: solid 1px #999;
+	filter:alpha(opacity=50);
+	opacity:.5;
+	box-shadow:none;
+}
+button.ui_state_highlight {
+	color: #FFF;
+	border: solid 1px #1c6a9e;
+	background: #2288cc;
+	background: linear-gradient(top, #33bbee, #2288cc);
+	background: -moz-linear-gradient(top, #33bbee, #2288cc);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#33bbee), to(#2288cc));
+	background: -o-linear-gradient(top, #33bbee, #2288cc);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33bbee', endColorstr='#2288cc');
+	text-shadow: 0 -1px 1px #1c6a9e;
+}
+button.ui_state_highlight:hover {
+	color:#FFF;
+	border-color:#555;
+}
+button.ui_state_highlight:active {
+	border-color:#1c6a9e;
+	background: linear-gradient(top, #33bbee, #2288cc);
+	background: -moz-linear-gradient(top, #33bbee, #2288cc);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#33bbee), to(#2288cc));
+	background: -o-linear-gradient(top, #33bbee, #2288cc);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33bbee', endColorstr='#2288cc');	
+}
+/*底部按钮样式结束*/
+/*对话框皮肤 End*/

@@ -36,19 +36,13 @@ zoom:1; text-align:left; }/*小于最小宽度左对齐*/
 .ui_icon_bg { margin:20px 0 20px 15px; }/*图标外边距*/
 .ui_state_tips .ui_main{ min-width:3em;}/*tips最小宽度*/
 .ui_state_tips .ui_content{ padding:8px 10px!important; margin-top:-2px;}/*tips适宜的边距和视觉居中*/
-.ui_state_tips .ui_icon_bg { margin:5px 0 8px 9px; }/*tips主体图标边距控制*/
+.ui_state_tips .ui_icon_bg { margin:5px 0 6px 9px; }/*tips主体图标边距控制*/
 .ui_state_tips .ui_title, .ui_state_tips .ui_title_buttons, .ui_state_tips .ui_lt, .ui_state_tips .ui_rt { display:none; }/*隐藏无需显示结构*/
-/*按钮结构部分*/
-.ui_buttons { padding:4px 8px 4px; text-align:right; white-space:nowrap; }
 
-.ui_buttons button { margin-left:10px; padding: 4px 10px; cursor: pointer; display: inline-block; text-align: center; line-height: 1; *padding:4px 10px; *height:2em; letter-spacing:2px; overflow:visible; *width:1;
-}
-.ui_buttons button::-moz-focus-inner {border:0; padding:0; margin:0; }
-/*按钮结构开始*/
 /*标题纯CSS按钮开始*/
 .ui_min, .ui_max, .ui_close, .ui_res, .ui_rese { text-decoration:none; letter-spacing: normal; /* reset IE < 8 */ text-align:center; display:inline-block; *display:inline; zoom:1; vertical-align:top; font-family:tahoma, arial, \5b8b\4f53, sans-serif; }
-.ui_min, .ui_max, .ui_res { position:relative; }
-.ui_min b, .ui_max b, .ui_res_t, .ui_res_b { display:block; position:absolute; overflow:hidden; cursor:pointer; }
+.ui_min, .ui_max, .ui_res,.ui_rese { position:relative; }
+.ui_min b, .ui_max b, .ui_res_t, .ui_res_b ,.ui_rese_b,.ui_rese_t{ display:block; position:absolute; overflow:hidden; cursor:pointer; }
 .ui_res, .ui_rese { display:none; } /*默认隐藏 回复和 还原按钮*/
 .ui_close { font-weight:600; }/*兼容IE6*/
 /*标题按钮结束*/
@@ -74,25 +68,36 @@ border-radius:4px 4px 0 0; text-shadow: 0 1px 1px #FFF;}
 .ui_state_drag .ui_title { background:#ebebeb; background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#c3c3c3), to(#ebebeb)); background:-moz-linear-gradient(top, #c3c3c3, #ebebeb); background:-o-linear-gradient(top, #c3c3c3, #ebebeb); filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#c3c3c3', endColorstr='#ebebeb');
 }
 .ui_title_bar { border-bottom:1px solid #aaaaaa; }
-.ui_buttons { border-top:1px solid #bebebe; border-bottom:1px solid #DDD; border-radius:0 0 4px 4px; background:#f5f5f5; background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f5f5f5), to(#d7d7d7)); background:-moz-linear-gradient(top, rgb(245,245,245), rgb(215,215,215)); background:-o-linear-gradient(top, #f5f5f5, #d7d7d7); filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5', endColorstr='#d7d7d7');
-border-radius:0 0 4px 4px;}
 .ui_footer { border-radius:0 0 9px 9px; }/*底部td*/
 /*标题纯CSS按钮定位部分*/
-.ui_min, .ui_max, .ui_close, .ui_res, .ui_rese {  margin-left:3px; color:#636363; font-size:20px; width:22px; height:22px; line-height:18px;/*按钮视觉居中*/ }
+.ui_min, .ui_max, .ui_close, .ui_res, .ui_rese {  margin-left:3px; color:#636363; font-size:20px; width:22px; height:22px; line-height:18px;/*按钮视觉居中*/}
+.ui_min, .ui_rese { margin-left:0;}
 .ui_min b { top:10px; left:5px; width:12px; height:2px; border-bottom:2px solid #636363; }
 .ui_max b { top:5px; left:5px; width:10px; height:7px; }
-.ui_res_t, .ui_res_b { top:8px; left:4px; width:10px; height:6px; }
-.ui_res_t, .ui_res_b, .ui_max b { border:1px solid #636363; border-top-width:3px; }
-.ui_res_b { top:4px; left:7px; }
+.ui_res_t, .ui_res_b,.ui_rese_b,.ui_rese_t { top:8px; left:3px; width:10px; height:5px; }
+.ui_res_b,.ui_rese_b { top:4px; left:6px; }
+.ui_res_t, .ui_res_b,.ui_rese_b,.ui_rese_t, .ui_max b { border:1px solid #636363; border-top-width:3px; }
 /*标题纯CSS按钮定位部分结束*/
 .ui_title_buttons { top:3px; right:5px; }
-.ui_res_t { background:#DDD; }/*还原按钮底部框背景与标题背景融合*/
+.ui_res_t,.ui_rese_t { background:#DDD; }/*还原按钮底部框背景与标题背景融合*/
 .ui_min, .ui_rese { font-size:14px; font-weight:600; line-height:20px; *line-height:22px; /*最小化 恢复按钮*/}
 .ui_close{ vertical-align:baseline; *line-height:22px; *font-size:22px;  *margin-left:0;}/*IE6关闭按钮垂直居中*/
 .ui_close:hover, .ui_close:focus { color:#bf160b; outline:0 none; }
 .ui_rese:hover{color:#2492FF;}
 .ui_min:hover b, .ui_max:hover b, .ui_res:hover b, .ui_rese:hover b { border-color:#2492FF; }
 /*标题按钮结束*/
+/*按钮结构部分*/
+.ui_buttons { padding:4px 8px 4px; text-align:right; white-space:nowrap;border-radius:0 0 4px 4px;
+			 border-top:1px solid #bebebe; border-bottom:1px solid #DDD; border-radius:0 0 4px 4px;
+  background:#f5f5f5; background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f5f5f5), to(#d7d7d7)); 
+  background:-moz-linear-gradient(top, rgb(245,245,245), rgb(215,215,215));
+   background:-o-linear-gradient(top, #f5f5f5, #d7d7d7);
+filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5', endColorstr='#d7d7d7');}
+.ui_buttons button { margin-left:10px; padding: 6px 10px; cursor: pointer; display: inline-block; text-align: center; line-height: 1; *padding:4px 10px; *height:2em; letter-spacing:2px; overflow:visible; *width:1;
+}
+.ui_buttons button::-moz-focus-inner {border:0; padding:0; margin:0; }
+/*按钮结构部分结束/
+
 
 /*Tips 部分开始*/
 /*基本重置*/
