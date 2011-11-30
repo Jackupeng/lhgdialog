@@ -310,7 +310,8 @@ lhgdialog.fn =
 			
 		if( text === false )
 		{
-			title.hide().html('');
+			title.hide();
+			DOM.title_txt.html('');
 			border.addClass(className);
 		}
 		else
