@@ -394,17 +394,6 @@
 			cancel:false
 		})	
 	}
-	function op27(){
-		var a = $.dialog({
-			id: "a27",
-			content: "是否将窗口拖动限制到可视区域内,默认是false",
-			title:"支持最大最小化功能",
-			min: false,
-			max: true,
-			width: "50%",
-			height: "50%"
-		}) 
-	}
 </script>
 </head>
 <body>
@@ -829,22 +818,6 @@ var a = $.dialog({
     cancel:false
 })              </pre>
                 <button class="button green" onclick="op26()">运行»</button>
-            </li>
-            <li>
-            	<h3>是否将窗口拖动限制到可视区域内,默认是false</h3>
-            	<pre class="prettyprint">
-var a = $.dialog({
-    id: "a27",
-    content: "是否将窗口拖动限制到可视区域内,默认是false",
-    title:"支持最大最小化功能",
-    min: false,
-    max: true,
-    limit: true,
-    width: "50%",
-    height: "50%"
-})       
-	            </pre>
-                <button class="button green" onclick="op27()">运行»</button>
             </li>
         </ol>
         <br/><br/>
