@@ -901,7 +901,6 @@ lhgdialog.fn =
 				ibody = iwin.document.body;
 			}catch(e){// 跨域
 			    $iframe[0].style.cssText = loadCss;
-				that.position( config.left, config.top );
 				return;
 			}
 			// 获取iframe内部尺寸
@@ -916,9 +915,12 @@ lhgdialog.fn =
 			setTimeout(function(){
 			    $iframe[0].style.cssText = loadCss;
 			},0);// setTimeout: 防止IE6~7对话框样式渲染异常
-			
-			that.size( iWidth, iHeight )
-			.position( config.left, config.top );
+		
+			if( !that._maxState )
+			{
+			    that.size( iWidth, iHeight )
+			    .position( config.left, config.top );
+			}
 			
 			$idoc.bind('mousedown',function()
 			{
@@ -1193,7 +1195,6 @@ lhgdialog.fn =
 			};
 			
 			that._ie6SelectFix();
-			return false;
 		}).bind('mousedown',function(){ that.focus(); });
 		
 		// 双击标题栏最大化还窗口事件
@@ -1402,7 +1403,7 @@ lhgdialog.setting =
 	resize: true,				// 是否允许用户调节尺寸
 	drag: true, 				// 是否允许用户拖动位置
 	cache: true,                // 是否缓存窗口内容页
-	extendDrag: true            // 增加lhgdialog拖拽体验
+	extendDrag: false            // 增加lhgdialog拖拽体验
 };
 
 window.lhgdialog = $.dialog = $.lhgdialog = lhgdialog;
@@ -1547,10 +1548,10 @@ _use = function(event)
 				height = y + startHeight;
 			
 			wrapStyle.width = 'auto';
-			style.width = Math.max(0,width) + 'px';
+			config.width = style.width = Math.max(0,width) + 'px';
 			wrapStyle.width = wrap[0].offsetWidth + 'px';
 			
-			style.height = Math.max(0,height) + 'px';
+			config.height = style.height = Math.max(0,height) + 'px';
 			
 		}
 		else
@@ -1620,9 +1621,12 @@ _$document.bind('mousedown',function(event){
 	
 	var target = event.target,
 		DOM = api.DOM,
+		title = DOM.title[0],
+		icon = DOM.title_icon[0],
+		txt = DOM.title_txt[0],
 	    config = api.config;
 	
-	if( config.drag !== false && (target === DOM.title[0] || target === DOM.title_icon[0] || target === DOM.title_txt[0])
+	if( config.drag !== false && (target === title || target === icon || target === txt)
 	|| config.resize !== false && target === DOM.rb[0] )
 	{
 	    _dragEvent = _dragEvent || new lhgdialog.dragEvent();
