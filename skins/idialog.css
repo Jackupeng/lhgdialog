@@ -10,11 +10,9 @@
  */
 /*制作新皮肤从这里开始复制*/
 /*基本重置*/
-html{_background-image:url(about:blank);_background-attachment:fixed;zoom:1;}/*IE6下无抖动随屏滚动*/
-body{ _margin:0;/*IE6 BUG*/ }
-.ui_lock_scroll body { overflow:hidden;padding-right:17px; }/*隐藏锁屏和全屏时滚动条*/
+body { _margin:0;/*IE6 BUG*/ }
+.ui_lock_scroll body { overflow:hidden;  }/*隐藏锁屏和全屏时滚动条*/
 .ui_lock_scroll { *overflow:hidden;}
-.ui_max_fixed{padding-right:0}
 /*结构层*/
 .ui_outer { text-align:left; }/*最外层div*/
 .ui_content, .ui_title, .ui_buttons button { font: 12px/1.333 tahoma, arial, \5b8b\4f53, sans-serif; }/*tahom字体在各个浏览器保持良好的统一*/
@@ -56,7 +54,7 @@ table.ui_border, table.ui_dialog { width:auto; border-spacing:0; *border-collaps
 .ui_inner { background:#FFF; }
 .ui_title_bar { width:100%; position:relative;}
 .ui_title_buttons{ top:-3px; right:5px; }
-.ui_title { display:block; height:22px; border-bottom:1px solid #DDD\9; font-size:14px; color:#888;background:#FFF;}
+.ui_title { display:block; height:26px; line-height:26px; border-bottom:1px solid #DDD\9; font-size:14px; color:#888;background:#FFF;}
 .ui_content { color:#666;}/*失去焦点*/
 .ui_state_focus .ui_content { color:#1e1e1e; }/*获得焦点*/
 .ui_state_focus .ui_title { color:#505050; }
@@ -100,15 +98,17 @@ table.ui_border, table.ui_dialog { width:auto; border-spacing:0; *border-collaps
 	.ui_state_drag .ui_border,.ui_state_drag.ui_state_lock .ui_border  { box-shadow:none; }
 	.ui_state_lock .ui_border { box-shadow:0 3px 18px rgba(0, 0, 0, .6); }
 	.ui_state_tips:active {border-radius:5px;  box-shadow:0 1px 8px rgba(0, 0, 0, .5)}
-.ui_title:after{ content:""; display:block; height:8px; width:100%;  position:absolute; top:18px; left:0;
+.ui_title:after{ content:""; display:block; height:8px; width:100%;  position:absolute; top:23px; left:0;
 background: -moz-radial-gradient(center, ellipse cover,  #b5b5b5 10%, #FFFFFF 75%); /* FF3.6+ */
 background: -webkit-radial-gradient(center, ellipse cover,  #b5b5b5 10%,#FFFFFF 75%); /* Chrome10+,Safari5.1+ */
 background: -o-radial-gradient(center, ellipse cover,  #b5b5b5 10%,#FFFFFF 75%); /* Opera 12+ */
 background: -ms-radial-gradient(center, ellipse cover,  #b5b5b5 10%,#FFFFFF 75%); /* IE10+ */
 background: radial-gradient(center, ellipse cover,  #b5b5b5 10%,#FFFFFF 75%); /* W3C */
+display:none\9;
 }
-.ui_title:before{ content:""; display:block; height:5px; width:100%;  position:absolute; top:18px; left:0; background:#FFF; z-index:1;}
+.ui_title:before{ content:""; display:block; height:5px; width:100%;  position:absolute; top:23px; left:0; background:#FFF; z-index:1;display:none\9;}
 }
+
 
 
 /*底部按钮样式*/

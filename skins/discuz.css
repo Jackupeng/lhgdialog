@@ -9,11 +9,9 @@
  */
 /*制作新皮肤从这里开始复制*/
 /*基本重置*/
-html{_background-image:url(about:blank);_background-attachment:fixed;zoom:1;}/*IE6下无抖动随屏滚动*/
-body{ _margin:0;/*IE6 BUG*/ }
-.ui_lock_scroll body { overflow:hidden;padding-right:17px; }/*隐藏锁屏和全屏时滚动条*/
+body { _margin:0;/*IE6 BUG*/ }
+.ui_lock_scroll body { overflow:hidden;  }/*隐藏锁屏和全屏时滚动条*/
 .ui_lock_scroll { *overflow:hidden;}
-.ui_max_fixed{padding-right:0}
 /*结构层*/
 .ui_outer { text-align:left; }/*最外层div*/
 .ui_content, .ui_title, .ui_buttons button { font: 12px/1.333 tahoma, arial, \5b8b\4f53, sans-serif; }/*tahom字体在各个浏览器保持良好的统一*/
@@ -94,8 +92,9 @@ background: -webkit-radial-gradient(center, ellipse cover,  #b5b5b5 10%,#FFFFFF 
 background: -o-radial-gradient(center, ellipse cover,  #b5b5b5 10%,#FFFFFF 75%); /* Opera 12+ */
 background: -ms-radial-gradient(center, ellipse cover,  #b5b5b5 10%,#FFFFFF 75%); /* IE10+ */
 background: radial-gradient(center, ellipse cover,  #b5b5b5 10%,#FFFFFF 75%); /* W3C */
+display:none\9;
 }
-.ui_title:before{ content:""; display:block; height:5px; width:100%;  position:absolute; top:26px; left:0; background:#FFF; z-index:1;}
+.ui_title:before{ content:""; display:block; height:5px; width:100%;  position:absolute; top:26px; left:0; background:#FFF; z-index:1;display:none\9;}
 
 .ui_state_focus .ui_title { color:#336699; }
 .ui_state_drag .ui_title { border-top-color:#4E84C0; }
