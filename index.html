@@ -29,11 +29,11 @@
 		html.push('</tbody></table>');
 		return html.join('');
 	}([
-		{ name: 'default', about: '默认皮肤' },
-		{ name: 'mac', about: '仿iphone皮肤' },
-		{ name: 'j', about: '蓝色简约风格皮肤,大气十足' },
-		{ name: 'discuz', about: 'discuz论坛极简皮肤，相当实用' },
-		{ name: 'idialog', about: '苹果电脑风格的弹窗皮肤，很不错的' }
+		{ name: 'default', about: '默认皮肤,简单的纯CSS灰色皮肤。' },
+		{ name: 'qq2011', about: '仿QQ2011弹出窗口的蓝色渐变皮肤，纯CSS' },
+		{ name: 'blue', about: '蓝色简约风格皮肤,大气十足，纯CSS' },
+		{ name: 'discuz', about: 'discuz论坛极简皮肤，相当实用，纯CSS' },
+		{ name: 'idialog', about: '苹果电脑风格的弹窗皮肤，很不错的(包含图片)' }
 	]);
 
 
@@ -42,7 +42,6 @@
 		var a = $.dialog({
 			id: "sk1",
 			title: "丰富多彩的皮肤",
-			titleIcon: "lhg.png",
 			content: _Skin_tmpl
 		});
 	}
@@ -405,6 +404,7 @@
 		<li class="button green"><a href="index.html">在线演示</a></li>
     	<li class="button blue"><a href="demo/extents.html">扩展演示</a></li>
         <li class="button blue"><a href="demo/valuedemo.html">传值演示</a></li>
+		<li class="button blue"><a href="javascript:;" onclick="sk1()">切换皮肤>></li>
         <li class="button orange"><a href="api/api.html" target="_blank">API文档</a></li>
     </ul>
 </div>
@@ -423,7 +423,7 @@ google_ad_height = 90;
 src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
 </div>
-    <div class="header"><h1 class="colb f1"><span class="colr">lhgDailog4正式发布beta1版本，</span>轻轻的点击一下上面的广告吧</h1></div>
+    <div class="header"><h1 class="colb f1"><span class="colr">lhgDailog4正式发布beta1版本，</span>感谢大家长期的支持。</h1></div>
     <div class="article">
         <h2>窗口的各种在线演示示例</h2>
         <p>多皮肤共存</p>
@@ -437,7 +437,7 @@ var a = $.dialog({
 	titleIcon: "lhg.png",
 	content: _Skin_tmpl,
 });				</pre>
-                <button class="button orange" onclick="sk1()">运行多皮肤»</button>
+                <button class="button orange" onclick="sk1()">切换皮肤»</button>
             </li>
         </ol>
         <p>常规配置参数使用演示</p>

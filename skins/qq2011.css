@@ -21,11 +21,14 @@
 
 /*公用部分-制作新皮肤从这里开始复制*/
 /*基本重置*/
+html{_background-image:url(about:blank);_background-attachment:fixed;zoom:1;}/*IE6下无抖动随屏滚动*/
 body {_margin:0;/*IE6 BUG*/}
 body, button, input, select, textarea, .ui_content { 
 	font: 12px/1.333 tahoma, arial, \5b8b\4f53, sans-serif; }/* for ie tahom字体在各个浏览器保持良好的统一*/
-.ui_lock_scroll body {overflow:hidden;}/*隐藏锁屏和全屏时滚动条*/
-.ui_lock_scroll {*overflow:hidden;}
+body{ _margin:0;/*IE6 BUG*/ }
+.ui_lock_scroll body { overflow:hidden;padding-right:17px; }/*隐藏锁屏和全屏时滚动条*/
+.ui_lock_scroll { *overflow:hidden;}
+.ui_max_fixed{padding-right:0}
 
 /*QQ2011皮肤开始-结构层与样式层分离，方便制作皮肤*/
 /*结构层*/
@@ -69,7 +72,6 @@ table.ui_border, table.ui_dialog {
 	line-height:30px;
 	padding:0 100px 0 6px;/*防止IE6按钮错位*/
 	background:#7ac7e3;
-	-moz-user-select:none ;-webkit-user-select:none;
 }
 .ui_title_icon {
 	display: inline-block;

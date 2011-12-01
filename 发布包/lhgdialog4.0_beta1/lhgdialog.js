@@ -4,7 +4,6 @@
  * Copyright (c) 2009 - 2011 By Li Hui Gang
  * URL : http://lhgcore.com/
  * BBS : http://bbs.lhgcore.com/
- * 
  */
 
 ;(function( $, window, undefined ){
@@ -184,7 +183,7 @@ lhgdialog.fn =
 			
 			// 标题栏左边的图标
 			ticon = config.titleIcon 
-			? { backgroundImage: 'url(\'' + config.path + 'skins/icons/' + config.titleIcon + '\')' }
+			? { backgroundImage: 'url(\'' + config.path + 'skins/icons/' + config.titleIcon + '\')', display:'' }
 			: { display:'none' }
 		
 		// 假如提示性图标为真默认不显示最小化和最大化按钮
@@ -552,7 +551,7 @@ lhgdialog.fn =
 		    DOM.res.hide();
 			
 			if( !that.parent || (that.parent && !that.parent._lock) )
-			    _$html.removeClass('ui_lock_scroll ui_lock_fixed');
+			    _$html.removeClass('ui_lock_scroll ui_max_fixed');
 		}
 		
 		// 置空内容
@@ -755,7 +754,7 @@ lhgdialog.fn =
 			
 			// 最大化时去除滚动条
 			!that._lock && _$html.addClass('ui_lock_scroll');
-			_ie6 && _$html.addClass('ui_lock_fixed');
+			_ie6 && _$html.addClass('ui_max_fixed');
 			
 			DOM.wrap.css({ top:top + 'px', left:left + 'px' });
 			
@@ -776,7 +775,7 @@ lhgdialog.fn =
 			
 			if( _ie6 )
 			{
-			    _$html.removeClass('ui_lock_fixed');
+			    _$html.removeClass('ui_max_fixed');
 				that._top = that._or.t;
 				that._left = that._or.l;
 			}
@@ -1092,15 +1091,6 @@ lhgdialog.fn =
 		style.position = 'absolute';
 	},
 	
-	/*! 按钮回调函数触发 */
-	_click: function( name )
-	{ 
-		var that = this,
-			fn = that._listeners[name] && that._listeners[name].callback;
-		return typeof fn !== 'function' || fn.call(that, window) !== false ?
-			that.close() : that;
-	},
-	
 	/*! 最化小后还原时设置 */
 	_minReset: function()
 	{
@@ -1113,6 +1103,15 @@ lhgdialog.fn =
 		DOM.rese.hide();
 		that.config.resize = that._minRz;
 		DOM.rb[0].style.cursor = that._minRz ? 'se-resize' : 'auto';
+	},
+	
+	/*! 按钮回调函数触发 */
+	_click: function( name )
+	{ 
+		var that = this,
+			fn = that._listeners[name] && that._listeners[name].callback;
+		return typeof fn !== 'function' || fn.call(that, window) !== false ?
+			that.close() : that;
 	},
 	
 	/*! 重置位置与尺寸 */
@@ -1187,7 +1186,8 @@ lhgdialog.fn =
 			    that.max();
 				return false;
 			}
-			else if( target === DOM.min[0] || target === DOM.rese[0] || target === DOM.min_b[0] )
+			else if( target === DOM.min[0] || target === DOM.rese[0] || target === DOM.min_b[0]
+			    || target === DOM.rese_b[0] || target === DOM.rese_t[0] )
 			{
 				that.min();
 				return false;
@@ -1334,9 +1334,9 @@ lhgdialog.templates =
 										'<div class="ui_title"><span class="ui_title_icon"></span><b class="ui_title_txt"></b></div>' +
 										'<div class="ui_title_buttons">' +
 										    '<a class="ui_min" href="#" title="\u6700\u5C0F\u5316"><b class="ui_min_b"></b></a>' +
-											'<a class="ui_rese" href="#" title="\u6062\u590D">▽</a>' +
+											'<a class="ui_rese" href="#" title="\u6062\u590D"><b class="ui_rese_b"></b><b class="ui_rese_t"></b></a>' +
 											'<a class="ui_max" href="#" title="\u6700\u5927\u5316"><b class="ui_max_b"></b></a>' +
-											'<a class="ui_res" href="#" title="\u8FD8\u539F"><b class="ui_res_b"></b><b class="ui_res_t"></b>' +
+											'<a class="ui_res" href="#" title="\u8FD8\u539F"><b class="ui_res_b"></b><b class="ui_res_t"></b></a>' +
 										    '<a class="ui_close" href="#" title="\u5173\u95ED(esc\u952E)">\xd7</a>' +
 										'</div>' +
 									'</div>' +
