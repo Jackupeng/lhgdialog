@@ -38,14 +38,22 @@ var _Skin_tmpl  = function (data) {
 ]);
 
 
-/** 多皮肤演示 */
-function sk1(){
-	var a = $.dialog({
-		id: "sk1",
-		title: "丰富多彩的皮肤",
-		content: _Skin_tmpl
-	});
-}
+	/** 多皮肤演示 */
+	function sk1(){
+		var a = $.dialog({
+			id: "sk1",
+			title: "丰富多彩的皮肤",
+			content: _Skin_tmpl
+		});
+	}
+	function op_b0(){
+		var b = $.dialog({
+			id: "op_b00",
+			title: "放一个视频",
+			content:'<embed src="http://player.youku.com/player.php/sid/XMzI4MTYwNDcy/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>',
+			padding: 0	
+		});
+	}
 	function op_b1(){
 		var b = lhgdialog.alert("这是一个alert消息哦");
 	}
@@ -71,6 +79,9 @@ function sk1(){
 	}
 	function op_b5(){
 		lhgdialog.tips("正在加载数据，请等待", 3, "loading.gif");	
+	}
+	function op6(){
+    	$.dialog.notice({title:'lhgdialog',content:'欢迎使用lhgdialog弹出窗口组件',width:220,time:5});
 	}
 </script>
 </head>
@@ -105,6 +116,19 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     <div class="article">
         <h2>窗口的各种扩展功能在线演示示例</h2>
         <ol>
+        	<li>
+            	<h3>放一个falsh视频给大家看下</h3>
+                <pre class="prettyprint">
+function op_b0(){
+    var b = $.dialog({
+        id: "op_b00",
+        title: "放一个视频",
+        content:'去视频网站找一个视频的html代码',
+        padding: 0	
+    });
+}				</pre>
+                <button class="button green" onclick="op_b0()">运行»</button>
+            </li>
         	<li>
             	<h3>Alert消息演示</h3>
             	<pre class="prettyprint">
@@ -161,6 +185,24 @@ lhgdialog.prompt("你愿意为 lhgDialog 4.0.0 支付多少授权费？",
 );				</pre>
                 <button class="button green" onclick="op_b3()">运行»</button>
             </li>
+            <li>
+            	<h3>notice通知扩展</h3>
+            	<pre class="prettyprint">
+/**
+ * notice 右下角通知扩展
+ * @param {options} 独立配置
+ * 注意：由于notice通知扩展使用了animate动画功能，lhgcore.js简化了该功能，如使用此扩展，请使用jQuery最新版本。
+ */
+$.dialog.notice = function( options )
+                </pre>
+                <pre class="prettyprint">
+function op6(){
+	$.dialog.notice({title:'lhgdialog',content:'欢迎使用lhgdialog弹出窗口组件',width:220,time:5});
+}
+                </pre>
+                <button class="button green" onclick="op6()">运行»</button>
+                <h3 class="colr">扩展文件下载，请点击页面上方的返回帖子，即可下载附件</h3>
+            </li>
              <li>
             	<h3>Tips 提示框</h3>
             	<pre class="prettyprint">
@@ -204,4 +246,5 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 </div>
 <script type="text/javascript">prettyPrint();</script>
+<script src="../extents.js" type="text/javascript"></script>
 </body>

@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>代码测试专用页</title>
+	<script type="text/javascript" src="demo/js/jquery-1.7.min.js"></script>
+	<script type="text/javascript" src="lhgdialog.js"></script>
+	<script type="text/javascript">
+$.dialog.notice = function( options )
+{
+    var opts = options || {},
+	    api, aConfig, hide, wrap, top,
+		duration = 800;
+	
+	var config = {
+        id: 'Notice',
+        left: '100%',
+        top: '100%',
+        fixed: true,
+        drag: false,
+        resize: false,
+        lock: false,
+		init: function(here){
+		    api = this;
+			aConfig = api.config;
+			wrap = api.DOM.wrap;
+			top = parseInt(wrap[0].style.top);
+			hide = top + wrap[0].offsetHeight;
+			
+			wrap.css('top', hide + 'px')
+			.animate({top: top + 'px'}, duration, function(){
+			    opts.init && opts.init.call(api, here);
+			});
+		},
+		close: function(here){
+		    wrap.animate({top: hide + 'px'}, duration, function(){
+			    opts.close && opts.close.call(this, here);
+				aConfig.close = $.noop;
+				api.close();
+			});
+			
+			return false;
+		}
+	};
+	
+	for(var i in opts)
+	{
+	    if( config[i] === undefined ) config[i] = opts[i];
+	}
+	
+	return $.dialog( config );
+};
+
+function op1(){
+    $.dialog.notice({title:'lhgdialog',content:'欢迎使用lhgdialog弹出窗口组件',width:220,time:5});
+}
+	</script>
+</head>
+
+<body>
+    <input type="button" value="op1" onclick="op1();"/>
+	<div style="height:1440px;"></div>
+</body>
+</html>
