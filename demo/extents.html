@@ -36,8 +36,7 @@ var _Skin_tmpl  = function (data) {
 	{ name: 'discuz', about: 'discuz论坛极简皮肤，相当实用，纯CSS' },
 	{ name: 'idialog', about: '苹果电脑风格的弹窗皮肤，很不错的(包含图片)' }
 ]);
-
-
+	
 	/** 多皮肤演示 */
 	function sk1(){
 		var a = $.dialog({
@@ -47,10 +46,11 @@ var _Skin_tmpl  = function (data) {
 		});
 	}
 	function op_b0(){
+		
 		var b = $.dialog({
 			id: "op_b00",
 			title: "放一个视频",
-			content:'<embed src="http://player.youku.com/player.php/sid/XMzI4MTYwNDcy/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>',
+			content:' <embed src="http://player.youku.com/player.php/sid/XMzI4MTYwNDcy/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed> ',
 			padding: 0	
 		});
 	}
@@ -80,8 +80,17 @@ var _Skin_tmpl  = function (data) {
 	function op_b5(){
 		lhgdialog.tips("正在加载数据，请等待", 3, "loading.gif");	
 	}
+	function op_b6(){
+		lhgdialog.tips("登录成功，3秒后自动跳转到主页").time(3, function(){
+			var iTimeoutId_0 = setTimeout(function(){
+				window.location.href = "http://bbs.lhgcore.com/";
+				clearTimeout(iTimeoutId_0);
+			}, 3000);
+		});
+		
+	}
 	function op6(){
-    	$.dialog.notice({title:'lhgdialog',content:'欢迎使用lhgdialog弹出窗口组件',width:220,time:5});
+    	var n = $.dialog.notice({title:'lhgdialog',content:'欢迎使用lhgdialog弹出窗口组件',width:220,time:5});
 	}
 </script>
 </head>
@@ -220,6 +229,17 @@ lhgdialog.tips("正在加载数据，请等待", 3, "loading.gif");
                 </pre>
                 <button class="button green" onclick="op_b4()">运行»</button>
                 <button class="button green" onclick="op_b5()">运行»</button>
+            </li>
+            <li>
+          		<h3>用tips提示登录成功，然后自动跳转到论坛首页</h3>
+                <pre class="prettyprint">
+lhgdialog.tips("登录成功，3秒后自动跳转到主页").time(3, function(){
+    var iTimeoutId_0 = setTimeout(function(){
+        window.location.href = "http://bbs.lhgcore.com/";	/** 如果是ifarme中使用，可以使用 window.top.locatioin.href  */
+        clearTimeout(iTimeoutId_0);
+    }, 3000);
+});				</pre>
+                <button class="button green" onClick="op_b6()">运行»</button>
             </li>
         </ol>
         
