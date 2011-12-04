@@ -9,33 +9,33 @@
 <script src="demo/js/prettify/prettify.js" type="text/javascript"></script>
 <script type="text/javascript">
 	// JavaScript Document
-var _search = window.location.search,lhg_skins,_Skin_tmpl;
-if(_search){
-	lhg_skins = _search.split("=")[1];
-}
-document.write('<scr'+'ipt src="lhgdialog.js?skin=' + (lhg_skins || 'default') +'"></sc'+'ript>');
-var _Skin_tmpl  = function (data) {
-	var html = ['<table class="skintabs" style="width:480px"><tbody>'];
-	for (var i = 0, length = data.length; i < length; i ++) {
-		html.push('<tr class="');
-		html.push(i%2 ? 'odd' : '');
-		html.push('"><th style="width:7em"><a href="?skin=');
-		html.push(data[i].name);
-		html.push('">');
-		html.push(data[i].name);
-		html.push('</a></th><td>');
-		html.push(data[i].about);
-		html.push('</td></tr>');
-	};
-	html.push('</tbody></table>');
-	return html.join('');
-}([
-	{ name: 'default', about: '默认皮肤,简单的纯CSS灰色皮肤。' },
-	{ name: 'qq2011', about: '仿QQ2011弹出窗口的蓝色渐变皮肤，纯CSS' },
-	{ name: 'blue', about: '蓝色简约风格皮肤,大气十足，纯CSS' },
-	{ name: 'discuz', about: 'discuz论坛极简皮肤，相当实用，纯CSS' },
-	{ name: 'idialog', about: '苹果电脑风格的弹窗皮肤，很不错的(包含图片)' }
-]);
+	var _search = window.location.search,lhg_skins,_Skin_tmpl;
+	if(_search){
+		lhg_skins = _search.split("=")[1];
+	}
+	document.write('<scr'+'ipt src="lhgdialog.js?skin=' + (lhg_skins || 'default') +'"></sc'+'ript>');
+	var _Skin_tmpl  = function (data) {
+		var html = ['<table class="skintabs" style="width:480px"><tbody>'];
+		for (var i = 0, length = data.length; i < length; i ++) {
+			html.push('<tr class="');
+			html.push(i%2 ? 'odd' : '');
+			html.push('"><th style="width:7em"><a href="?skin=');
+			html.push(data[i].name);
+			html.push('">');
+			html.push(data[i].name);
+			html.push('</a></th><td>');
+			html.push(data[i].about);
+			html.push('</td></tr>');
+		};
+		html.push('</tbody></table>');
+		return html.join('');
+	}([
+		{ name: 'default', about: '默认皮肤,简单的纯CSS灰色皮肤。' },
+		{ name: 'qq2011', about: '仿QQ2011弹出窗口的蓝色渐变皮肤，纯CSS' },
+		{ name: 'blue', about: '蓝色简约风格皮肤,大气十足，纯CSS' },
+		{ name: 'discuz', about: 'discuz论坛极简皮肤，相当实用，纯CSS' },
+		{ name: 'idialog', about: '苹果电脑风格的弹窗皮肤，很不错的(包含图片)' }
+	]);
 
 
 /** 多皮肤演示 */

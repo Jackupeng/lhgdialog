@@ -106,13 +106,13 @@ try{
 /*! 在最顶层页面添加样式文件 */
 $('head',_doc).append( '<link href="' + _path + 'skins/' + _skin + '.css" rel="stylesheet" type="text/css"/>' );
 
-$.fn.showIt = function(ib){
+$.fn.show = function(ib){
     ib = ib ? 'inline-block' : 'block';
 	this[0].style.display = ib;
 	return this;
 };
 
-$.fn.hideIt = function()
+$.fn.hide = function()
 {
     this[0].style.display = 'none';
 	return this;
@@ -204,11 +204,11 @@ lhgdialog.fn =
 		DOM.icon[0].style.display = icon ? '' : 'none';
 		DOM.icon_bg.attr('src',iconBg || '');
 		DOM.title_icon.css( ticon );
-		DOM.rb[0].style.cursor = config.resize ? 'se-resize' : 'auto';
-		DOM.title[0].style.cursor = config.drag ? 'move' : 'auto'
-		DOM.max[config.max?'showIt':'hideIt'](true);
-		DOM.min[config.min?'showIt':'hideIt'](true);
-		DOM.close[config.cancel===false?'hideIt':'showIt'](true); //当cancel参数为false时隐藏关闭按钮
+		DOM.rb.css('cursor', config.resize ? 'se-resize' : 'auto');
+		DOM.title.css('cursor', config.drag ? 'move' : 'auto');
+		DOM.max[config.max?'show':'hide'](true);
+		DOM.min[config.min?'show':'hide'](true);
+		DOM.close[config.cancel===false?'hide':'show'](true); //当cancel参数为false时隐藏关闭按钮
 		DOM.content.css('padding', config.padding);
 		
 		that.show(true)
@@ -263,7 +263,7 @@ lhgdialog.fn =
 		    // 假如内容中前3个字符为'url:'就加载相对路径的单独页面的内容页
 			if( _rurl.test(msg) )
 			{
-			    DOM.icon.hideIt();
+			    DOM.icon.hide();
 				$content.html( loading );
 				_url = msg.split('url:')[1];
 				that._iframe( _url );
@@ -312,13 +312,13 @@ lhgdialog.fn =
 			
 		if( text === false )
 		{
-			title.hideIt();
+			title.hide();
 			DOM.title_txt.html('');
 			border.addClass(className);
 		}
 		else
 		{
-			title.showIt();
+			title.show();
 			DOM.title_txt.html(text || '');
 			border.removeClass(className);
 		};
@@ -493,16 +493,16 @@ lhgdialog.fn =
 	/*! 显示对话框 */
 	show: function()
 	{
-		this.DOM.wrap.showIt();
-		!arguments[0] && this._lock && $('#lockMask',_doc).showIt();
+		this.DOM.wrap.show();
+		!arguments[0] && this._lock && $('#lockMask',_doc).show();
 		return this;
 	},
 	
 	/*! 隐藏对话框 */
 	hide: function()
 	{
-	    this.DOM.wrap.hideIt();
-		!arguments[0] && this._lock && $('#lockMask',_doc).hideIt();
+	    this.DOM.wrap.hide();
+		!arguments[0] && this._lock && $('#lockMask',_doc).hide();
 		return this;
 	},
 	
@@ -548,7 +548,7 @@ lhgdialog.fn =
 		if( that._maxState )
 		{
 		    DOM.main.css({width:that._or.w,height:that._or.h});
-		    DOM.res.hideIt();
+		    DOM.res.hide();
 			
 			if( !that.parent || (that.parent && !that.parent._lock) )
 			    _$html.removeClass('ui_lock_scroll ui_max_fixed');
@@ -736,7 +736,7 @@ lhgdialog.fn =
 			if( that._minState )
 			{
 			    that._minReset();
-				DOM.min.showIt(true);
+				DOM.min.show(true);
 				that._minState = false;
 			}
 			
@@ -764,8 +764,8 @@ lhgdialog.fn =
 			rbStyle.cursor = 'auto';
 			titleStyle.cursor = 'auto';
 			
-			DOM.max.hideIt();
-			DOM.res.showIt(true);
+			DOM.max.hide();
+			DOM.res.show(true);
 			
 			that._maxState = true;
 		}
@@ -787,8 +787,8 @@ lhgdialog.fn =
 		    rbStyle.cursor = that._or.rc;
 		    titleStyle.cursor = that._or.tc;
 		
-		    DOM.res.hideIt();
-			DOM.max.showIt(true);
+		    DOM.res.hide();
+			DOM.max.show(true);
 			
 			delete that._or;
 			
@@ -812,11 +812,11 @@ lhgdialog.fn =
 				that.max();
 			
 			that._minRz = that.config.resize;
-			DOM.main.hideIt();
-		    DOM.footer.hideIt();
+			DOM.main.hide();
+		    DOM.footer.hide();
 		    DOM.dialog[0].style.width = DOM.main[0].style.width;
-			DOM.rese.showIt(true);
-			DOM.min.hideIt();
+			DOM.rese.show(true);
+			DOM.min.hide();
 			DOM.rb[0].style.cursor = 'auto';
 			that.config.resize = false;
 		
@@ -825,7 +825,7 @@ lhgdialog.fn =
 		else
 		{
 		    that._minReset();
-			DOM.min.showIt(true);
+			DOM.min.show(true);
 			
 			delete that._minRz;
 			
@@ -896,7 +896,7 @@ lhgdialog.fn =
 		var load = that._fmLoad = function()
 		{
 			$content.addClass('ui_state_full');
-			$loading[0] && $loading.hideIt();
+			$loading[0] && $loading.hide();
 			
 			try{
 			    iwin = that.iwin = $iframe[0].contentWindow; // 定义窗口对象iwin属性为内容页的window对象
@@ -925,18 +925,9 @@ lhgdialog.fn =
 			    .position( config.left, config.top );
 			}
 			
-			//此处代码的作用是给内容页的document对象绑定mousedown事件
-			//使鼠标点击窗口内容页时窗口成为最顶层窗口
-			//如果此事件影响了你页面其它的事件可将此段代码删除，对组件使用没什么太大影响
 			$idoc.bind('mousedown',function()
 			{
-			    var index = lhgdialog.setting.zIndex++,
-				    topDG = lhgdialog.focus;
-				
-				that.DOM.wrap.css('zIndex', index);
-				topDG && topDG.DOM.outer.removeClass('ui_state_focus');
-				lhgdialog.focus = that;
-				that.DOM.outer.addClass('ui_state_focus');
+			    that.focus();
 			});
 			
 			config.init && config.init.call( that, iwin, _top );
@@ -1109,7 +1100,7 @@ lhgdialog.fn =
 		DOM.main[0].style.display = '';
 		DOM.footer[0].style.display = '';
 		DOM.dialog.removeAttr('style');
-		DOM.rese.hideIt();
+		DOM.rese.hide();
 		that.config.resize = that._minRz;
 		DOM.rb[0].style.cursor = that._minRz ? 'se-resize' : 'auto';
 	},
@@ -1340,7 +1331,7 @@ lhgdialog.templates =
 							'<tr>' +
 								'<td colspan="2" class="ui_header">' +
 									'<div class="ui_title_bar">' +
-										'<div class="ui_title" unselectable="on"><span class="ui_title_icon"></span><b class="ui_title_txt"></b></div>' +
+										'<div class="ui_title"><span class="ui_title_icon"></span><b class="ui_title_txt"></b></div>' +
 										'<div class="ui_title_buttons">' +
 										    '<a class="ui_min" href="#" title="\u6700\u5C0F\u5316"><b class="ui_min_b"></b></a>' +
 											'<a class="ui_rese" href="#" title="\u6062\u590D"><b class="ui_rese_b"></b><b class="ui_rese_t"></b></a>' +
