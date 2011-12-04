@@ -1,5 +1,5 @@
 ﻿/*!
- * lhgcore Dialog Plugin v4.0.0 bate1
+ * lhgcore Dialog Plugin v4.0.1 bate1
  * Date : 2011-12-01 10:00:00
  * Copyright (c) 2009 - 2011 By Li Hui Gang
  * URL : http://lhgcore.com/
@@ -173,7 +173,7 @@ var lhgdialog = function( config, ok, cancel )
 
 lhgdialog.fn =
 {
-    version: '4.0.0',
+    version: '4.0.1',
 	
 	_init: function( config )
 	{
