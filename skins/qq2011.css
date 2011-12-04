@@ -1,4 +1,4 @@
-﻿@charset "utf-8";
+﻿f@charset "utf-8";
 /*
 *lhgdialog采用先进的自适应九宫格结构
 *QQ2011皮肤-注释版
@@ -10,7 +10,7 @@
 
 /*皮肤设计原则：
 *1.深入理解渐进增强的概念，体现到皮肤设计的每个细节中。皮肤无需刻意追求每个浏览器视觉上的完全统一，更不要走入1px的极端；
-*2.不要过度干涉浏览器自身特性，例如使用 outeline:0 none 隐藏现代浏览器焦点（照顾弱势群体与键盘操作）；
+*2.不要过度干涉浏览器自身特性，例如使用 outeline:0 none 隐藏现代浏览器焦点（照顾弱势群体与键盘操作），参见W3C无障碍设计；
 *3.隐藏边框的最佳写法是 border:0 none;  http://www.blueidea.com/tech/web/2010/7417.asp
 *4.给td或者tr添加边框会存在兼容性问题；
 *5.按钮的设计不要太小，兼顾移动平台触摸屏的操作；
@@ -21,14 +21,11 @@
 
 /*公用部分-制作新皮肤从这里开始复制*/
 /*基本重置*/
-html{_background-image:url(about:blank);_background-attachment:fixed;zoom:1;}/*IE6下无抖动随屏滚动*/
 body {_margin:0;/*IE6 BUG*/}
 body, button, input, select, textarea, .ui_content { 
 	font: 12px/1.333 tahoma, arial, \5b8b\4f53, sans-serif; }/* for ie tahom字体在各个浏览器保持良好的统一*/
-body{ _margin:0;/*IE6 BUG*/ }
-.ui_lock_scroll body { overflow:hidden;padding-right:17px; }/*隐藏锁屏和全屏时滚动条*/
-.ui_lock_scroll { *overflow:hidden;}
-.ui_max_fixed{padding-right:0}
+.ui_lock_scroll body {overflow:hidden;}/*隐藏锁屏和全屏时滚动条*/
+.ui_lock_scroll {*overflow:hidden;}
 
 /*QQ2011皮肤开始-结构层与样式层分离，方便制作皮肤*/
 /*结构层*/
@@ -45,7 +42,7 @@ table.ui_border, table.ui_dialog {
 .ui_lb, .ui_rb, .ui_lt, .ui_rt {/*皮肤四个角*/
 	width:0;
 	height:0;
-	*width:1px;/*IE6-7设为0会有偏*/
+	*width:1px;/*IE6-7设为0会有偏移*/
 	*height:1px;
 	/*display:none; 隐藏后如果设置inner边框会造成谷歌浏览器1px空隙*/
 }
@@ -67,11 +64,12 @@ table.ui_border, table.ui_dialog {
 	text-overflow: ellipsis;
 	white-space:nowrap;/*firefox 不自动换行*/
 	display:block;
-	cursor:move;
 	height:30px;	/*标题栏高度*/
 	line-height:30px;
 	padding:0 100px 0 6px;/*防止IE6按钮错位*/
 	background:#7ac7e3;
+	-moz-user-select:none;
+	-webkit-user-select:none;
 }
 .ui_title_icon {
 	display: inline-block;
@@ -213,7 +211,7 @@ margin:0;
 .ui_inner { border-radius:6px; border:1px solid #6E6E6E\9\0; }
 
 .ui_dialog {
-	box-shadow:0 1px 5px rgba(0, 0, 0, .8);
+	box-shadow:0 1px 5px rgba(0, 0, 0, .5);
 -moz-transition:-moz-box-shadow linear .2s;
 -webkit-transition: -webkit-box-shadow linear .2s;
 transition: -webkit-box-shadow linear .2s;
@@ -222,7 +220,7 @@ transition: -webkit-box-shadow linear .2s;
 	border-left-color:#3992be\9\0;
 	border-right-color:#95d7f1\9\0;
 }
-.ui_state_lock .ui_dialog { box-shadow:0 3px 18px rgba(33,82,106,.6);}/*锁屏时遮罩*/
+.ui_state_lock .ui_dialog { box-shadow:0 3px 10px rgba(33,82,106,.6);}/*锁屏时遮罩*/
 .ui_state_drag .ui_dialog, .ui_state_lock.ui_state_drag .ui_dialog { box-shadow:none; }/*拖动时隐藏阴影，通过css3实现渐变动画*/
 
 .ui_content { color:#666; }/*失去焦点*/
@@ -408,73 +406,5 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33bbee', endC
 /*QQ2011皮肤结束*/
 
 
-/*多皮肤共存部分（可删除）*/
-
-/*JTips Start(优雅的自适应高度宽度，渐进增强)*/
-/*公用类，调用时请参数诸如：skin:'i tips'*/
-.tips .ui_state_tips .ui_l, .tips .ui_state_tips .ui_r { background:none; }
-.tips .ui_state_tips .ui_content { padding:5px; color:#CCC; }
-.tips .ui_state_focus .ui_state_tips .ui_content { color:#FFF; }/*高亮颜色*/
-/*iTips
-*2011-11-25
-*/
-.i .ui_state_tips .ui_inner {
-	border:1px solid #FFF;
-	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
-	border-radius:5px;
-}/*外边框*/
-.i .ui_state_tips .ui_dialog {
-	border:0 none;
-	border-radius:4px;/*内边框*/
-	height:20px;
-	min-height:20px;
-	background:none;/*IE 8-9*/
-	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#FAFAFA), to(#E4E4E4));
-	background:-moz-linear-gradient(top, #FAFAFA, #E4E4E4);
-	background:-o-linear-gradient(top, #FAFAFA, #E4E4E4);
-filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#FAFAFA', endColorstr='#E4E4E4');
-}
-
-/*JTips Black  
-*2011-11-25
-*/
-.black .ui_inner {
-	border:1px solid #333; /*外边框*/
-	box-shadow: 0 1px 6px #333;
-	border-radius:5px;
-}
-.black .ui_dialog {
-	border:1px solid #555;
-	border-radius:4px; /*内边框*/
-	height:20px;
-	min-height:20px;
-	background:none;/*IE 8-9*/
-	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(35,35,35,.8)), to(rgba(0,0,0,.9)));
-	background:-moz-linear-gradient(top, rgba(35,35,35,.8), rgba(0,0,0,.9));
-	background:-o-linear-gradient(top, rgba(35,35,35,.8), rgba(0,0,0,.9));
-filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#555555', endColorstr='#000000');
-}
-/*JTips Black End*/
-
-/*JTips Blue  
-*2011-11-25
-*/
-.blue .ui_state_tips .ui_inner {
-	border:1px solid #0b6693; /*外边框*/
-	box-shadow: 0 1px 6px #082556;
-	border-radius:5px;
-}
-.blue .ui_state_tips .ui_dialog {
-	border:1px solid #5083db;
-	border-radius:4px; /*内边框*/
-	height:20px;
-	min-height:20px;
-	background:none;/*IE 8-9*/
-	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(26,140,211,.8)), to(rgba(3,59,154,.9)));
-	background:-moz-linear-gradient(top, rgba(26,140,211,.8), rgba(3,59,154,.9));
-	background:-o-linear-gradient(top, rgba(26,140,211,.8), rgba(3,59,154,.9));
-filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#1a8cd3', endColorstr='#033b9a');
-}
-/*JTips Blue End*/
 
 

@@ -10,11 +10,9 @@
 
 /*制作新皮肤从这里开始复制*/
 /*基本重置*/
-html{_background-image:url(about:blank);_background-attachment:fixed;zoom:1;}/*IE6下无抖动随屏滚动*/
-body{ _margin:0;/*IE6 BUG*/ }
-.ui_lock_scroll body { overflow:hidden;padding-right:17px; }/*隐藏锁屏和全屏时滚动条*/
+body { _margin:0;/*IE6 BUG*/ }
+.ui_lock_scroll body { overflow:hidden;  }/*隐藏锁屏和全屏时滚动条*/
 .ui_lock_scroll { *overflow:hidden;}
-.ui_max_fixed{padding-right:0}
 /*结构层*/
 .ui_outer { text-align:left; }/*最外层div*/
 .ui_content, .ui_title, .ui_buttons button { font: 12px/1.333 tahoma, arial, \5b8b\4f53, sans-serif; }/*tahom字体在各个浏览器保持良好的统一*/
@@ -23,7 +21,7 @@ table.ui_border, table.ui_dialog { width:auto; border-spacing:0; *border-collaps
 
 .ui_dialog { background:#FFF; }/*主体背景*/
 /*标题部分开始*/
-.ui_title { overflow:hidden; text-overflow: ellipsis; white-space:nowrap;/*firefox 不自动换行*/ display:block; cursor:move; padding:0 100px 0 5px;/*防止IE6按钮错位*/ }
+.ui_title { overflow:hidden; text-overflow: ellipsis; white-space:nowrap;/*firefox 不自动换行*/ display:block; padding:0 100px 0 5px;/*防止IE6按钮错位*/ background: #79BCFF;/*IE haslayout 勿删除*/-moz-user-select:none; -webkit-user-select:none; /*firefox2+，webkit禁止双击选中文字*/  }
 .ui_title_icon { display: inline-block; height:100%; min-width:16px; width:16px; margin-right:5px; vertical-align:middle; background-position: center center; background-repeat:no-repeat; }
 .ui_title_buttons { position:absolute; cursor:pointer; font-size:0;/*opera 空隙修复*/ letter-spacing:-.5em; /*其他浏览器 空隙修复 宋体/Verdana为-.5em，Tahoma为-.333em，Arial为-.25em*/ }
 /*标题部分结束*/
@@ -60,20 +58,22 @@ transition: -webkit-box-shadow linear .2s;}
 .ui_state_drag .ui_border, .ui_state_lock.ui_state_drag .ui_border { box-shadow:none; }/*拖动时隐藏阴影，通过css3实现渐变动画*/
 
 .ui_lt, .ui_rt, .ui_lb, .ui_rb { width:6px; height:6px; display:block;/*防止改变浏览器大小挤压窗口边框*/}/*边框宽度*/
-.ui_lt{ border-radius:3px 0 0 0;}.ui_rt{ border-radius:0 3px 0 0;}.ui_rb{ border-radius:0 0 3px 0;}.ui_lb{ border-radius:0 0 0 3px;}
+.ui_lt{ border-radius:3px 0 0 0;} .ui_rt{ border-radius:0 3px 0 0;} .ui_rb{ border-radius:0 0 3px 0;} .ui_lb{ border-radius:0 0 0 3px;}
 .ui_lt, .ui_rt, .ui_l, .ui_r, .ui_lb, .ui_b, .ui_t, .ui_rb { background:rgba(80, 120, 150, .5); background:#507896\9; filter:alpha(opacity=50);}/*边框透明度*/
-.ui_state_lock .ui_lt, .ui_state_lock .ui_t, .ui_state_lock .ui_rt, .ui_state_lock .ui_l, .ui_state_lock .ui_r, .ui_state_lock .ui_lb, .ui_state_lock .ui_b, .ui_state_lock .ui_rb { background:rgba(80, 120, 150, .5); background:#507896\9; filter:alpha(opacity=50); }/*锁屏是边框背景*/
+.ui_state_lock .ui_lt, .ui_state_lock .ui_t, .ui_state_lock .ui_rt, .ui_state_lock .ui_l, .ui_state_lock .ui_r, .ui_state_lock .ui_lb, .ui_state_lock .ui_b, .ui_state_lock .ui_rb { background:rgba(80, 120, 150, .5); background:#507896\9; filter:alpha(opacity=50); }/*锁屏时边框背景*/
 
 /*************标题栏样式*********/
-.ui_title_bar { position:relative; height:100%; }
+.ui_title_bar { position:relative; height:100%;}
 .ui_title { height:28px; line-height:28px; font-size:14px; font-weight:bold; color:#DDD;text-shadow: 0 1px 0 #000;
  border-style:solid; border-width:1px; border-color:#88cafc #3582bd #38739f #3582bd;
- background-color:#3A6EA5;
  background: linear-gradient(top, #46a0e1, #3280bf);
  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#46a0e1), to(#3280bf)); 
  background: -moz-linear-gradient(top, #46a0e1, #3280bf); 
  background: -o-linear-gradient(top, #46a0e1, #3280bf);
- filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#46a0e1', endColorstr='#3280bf'); }
+ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#46a0e1', endColorstr='#3280bf');
+
+ }
+ 
 .ui_state_focus .ui_title {  color:#FFF; }
 .ui_state_drag .ui_title { border-top-color:#4E84C0;
 background: linear-gradient(top, #3280bf, #46a0e1); 
@@ -163,7 +163,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33bbee', endC
 
 /*对话框皮肤 End*/
 /*标题纯CSS按钮定位部分*/
-.ui_min, .ui_max, .ui_close, .ui_res, .ui_rese {  margin-left:3px; color:#FFF; font-size:20px; width:22px; height:22px; line-height:18px;/*按钮视觉居中*/}
+.ui_min, .ui_max, .ui_close, .ui_res, .ui_rese { margin-left:3px; color:#FFF; font-size:20px; width:22px; height:22px; line-height:18px;/*按钮视觉居中*/}
 .ui_min, .ui_rese { margin-left:0;}
 .ui_min b { top:10px; left:5px; width:12px; height:2px; border-bottom:2px solid #FFF; }
 .ui_max b { top:5px; left:5px; width:10px; height:7px; }
@@ -175,7 +175,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33bbee', endC
 .ui_res_t,.ui_rese_t { background:#3d8cce; }/*还原按钮底部框背景与标题背景融合*/
 .ui_min, .ui_rese { font-size:14px; font-weight:600; line-height:20px; *line-height:22px; /*最小化 恢复按钮*/}
 .ui_close{ vertical-align:baseline; *line-height:22px; *font-size:22px;  *margin-left:0;}/*IE6关闭按钮垂直居中*/
-.ui_close:hover, .ui_close:focus { color:#bf160b; outline:0 none; }
+.ui_close:hover, .ui_close:focus { color:#c9190d; outline:0 none; }
 .ui_rese:hover{color:#555;}
 .ui_min:hover b, .ui_max:hover b, .ui_res:hover b, .ui_rese:hover b { border-color:#555; }
 /*标题按钮结束*/
@@ -197,71 +197,4 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33bbee', endC
 .ui_state_tips .ui_dialog { background-position: 0 -54px; background-repeat: repeat-x; height:54px; overflow:hidden; }/*主体内容背景*/
 
 
-/*多皮肤共存部分（可删除）*/
-/*JTips Start(优雅的自适应高度宽度，渐进增强)*/
-/*公用类，调用时请参数诸如：skin:'i tips'*/
-.tips .ui_state_tips .ui_l, .tips .ui_state_tips .ui_r { background:none; }
-.tips .ui_state_tips .ui_content { padding:5px; color:#CCC; }
-.tips .ui_state_focus .ui_state_tips .ui_content { color:#FFF; }/*高亮颜色*/
-/*iTips
-*2011-11-25
-*/
-.i .ui_state_tips .ui_inner {
-	border:1px solid #FFF;
-	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
-	border-radius:5px;
-}/*外边框*/
-.i .ui_state_tips .ui_dialog {
-	border:0 none;
-	border-radius:4px;/*内边框*/
-	height:20px;
-	min-height:20px;
-	background:none;/*IE 8-9*/
-	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#FAFAFA), to(#E4E4E4));
-	background:-moz-linear-gradient(top, #FAFAFA, #E4E4E4);
-	background:-o-linear-gradient(top, #FAFAFA, #E4E4E4);
-filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#FAFAFA', endColorstr='#E4E4E4');
-}
-
-/*JTips Black  
-*2011-11-25
-*/
-.black .ui_inner {
-	border:1px solid #333; /*外边框*/
-	box-shadow: 0 1px 6px #333;
-	border-radius:5px;
-}
-.black .ui_dialog {
-	border:1px solid #555;
-	border-radius:4px; /*内边框*/
-	height:20px;
-	min-height:20px;
-	background:none;/*IE 8-9*/
-	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(35,35,35,.8)), to(rgba(0,0,0,.9)));
-	background:-moz-linear-gradient(top, rgba(35,35,35,.8), rgba(0,0,0,.9));
-	background:-o-linear-gradient(top, rgba(35,35,35,.8), rgba(0,0,0,.9));
-filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#555555', endColorstr='#000000');
-}
-/*JTips Black End*/
-
-/*JTips Blue  
-*2011-11-25
-*/
-.blue .ui_state_tips .ui_inner {
-	border:1px solid #0b6693; /*外边框*/
-	box-shadow: 0 1px 6px #082556;
-	border-radius:5px;
-}
-.blue .ui_state_tips .ui_dialog {
-	border:1px solid #5083db;
-	border-radius:4px; /*内边框*/
-	height:20px;
-	min-height:20px;
-	background:none;/*IE 8-9*/
-	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(26,140,211,.8)), to(rgba(3,59,154,.9)));
-	background:-moz-linear-gradient(top, rgba(26,140,211,.8), rgba(3,59,154,.9));
-	background:-o-linear-gradient(top, rgba(26,140,211,.8), rgba(3,59,154,.9));
-filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#1a8cd3', endColorstr='#033b9a');
-}
-/*JTips Blue End*/
 

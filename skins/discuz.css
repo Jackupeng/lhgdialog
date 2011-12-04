@@ -20,7 +20,7 @@ table.ui_border, table.ui_dialog { width:auto; border-spacing:0; *border-collaps
 
 .ui_dialog { background:#FFF; }/*主体背景*/
 /*标题部分开始*/
-.ui_title { overflow:hidden; text-overflow: ellipsis; white-space:nowrap;/*firefox 不自动换行*/ display:block; cursor:move; padding:0 100px 0 5px;/*防止IE6按钮错位*/ }
+.ui_title { overflow:hidden; text-overflow: ellipsis; white-space:nowrap;/*firefox 不自动换行*/ display:block; padding:0 100px 0 5px;/*防止IE6按钮错位*/ background: #79BCFF;/*IE haslayout 勿删除*/-moz-user-select:none; -webkit-user-select:none; /*firefox2+，webkit禁止双击选中文字*/  }
 .ui_title_icon { display: inline-block; height:100%; min-width:16px; width:16px; margin-right:5px; vertical-align:middle; background-position: center center; background-repeat:no-repeat; }
 .ui_title_buttons { position:absolute; cursor:pointer; font-size:0;/*opera 空隙修复*/ letter-spacing:-.5em; /*其他浏览器 空隙修复 宋体/Verdana为-.5em，Tahoma为-.333em，Arial为-.25em*/ }
 /*标题部分结束*/
@@ -71,13 +71,8 @@ table.ui_border, table.ui_dialog { width:auto; border-spacing:0; *border-collaps
 /*制作新皮肤到这里结束复制*/
 
 /************样式层开始************/
-.ui_inner {border:1px solid #a0a0a0;}
-.ui_border{ border-radius:5px; box-shadow:0 1px 5px rgba(0,0,0,.9);-moz-transition:-moz-box-shadow linear .2s;
--webkit-transition: -webkit-box-shadow linear .2s;
-transition: -webkit-box-shadow linear .2s;}
-.ui_state_lock .ui_border{box-shadow:0 3px 12px rgba(0, 0, 0, .5);}/*锁屏时遮罩*/
-.ui_state_drag .ui_border, .ui_state_lock.ui_state_drag .ui_border { box-shadow:none;}/*拖动时隐藏阴影，通过css3实现渐变动画*/
-
+.ui_inner {border:1px solid #888;}
+.ui_border{ border-radius:5px;}
 .ui_lt, .ui_rt, .ui_lb, .ui_rb { width:8px; height:8px; display:block;/*防止改变浏览器大小挤压窗口边框*/}/*边框宽度*/
 .ui_lt{ border-radius:5px 0 0 0;}.ui_rt{ border-radius:0 5px 0 0;}.ui_rb{ border-radius:0 0 5px 0;}.ui_lb{ border-radius:0 0 0 5px;}
 .ui_lt, .ui_rt, .ui_l, .ui_r, .ui_lb, .ui_b, .ui_t, .ui_rb { background:rgba(0, 0, 0, .2); background:#000\9; filter:alpha(opacity=20);}/*边框透明度*/
@@ -85,13 +80,13 @@ transition: -webkit-box-shadow linear .2s;}
 
 /*************标题栏样式*********/
 .ui_title_bar { position:relative; height:100%;}
-.ui_title { height:30px; line-height:30px; font-size:14px; font-weight:bold; color:#888; border-bottom:1px solid #DDD\9;}
+.ui_title { height:30px; line-height:30px; font-size:14px; font-weight:bold; color:#888; border-bottom:1px solid #DDD\9; background:none;}
 .ui_title:after{ content:""; display:block; height:8px; width:100%;  position:absolute; top:26px; left:0;
-background: -moz-radial-gradient(center, ellipse cover,  #b5b5b5 10%, #FFFFFF 75%); /* FF3.6+ */
-background: -webkit-radial-gradient(center, ellipse cover,  #b5b5b5 10%,#FFFFFF 75%); /* Chrome10+,Safari5.1+ */
-background: -o-radial-gradient(center, ellipse cover,  #b5b5b5 10%,#FFFFFF 75%); /* Opera 12+ */
-background: -ms-radial-gradient(center, ellipse cover,  #b5b5b5 10%,#FFFFFF 75%); /* IE10+ */
-background: radial-gradient(center, ellipse cover,  #b5b5b5 10%,#FFFFFF 75%); /* W3C */
+background: -moz-radial-gradient(center, ellipse cover,  #c8c8c8 10%, #FFFFFF 75%); /* FF3.6+ */
+background: -webkit-radial-gradient(center, ellipse cover,  #c8c8c8 10%,#FFFFFF 75%); /* Chrome10+,Safari5.1+ */
+background: -o-radial-gradient(center, ellipse cover,  #c8c8c8 10%,#FFFFFF 75%); /* Opera 12+ */
+background: -ms-radial-gradient(center, ellipse cover,  #c8c8c8 10%,#FFFFFF 75%); /* IE10+ */
+background: radial-gradient(center, ellipse cover,  #c8c8c8 10%,#FFFFFF 75%); /* W3C */
 display:none\9;
 }
 .ui_title:before{ content:""; display:block; height:5px; width:100%;  position:absolute; top:26px; left:0; background:#FFF; z-index:1;display:none\9;}

@@ -21,7 +21,7 @@ table.ui_border, table.ui_dialog { width:auto; border-spacing:0; *border-collaps
 .ui_border td, .ui_dialog td { padding:0; }
 .ui_dialog{background:#FFF;}
 /*标题部分开始*/
-.ui_title { overflow:hidden; text-overflow: ellipsis; white-space:nowrap;/*firefox 不自动换行*/ display:block; cursor:move; padding:0 100px 0 6px;/*防止IE6按钮错位*/ -moz-user-select:none; -webkit-user-select:none; /*firefox2+，webkit禁止双击选中文字*/ }
+.ui_title { overflow:hidden; text-overflow: ellipsis; white-space:nowrap;/*firefox 不自动换行*/ display:block; padding:0 100px 0 6px;/*防止IE6按钮错位*/ -moz-user-select:none; -webkit-user-select:none; /*firefox2+，webkit禁止双击选中文字*/ }
 .ui_title_icon { display: inline-block; height:100%; min-width:16px; width:16px; margin-right:5px; vertical-align:middle; background-position: center center; background-repeat:no-repeat; }
 .ui_title_buttons { position:absolute; cursor:pointer; font-size:0;/*opera 空隙修复*/ letter-spacing:-.5em; /*其他浏览器 空隙修复 宋体/Verdana为-.5em，Tahoma为-.333em，Arial为-.25em*/ }
 /*标题部分结束*/
@@ -117,3 +117,72 @@ filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5', end
 .ui_state_tips .ui_r { background-position:0 0; right:-6px; width:5px; top:0; }/*右侧背景样式*/
 .ui_state_tips .ui_dialog { background-position: 0 -54px; background-repeat: repeat-x; height:54px; overflow:hidden; }/*主体内容背景*/
 /*mac皮肤结束*/
+
+/*多皮肤共存部分（可删除）*/
+
+/*JTips Start(优雅的自适应高度宽度，渐进增强)*/
+/*公用类，调用时请参数诸如：skin:'i tips'*/
+.tips .ui_state_tips .ui_l, .tips .ui_state_tips .ui_r { background:none; }
+.tips .ui_state_tips .ui_content { padding:5px; color:#CCC; }
+.tips .ui_state_focus .ui_state_tips .ui_content { color:#FFF; }/*高亮颜色*/
+/*iTips
+*2011-11-25
+*/
+.i .ui_state_tips .ui_inner {
+	border:1px solid #FFF;
+	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+	border-radius:5px;
+}/*外边框*/
+.i .ui_state_tips .ui_dialog {
+	border:0 none;
+	border-radius:4px;/*内边框*/
+	height:20px;
+	min-height:20px;
+	background:none;/*IE 8-9*/
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#FAFAFA), to(#E4E4E4));
+	background:-moz-linear-gradient(top, #FAFAFA, #E4E4E4);
+	background:-o-linear-gradient(top, #FAFAFA, #E4E4E4);
+filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#FAFAFA', endColorstr='#E4E4E4');
+}
+
+/*JTips Black  
+*2011-11-25
+*/
+.black .ui_inner {
+	border:1px solid #333; /*外边框*/
+	box-shadow: 0 1px 6px #333;
+	border-radius:5px;
+}
+.black .ui_dialog {
+	border:1px solid #555;
+	border-radius:4px; /*内边框*/
+	height:20px;
+	min-height:20px;
+	background:none;/*IE 8-9*/
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(35,35,35,.8)), to(rgba(0,0,0,.9)));
+	background:-moz-linear-gradient(top, rgba(35,35,35,.8), rgba(0,0,0,.9));
+	background:-o-linear-gradient(top, rgba(35,35,35,.8), rgba(0,0,0,.9));
+filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#555555', endColorstr='#000000');
+}
+/*JTips Black End*/
+
+/*JTips Blue  
+*2011-11-25
+*/
+.blue .ui_state_tips .ui_inner {
+	border:1px solid #0b6693; /*外边框*/
+	box-shadow: 0 1px 6px #082556;
+	border-radius:5px;
+}
+.blue .ui_state_tips .ui_dialog {
+	border:1px solid #5083db;
+	border-radius:4px; /*内边框*/
+	height:20px;
+	min-height:20px;
+	background:none;/*IE 8-9*/
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(26,140,211,.8)), to(rgba(3,59,154,.9)));
+	background:-moz-linear-gradient(top, rgba(26,140,211,.8), rgba(3,59,154,.9));
+	background:-o-linear-gradient(top, rgba(26,140,211,.8), rgba(3,59,154,.9));
+filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#1a8cd3', endColorstr='#033b9a');
+}
+/*JTips Blue End*/
