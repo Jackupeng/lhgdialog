@@ -46,13 +46,22 @@ var _Skin_tmpl  = function (data) {
 		});
 	}
 	function op_b0(){
-		
 		var b = $.dialog({
 			id: "op_b00",
 			title: "放一个视频",
-			content:' <embed src="http://player.youku.com/player.php/sid/XMzI4MTYwNDcy/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed> ',
+			content:' <embed src="http://player.youku.com/player.php/sid/XMzI4MTYwNDcy/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" wmode="transparent"></embed> ',
 			padding: 0	
 		});
+	}
+	function op_bmap(){
+		var map = $.dialog({
+			id: "op_map",
+			title: "google地图",
+			content: "url:http://maps.google.com/maps?hl=zh-CN&ie=UTF8&ll=37.0625,-95.677068&spn=39.371738,86.396484&t=m&z=4&vpsrc=1",
+			padding: 0,
+			width: 450,
+			height: 400
+		});	
 	}
 	function op_b1(){
 		var b = lhgdialog.alert("这是一个alert消息哦");
@@ -132,11 +141,35 @@ function op_b0(){
     var b = $.dialog({
         id: "op_b00",
         title: "放一个视频",
-        content:'去视频网站找一个视频的html代码',
+        content:' &lt;embed src="http://player.youku.com/player.php/sid/XMzI4MTYwNDcy/v.swf" 
+        			allowFullScreen="true" quality="high" width="480" height="400" align="middle" 
+                    allowScriptAccess="always" type="application/x-shockwave-flash" wmode="transparent"&gt;&lt;/embed&gt; ',
         padding: 0	
     });
 }				</pre>
+				<pre class="prettyprint">
+/** 关于flash无法被遮罩的问题，可以这样参考一下解决方案： */
+
+IE浏览器下可用：&lt;param name="wmode" value="transparent" /&gt;
+
+firefox下可用：&lt;embed src="YourFlash.swf" wmode="transparent" &gt;
+                </pre>
                 <button class="button green" onclick="op_b0()">运行»</button>
+            </li>
+            <li>
+            	<h3>放一个地图给大家</h3>
+                <pre class="prettyprint">
+var map = $.dialog({
+    id: "op_map",
+    title: "google地图",
+    content: "url:http://maps.google.com/maps?hl=zh-CN&ie=UTF8
+    	&ll=37.0625,-95.677068&spn=39.371738,86.396484&t=m&z=4&vpsrc=1",
+    padding: 0,
+    width: 450,
+    height: 400
+});
+                </pre>
+                <button class="button green" onclick="op_bmap()">运行地图</button>
             </li>
         	<li>
             	<h3>Alert消息演示</h3>

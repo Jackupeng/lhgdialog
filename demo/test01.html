@@ -11,7 +11,13 @@ var api = frameElement.api, W = api.opener, D = document;
 $(function(){
 	var val = W.$.dialog.data('txt01');
 	$("#txt01").val(val);
-
+	
+	$("#btn_sub").bind("click", function(){
+		W.$("#txt2").val($("#txt01").val());
+	});
+	
+	
+	
 });
 
 </script>
@@ -21,9 +27,8 @@ $(function(){
 <div>下面的文本框显示调用页面传过来的数据</div>
 
 <br/>
-<br /><br />
 <input type="text" class="text" id="txt01" />
-<br /><br />
+<input type="button" id="btn_sub" value="点击按钮将文本框传回页面" />
 <select name="">
     <option value="sdf">我来测试选项卡1</option>
     <option value="sdf">选项2</option>

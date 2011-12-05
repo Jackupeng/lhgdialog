@@ -122,9 +122,16 @@ $.dialog.data( "txt01", $("#txt1").val() );</pre>
 /** test01.html 页面JS 调用页面通过( var api = frameElement.api, W = api.opener, D = document; 获取Window对象) */
 var val = W.$.dialog.data('txt01');
 $("#txt01").val(val);
+
+/** 在test01.html 页面点击按钮，将文本框中的数据传回调用页面 */
+/** #txt2 为调用页面的一个文本框 W = = api.opener */
+$("#btn_sub").bind("click", function(){
+    W.$("#txt2").val($("#txt01").val());
+});
                 </pre>
 				<input type="text" class="text" value="我都使用lhgDialog4了" id="txt1" />
                 <button class="button green" onclick="va1()">运行»</button>
+                <input type="text" class="text" id="txt2" />
             </li>
             <li>
             	<h3>完整的登录演示页面</h3>
