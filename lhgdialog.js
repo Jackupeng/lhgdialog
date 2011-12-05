@@ -1,5 +1,5 @@
 ﻿/*!
- * lhgcore Dialog Plugin v4.0.1 bate1
+ * lhgcore Dialog Plugin v4.0.0 bate1
  * Date : 2011-12-01 10:00:00
  * Copyright (c) 2009 - 2011 By Li Hui Gang
  * URL : http://lhgcore.com/
@@ -173,7 +173,7 @@ var lhgdialog = function( config, ok, cancel )
 
 lhgdialog.fn =
 {
-    version: '4.0.1',
+    version: '4.0.0',
 	
 	_init: function( config )
 	{
@@ -560,6 +560,7 @@ lhgdialog.fn =
 		DOM.title_txt.html('');
 		DOM.content.html('');
 		DOM.buttons.html('');
+		DOM.icon_bg.attr('src', '');
 		
 		if( lhgdialog.focus === that ) lhgdialog.focus = null;
 		
@@ -1727,18 +1728,20 @@ var _zIndex = function()
  * 警告
  * @param	{String}	消息内容
  */
-lhgdialog.alert = function( content, icon, title )
+lhgdialog.alert = function( content )
 {
 	return lhgdialog({
-		title: title || '',
+		title: '警告',
 		id: 'Alert',
 		zIndex: _zIndex(),
-		icon: icon || 'warning.png',
+		icon: 'alert.gif',
+		fixed: true,
 		lock: true,
+		content: content,
 		ok: true,
-		resize: false,
-		content: content
+		resize: false
 	});
+	
 };
 
 /**
@@ -1747,17 +1750,17 @@ lhgdialog.alert = function( content, icon, title )
  * @param	{Function}	确定按钮回调函数
  * @param	{Function}	取消按钮回调函数
  */
-lhgdialog.confirm = function( content, yes, no, icon, title )
+lhgdialog.confirm = function( content, yes, no )
 {
 	return lhgdialog({
-		title: title || '',
-		id: 'Confirm',
+		title: '确认',
+		id: 'confirm.gif',
 		zIndex: _zIndex(),
-		icon: icon || 'issue.png',
+		icon: 'confirm.gif',
+		fixed: true,
 		lock: true,
-		opacity: .1,
-		resize: false,
 		content: content,
+		resize: false,
 		ok: function(here){
 			return yes.call(this, here);
 		},
@@ -1773,19 +1776,18 @@ lhgdialog.confirm = function( content, yes, no, icon, title )
  * @param	{Function}	回调函数. 接收参数：输入值
  * @param	{String}	默认值
  */
-lhgdialog.prompt = function( content, yes, value, icon, title )
+lhgdialog.prompt = function( content, yes, value )
 {
 	value = value || '';
 	var input;
 	
 	return lhgdialog({
-		title: title || '',
+		title: '提问',
 		id: 'Prompt',
 		zIndex: _zIndex(),
-		icon: icon || 'issue.png',
+		icon: 'prompt.gif',
+		fixed: true,
 		lock: true,
-		opacity: .1,
-		resize: false,
 		content: [
 			'<div style="margin-bottom:5px;font-size:12px">',
 				content,
@@ -1797,7 +1799,7 @@ lhgdialog.prompt = function( content, yes, value, icon, title )
 			'</div>'
 			].join(''),
 		init: function(){
-			input = $('input',this.DOM.content[0])[0];
+			input = this.DOM.content[0].getElementsByTagName('input')[0];
 			input.select();
 			input.focus();
 		},
@@ -1811,24 +1813,25 @@ lhgdialog.prompt = function( content, yes, value, icon, title )
 /**
  * 短暂提示
  * @param	{String}	提示内容
- * @param	{Number}	显示时间 (默认1.5秒)
+ * @param	{Number}	提示图标
+ * @param   {Function}  提示关闭时执行的函数，返回false将阻止窗口关闭
  */
-lhgdialog.tips = function( content, time, icon )
+lhgdialog.tips = function( content, icon, close )
 {
 	return lhgdialog({
 		id: 'Tips',
 		zIndex: _zIndex(),
 		title: false,
 		cancel: false,
-		min: false,
-		max: false,
 		fixed: true,
 		lock: false,
 		resize: false,
-		icon: icon || 'i.png'
-	})
-	.content('<div style="padding: 0 1em;">' + content + '</div>')
-	.time(time || 1.5);
+		icon: icon || 'tips.gif',
+		close: function(here){
+		    return close && close.call(this, here);
+		},
+		content: '<div style="padding: 0 1em;">' + content + '</div>'
+	});
 };
 
 })( window.jQuery||window.lhgcore, this.lhgdialog );
