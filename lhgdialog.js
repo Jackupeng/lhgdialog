@@ -345,7 +345,7 @@ lhgdialog.fn =
 		if( width )
 		{
 			that._width = width.toString().indexOf('%') !== -1 ? width : null;
-			maxWidth = _$top.width() - wrap[0].offsetWidth + main[0].offsetWidth;
+			maxWidth = _$top.width() - 2 - wrap[0].offsetWidth + main[0].offsetWidth;
 			scaleWidth = that._toNumber(width,maxWidth);
 			width = scaleWidth;
 			
