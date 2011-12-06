@@ -721,6 +721,8 @@ lhgdialog.fn =
 	 */
 	max: function()
 	{
+		if( !this.config.max ) return this;
+		
 		var that = this,
 		    DOM = that.DOM,
 			wrapStyle = DOM.wrap[0].style,
@@ -804,7 +806,9 @@ lhgdialog.fn =
 	 */
 	min: function()
 	{
-	    var that = this,
+	    if( !this.config.min ) return this;
+		
+		var that = this,
 		    DOM = that.DOM;
 			
 		if( !that._minState )
@@ -1417,7 +1421,7 @@ lhgdialog.setting =
 	resize: true,				// 是否允许用户调节尺寸
 	drag: true, 				// 是否允许用户拖动位置
 	cache: true,                // 是否缓存窗口内容页
-	extendDrag: false            // 增加lhgdialog拖拽体验
+	extendDrag: false           // 增加lhgdialog拖拽体验
 };
 
 window.lhgdialog = $.dialog = $.lhgdialog = lhgdialog;
