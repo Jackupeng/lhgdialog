@@ -1627,7 +1627,7 @@ _use = function(event)
 			fixed = wrap.style.position === 'fixed',
 			ow = wrap.offsetWidth,
 			// 向下拖动时不能将标题栏拖出可视区域
-			oh = title[0].offsetHeight || 20, //wrap.offsetHeight,
+			oh = title[0].offsetHeight + DOM.t[0].offsetHeight || 20,
 			ww = _$window.width(),
 			wh = _$window.height(),
 			dl = fixed ? 0 : _$document.scrollLeft(),
