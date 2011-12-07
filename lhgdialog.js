@@ -345,7 +345,7 @@ lhgdialog.fn =
 		if( width )
 		{
 			that._width = width.toString().indexOf('%') !== -1 ? width : null;
-			maxWidth = _$top.width() - 2 - wrap[0].offsetWidth + main[0].offsetWidth;
+			maxWidth = _$top.width() - wrap[0].offsetWidth + main[0].offsetWidth;
 			scaleWidth = that._toNumber(width,maxWidth);
 			width = scaleWidth;
 			
@@ -394,7 +394,7 @@ lhgdialog.fn =
 			docTop = _$doc.scrollTop(),
 			dl = isFixed ? 0 : docLeft,
 			dt = isFixed ? 0 : docTop,
-			ww = _$top.width() - 2,
+			ww = _$top.width(),
 			wh = _$top.height(),
 			ow = wrap.offsetWidth,
 			oh = wrap.offsetHeight,
@@ -1070,26 +1070,40 @@ lhgdialog.fn =
 	/*! 设置静止定位
 	 * IE6 Fixed @see: http://www.planeart.cn/?p=877
 	 */
-	_setFixed: function()
+	_setFixed: (function()
 	{
-		var $elem = this.DOM.wrap,
-			style = $elem[0].style;
+	    _ie6 && $(function(){
+		    var bg = 'backgroundAttachment';
+			if( _$html.css(bg) !== 'fixed' && $(_doc.body).css(bg) !== 'fixed' )
+			{
+			    _$html.css({
+				    zoom: 1,// 避免偶尔出现body背景图片异常的情况
+					backgroundImage: 'url(about:blank)',
+					backgroundAttachment: 'fixed'
+				});
+			}
+		});
 		
-		if(_ie6)
-		{
-			var sLeft = _$doc.scrollLeft(),
-				sTop = _$doc.scrollTop(),
-				left = parseInt($elem.css('left')) - sLeft,
-				top = parseInt($elem.css('top')) - sTop;
+		return function(){
+			var $elem = this.DOM.wrap,
+				style = $elem[0].style;
 			
-			this._setAbsolute();
-			
-			style.setExpression( 'left', 'this.ownerDocument.documentElement.scrollLeft +' + left );
-			style.setExpression( 'top', 'this.ownerDocument.documentElement.scrollTop +' + top );
-		}
-		else
-			style.position = 'fixed';
-	},
+			if(_ie6)
+			{
+				var sLeft = _$doc.scrollLeft(),
+					sTop = _$doc.scrollTop(),
+					left = parseInt($elem.css('left')) - sLeft,
+					top = parseInt($elem.css('top')) - sTop;
+				
+				this._setAbsolute();
+				
+				style.setExpression( 'left', 'this.ownerDocument.documentElement.scrollLeft +' + left );
+				style.setExpression( 'top', 'this.ownerDocument.documentElement.scrollTop +' + top );
+			}
+			else
+				style.position = 'fixed';
+		};
+	}()),
 	
 	/*! 设置绝对定位 */
 	_setAbsolute: function()
@@ -1614,7 +1628,7 @@ _use = function(event)
 			ow = wrap.offsetWidth,
 			// 向下拖动时不能将标题栏拖出可视区域
 			oh = title[0].offsetHeight || 20, //wrap.offsetHeight,
-			ww = _$window.width() - 2,
+			ww = _$window.width(),
 			wh = _$window.height(),
 			dl = fixed ? 0 : _$document.scrollLeft(),
 			dt = fixed ? 0 : _$document.scrollTop();
