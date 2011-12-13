@@ -53,7 +53,7 @@ $(function(){
 			if(username == "admin" && password == "admin"){
 				W.$.dialog.data("islogin", true);
 				W.$.dialog.tips("登录成功", "suc.png", function(){
-					W.reload();
+					W.location.reload();
 					//W.$.dialog.list["va_2"].close();
 					api.close();
 				}).time(1);
