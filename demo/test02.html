@@ -36,7 +36,7 @@ $(function(){
 				for( i = 0; i < errorList.length; i++ ){
 					Msg = Msg + errorList[i].element.name + ":&nbsp;&nbsp;<font color='red'>" + errorList[i].message + "</font><br/>";
 				}
-				validTips = W.$.dialog.tips(Msg,2,"hits.png");
+				validTips = W.$.dialog.tips(Msg,"hits.png").time(1);
 			}
 		}, 
 		success: function (lable){
@@ -51,11 +51,14 @@ $(function(){
 			var username = $.trim( $("#login_username").val() );
 			var password = $.trim( $("#login_password").val() );
 			if(username == "admin" && password == "admin"){
-				W.$.dialog.tips("登录成功", 3, "suc.png");
 				W.$.dialog.data("islogin", true);
-				api.time(1);
+				W.$.dialog.tips("登录成功", "suc.png", function(){
+					W.reload();
+					//W.$.dialog.list["va_2"].close();
+					api.close();
+				}).time(1);
 			}else{
-				W.$.dialog.tips("用户名或密码错误", 3, "fail.png");
+				W.$.dialog.tips("用户名或密码错误", "fail.png").time(1);
 			}
 			return true;
 		}
