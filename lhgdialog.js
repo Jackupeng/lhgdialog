@@ -1,6 +1,6 @@
 ﻿/*!
- * lhgcore Dialog Plugin v4.0.0 bate1
- * Date : 2011-12-01 10:00:00
+ * lhgcore Dialog Plugin v4.0.1 bate2
+ * Date : 2011-12-11 10:05:00
  * Copyright (c) 2009 - 2011 By Li Hui Gang
  * URL : http://lhgcore.com/
  * BBS : http://bbs.lhgcore.com/
@@ -11,11 +11,9 @@
 $.noop = $.noop || function(){}; // jQuery 1.3.2
 var _ie6 = window.VBArray && !window.XMLHttpRequest,
     _isIE = 'CollectGarbage' in window,
-    _isMobile = 'createTouch' in document && !('onmousemove' in document.documentElement)
-	    || /(iPhone|iPad|iPod)/i.test(navigator.userAgent),
 	_count = 0,
 	_expando = 'lhgdialog' + (new Date).getTime(),
-	_rurl = /^url:/, _box,
+	_rurl = /^url:/, _box, onKeyDown,
 		
 /*!
  * 克隆对象函数
@@ -125,8 +123,8 @@ var lhgdialog = function( config, ok, cancel )
 {
 	config = config || {};
 	
-	if( typeof config === 'string' || config.nodeType === 1 )
-		config = { content: config, fixed: _isMobile };
+	if( typeof config === 'string' )
+		config = { content: config };
 	
 	var api, setting = lhgdialog.setting;
 		
@@ -139,10 +137,7 @@ var lhgdialog = function( config, ok, cancel )
 	
 	// 如果定义了id参数则返回存在此id的窗口对象
 	api = lhgdialog.list[config.id];
-	if(api) return api.focus();
-	
-	// 目前主流移动设备对fixed支持不好
-	if(_isMobile) config.fixed = false;
+	if(api) return api.zindex().focus();
 	
 	// 按钮队列
 	if( !$.isArray(config.button) )
@@ -217,7 +212,7 @@ lhgdialog.fn =
 		.content(config.content, true)
 		.size(config.width, config.height)
 		.position(config.left, config.top)
-		.focus()
+		.zindex().focus()
 		.time(config.time);
 		
 		config.lock && that.lock();
@@ -263,8 +258,8 @@ lhgdialog.fn =
 		    // 假如内容中前3个字符为'url:'就加载相对路径的单独页面的内容页
 			if( _rurl.test(msg) )
 			{
-			    DOM.icon.hideIt();
 				$content.html( loading );
+				DOM.icon.hideIt();
 				_url = msg.split('url:')[1];
 				that._iframe( _url );
 			}
@@ -529,7 +524,7 @@ lhgdialog.fn =
 			// IE删除iframe后，iframe仍然会留在内存中出现上述问题，置换src是最容易解决的方法
 			$(that.iframe).css('display', 'none')
 			.unbind('load', that._fmLoad)
-			.attr('src', 'about:blank').remove();
+			.attr('src','about:blank').remove();
 			
 			DOM.content.removeClass('ui_state_full');
 			if( that._frmTimer ) clearTimeout(that._frmTimer);
@@ -560,7 +555,6 @@ lhgdialog.fn =
 		DOM.title_txt.html('');
 		DOM.content.html('');
 		DOM.buttons.html('');
-		DOM.icon_bg.attr('src', '');
 		
 		if( lhgdialog.focus === that ) lhgdialog.focus = null;
 		
@@ -578,6 +572,26 @@ lhgdialog.fn =
 		_box ? wrap.remove() : _box = that;
 		
 		return that;
+	},
+	
+	/**
+	 * 刷新或跳转指定页面
+	 * @param	{Object, 指定页面的window对象}
+	 * @param	{String, 要跳转到的页面地址}
+	 */
+	reload: function( win, url )
+	{
+	    win = win || window;
+		
+		try{
+		    win.location.href = url ? url : win.location.href;
+		}
+		catch(e){ // 跨域
+			url = this.iframe.src;
+			$(this.iframe).attr('src', url);
+		}
+		
+		return this;
 	},
 	
 	/*!
@@ -604,10 +618,10 @@ lhgdialog.fn =
 		return that;
 	},
 	
-	/*! 设置焦点 */
-	focus: function()
+	/*! 置顶对话框 */
+	zindex: function()
 	{
-		var that = this, elemFocus,
+		var that = this,
 			DOM = that.DOM,
 			top = lhgdialog.focus,
 			index = lhgdialog.setting.zIndex++;
@@ -620,16 +634,25 @@ lhgdialog.fn =
 		lhgdialog.focus = that;
 		DOM.outer.addClass('ui_state_focus');
 		
-		// 添加焦点
-		if(that.config.focus)
-		{
-			try {
-				elemFocus = that._focus && that._focus[0] || DOM.close[0];
-				elemFocus && elemFocus.focus();
-			}catch(e){} // IE对不可见元素设置焦点会报错
-		}
+		// 扩展窗口置顶功能，只用在iframe方式加载内容
+		// 或跨域加载内容页时点窗口内容主体部分置顶窗口
+		if( that._$load && that._$load[0].style.zIndex )
+		    that._$load.hideIt();
+		if( top && top !== that && top.iframe )
+		    top._$load.showIt();
 		
 		return that;
+	},
+	
+	/*! 设置焦点 */
+	focus: function()
+	{
+	    try{
+		    elemFocus = this._focus && this._focus[0] ||  this.DOM.close[0];
+			elemFocus && elemFocus.focus();
+		}catch(e){}
+		
+		return this;
 	},
 	
 	/*!
@@ -644,7 +667,6 @@ lhgdialog.fn =
 			mask = $('#lockMask',_doc)[0] || null,
 			style = mask ? mask.style : '',
 			positionType = _ie6 ? 'absolute' : 'fixed';
-			opac = $.browser.msie
 		
 		// 消除滚动条
 		_$html.addClass('ui_lock_scroll');
@@ -679,7 +701,7 @@ lhgdialog.fn =
 		    style.zIndex = index;
 		}, 1);
 		
-		that.focus();
+		that.zindex();
 		that.DOM.outer.addClass('ui_state_lock');
 		
 		that._lock = true;
@@ -841,26 +863,20 @@ lhgdialog.fn =
 	},
 	
 	/*!
-	 * 获取指定id的几种对象
+	 * 获取指定id的窗口对象或窗口中iframe加载的内容页的window对象
 	 * @param {String} 指定的id
-	 * @param {String} 指定要返回的类型
-	 *        'window' 默认值，返回iframe加载的内容页的window对象
-	 *        'object' 返回指定id的窗口对象
-	 *        'dom' 返回指定id的窗口的DOM对象
+	 * @param {String} 是否返回的为指定id的窗口对象
+	 *        用数字1来表示真，如果不写或写其它为false
 	 * @return {Object|null}
 	 */
-	get: function( id, type )
+	get: function( id, object )
 	{
-	    type = type || 'window';
-		
 		if( lhgdialog.list[id] )
 		{
-			if( type === 'window' )
-			    return lhgdialog.list[id].iwin || null;
-			else if( type === 'object' )
+			if( object === 1 )
 			    return lhgdialog.list[id];
-			else if( type === 'dom' )
-			    return lhgdialog.list[id].DOM;
+			else
+			    return lhgdialog.list[id].iwin || null;
 		}
 		
 		return null;
@@ -872,9 +888,9 @@ lhgdialog.fn =
 	_iframe: function( url )
 	{
 	    var that = this, $iframe, iwin, $idoc, ibody, iWidth, iHeight,
-		    $content = that.DOM.content, srcTimer,
+		    $content = that.DOM.content,
 			config = that.config,
-			$loading = $('.ui_loading',$content[0]),
+			$loading = that._$load = $('.ui_loading',$content[0]),
 		    initCss = 'position:absolute;left:-9999em;border:none 0;background:transparent',
 		    loadCss = 'width:100%;height:100%;border:none 0;';
 		
@@ -901,7 +917,17 @@ lhgdialog.fn =
 		var load = that._fmLoad = function()
 		{
 			$content.addClass('ui_state_full');
-			$loading[0] && $loading.hideIt();
+			
+			// 增强窗口置顶功能，iframe方式加载内容或跨域加载内容页时点窗口内容部分置顶窗口
+			// 通过使用重置loading层来优雅的完成此功能，在focus方法中有此功能的相关代码
+			var title = that.DOM.title[0],
+			    lt = that.DOM.lt[0],
+				mainStyle = that.DOM.main[0].style;
+				
+			$loading[0].style.cssText = 'display:none;z-index:1;position:absolute;background:#FFF;top:' + 
+			    (title.offsetHeight + lt.offsetHeight + 2) + 'px;width:' + mainStyle.width + ';height:' + mainStyle.height + ';';
+			$loading.css('opacity',0).html('');
+			// 此部分代码结束，在拖动改变大小的_dragEvent.onmove方法中还有此功能的相关代码
 			
 			try{
 			    iwin = that.iwin = $iframe[0].contentWindow; // 定义窗口对象iwin属性为内容页的window对象
@@ -930,19 +956,8 @@ lhgdialog.fn =
 			    .position( config.left, config.top );
 			}
 			
-			//此处代码的作用是给内容页的document对象绑定mousedown事件
-			//使鼠标点击窗口内容页时窗口成为最顶层窗口
-			//如果此事件影响了你页面其它的事件可将此段代码删除，对组件使用没什么太大影响
-			$idoc.bind('mousedown',function()
-			{
-			    var index = lhgdialog.setting.zIndex++,
-				    topDG = lhgdialog.focus;
-				
-				that.DOM.wrap.css('zIndex', index);
-				topDG && topDG.DOM.outer.removeClass('ui_state_focus');
-				lhgdialog.focus = that;
-				that.DOM.outer.addClass('ui_state_focus');
-			});
+			// 非跨域时还要对loading层重设大小，要不宽和度都为'auto'
+			$loading.css({width:mainStyle.width, height:mainStyle.height});
 			
 			config.init && config.init.call( that, iwin, _top );
 		};
@@ -955,7 +970,7 @@ lhgdialog.fn =
 	/*! 获取窗口元素 */
 	_getDOM: function()
 	{
-		var wrap = $(lhgdialog.templates,_doc).appendTo(_doc.body),
+		var wrap = $(lhgdialog.templates,_doc).prependTo(_doc.body),
             name, i = 0,
 			DOM = { wrap: wrap },
 			els = wrap[0].getElementsByTagName('*'),
@@ -1049,7 +1064,7 @@ lhgdialog.fn =
 			if( tags[i].type === 'text/dialog' )
 			{
 				script[n] = tags[i].innerHTML;
-				n ++;
+				n++;
 			}
 		}
 		
@@ -1227,7 +1242,23 @@ lhgdialog.fn =
 			};
 			
 			that._ie6SelectFix();
-		}).bind('mousedown',function(){ that.focus(); });
+		}).bind('mousedown',function(event)
+		{
+		    that.zindex();
+			
+			var target = event.target,
+			    title = DOM.title[0],
+				icon = DOM.title_icon[0],
+				txt = DOM.title_txt[0];
+			
+			if( config.drag !== false && (target === title || target === icon || target === txt)
+			|| config.resize !== false && target === DOM.rb[0] )
+			{
+			    _dragEvent = _dragEvent || new lhgdialog.dragEvent();
+				_use(event);
+				return false; // 防止firefox与chrome滚屏
+			}
+		});
 		
 		// 双击标题栏最大化还窗口事件
 		if( config.max )
@@ -1265,8 +1296,13 @@ lhgdialog.top = _top;
 /*! 存储窗口实例的对象列表 */
 lhgdialog.list = {};
 
-/*! 全局快捷键 */
-_$doc.bind('keydown',function(event)
+/*!
+ * 全局快捷键
+ * 由于跨框架时事件是绑定到最顶层页面，所以当当前页面卸载时必须要除移此事件
+ * 所以必须unbind此事件绑定的函数，所以这里要给绑定的事件定义个函数
+ * 这样在当前页面卸载时就可以移此事件绑定的相应函数，不而不影响顶层页面此事件绑定的其它函数
+ */
+onKeyDown = function(event)
 {
 	var target = event.target,
 		nodeName = target.nodeName,
@@ -1277,16 +1313,73 @@ _$doc.bind('keydown',function(event)
 	if( !api || !api.config.esc || rinput.test(nodeName) ) return;
 		
 	keyCode === 27 && api._click(api.config.cancelVal);
-});
+};
 
-/*! 触发浏览器预先缓存背景图片 */
+_$doc.bind('keydown',onKeyDown);
+
+/*! 
+ * 页面DOM加载完成执行的代码
+ */
 $(function()
 {
+	// 触发浏览器预先缓存背景图片
 	setTimeout(function()
 	{
 	    if(_count) return;
-		lhgdialog({left:'-9999em',time:9,fixed:false,lock:false,focus:false});
+		lhgdialog({left:'-9999em',time:9,fixed:false,lock:false});
 	},150);
+	
+	// 增强lhgdialog拖拽体验（可选外置模块，如不需要可删除）
+	// 防止鼠标落入iframe导致不流畅，对超大对话框拖动优化
+	if( lhgdialog.setting.extendDrag ) //lhgdialog.setting.extendDrag 此默认选项只能使用全局设置
+	{
+		var event = lhgdialog.dragEvent;
+		if( !event ) return;
+		
+		var dragEvent = event.prototype,
+			mask = _doc.createElement('div'),
+			style = mask.style,
+			positionType = _ie6 ? 'absolute' : 'fixed';
+		
+		style.cssText = 'display:none;position:' + positionType + ';left:0;top:0;width:100%;height:100%;'
+		+ 'cursor:move;filter:alpha(opacity=0);opacity:0;background:#FFF;pointer-events:none;';
+		
+		mask.id = 'dragMask';
+		_doc.body.appendChild(mask);
+		
+		dragEvent._start = dragEvent.start;
+		dragEvent._end = dragEvent.end;
+		
+		dragEvent.start = function()
+		{
+			var api = lhgdialog.focus,
+				main = api.DOM.main[0],
+				iframe = api.iframe;
+			
+			dragEvent._start.apply(this, arguments);
+			style.display = 'block';
+			style.zIndex = lhgdialog.setting.zIndex + 3;
+			
+			if(positionType === 'absolute')
+			{
+				style.width = '100%';
+				style.height = _$top.height() + 'px';
+				style.left = _$doc.scrollLeft() + 'px';
+				style.top = _$doc.scrollTop() + 'px';
+			};
+			
+			if( iframe && main.offsetWidth * main.offsetHeight > 307200 )
+				main.style.visibility = 'hidden';
+		};
+		
+		dragEvent.end = function()
+		{
+			var api = lhgdialog.focus;
+			dragEvent._end.apply(this, arguments);
+			style.display = 'none';
+			if(api) api.DOM.main[0].style.visibility = 'visible';
+		};
+	}
 });
 
 /*!
@@ -1299,16 +1392,15 @@ _top != window && $(window).bind('unload',function()
 	for( var i in list )
 	{
 	    if(list[i])
-		{
 		    list[i].close();
-			delete list[i];
-		}
 	}
 	_box && _box.DOM.wrap.remove();
+	
+	_$doc.unbind('keydown',onKeyDown);
+	
 	$('#lockMask',_doc)[0] && $('#lockMask',_doc).remove();
 	$('#dragMask',_doc)[0] && $('#dragMask',_doc).remove();
 });
-
 
 /**
  * 跨框架数据共享接口
@@ -1335,6 +1427,207 @@ lhgdialog.data = function( name, value )
 	return cache;
 };
 
+/*!
+ *------------------------------------------------
+ * 对话框模块-拖拽支持（可选外置模块）
+ *------------------------------------------------
+ */
+var _dragEvent, _use,
+    _elem = _doc.documentElement,
+	_isSetCapture = 'setCapture' in _elem,
+	_isLosecapture = 'onlosecapture' in _elem;
+
+lhgdialog.dragEvent = function()
+{
+    var that = this,
+	
+	proxy = function(name)
+	{
+	    var fn = that[name];
+		that[name] = function(){
+		    return fn.apply(that,arguments);
+		}
+	};
+	
+	proxy('start');
+	proxy('move');
+	proxy('end');
+};
+
+lhgdialog.dragEvent.prototype =
+{
+	// 开始拖拽
+	onstart: $.noop,
+	start: function(event)
+	{
+		var that = this;
+		
+		_$doc
+		.bind( 'mousemove', that.move )
+		.bind( 'mouseup', that.end );
+		
+		that._sClientX = event.clientX;
+		that._sClientY = event.clientY;
+		that.onstart( event.clientX, event.clientY );
+		
+		return false;
+	},
+	
+	// 正在拖拽
+	onmove: $.noop,
+	move: function(event)
+	{		
+		var that = this;
+		
+		that._mClientX = event.clientX;
+		that._mClientY = event.clientY;
+		
+		that.onmove(
+			event.clientX - that._sClientX,
+			event.clientY - that._sClientY
+		);
+		
+		return false;
+	},
+	
+	// 结束拖拽
+	onend: $.noop,
+	end: function(event)
+	{
+		var that = this;
+		
+		_$doc
+		.unbind('mousemove', that.move)
+		.unbind('mouseup', that.end);
+		
+		that.onend( event.clientX, event.clientY );
+		return false;
+	}
+};
+
+_use = function(event)
+{
+	var limit, startWidth, startHeight, startLeft, startTop, isResize,
+		api = lhgdialog.focus,
+		config = api.config,
+		DOM = api.DOM,
+		wrap = DOM.wrap,
+		title = DOM.title,
+		main = DOM.main,
+	
+	// 清除文本选择
+	clsSelect = 'getSelection' in _$top[0] ?
+	function(){
+		_$top[0].getSelection().removeAllRanges();
+	}:function(){
+		try{_$doc[0].selection.empty();}catch(e){};
+	};
+	
+	// 对话框准备拖动
+	_dragEvent.onstart = function( x, y )
+	{
+		if( isResize )
+		{
+			startWidth = main[0].offsetWidth;
+			startHeight = main[0].offsetHeight;
+		}
+		else
+		{
+			startLeft = wrap[0].offsetLeft;
+			startTop = wrap[0].offsetTop;
+		};
+		
+		_$doc.bind( 'dblclick', _dragEvent.end );
+		
+		!_ie6 && _isLosecapture
+		? title.bind('losecapture',_dragEvent.end )
+		: _$top.bind('blur',_dragEvent.end);
+		
+		api.focus();
+		
+		_isSetCapture && title[0].setCapture();
+		
+		DOM.outer.addClass('ui_state_drag');
+	};
+	
+	// 对话框拖动进行中
+	_dragEvent.onmove = function( x, y )
+	{
+		if( isResize )
+		{
+			var wrapStyle = wrap[0].style,
+				style = main[0].style,
+				width = x + startWidth,
+				height = y + startHeight;
+			
+			wrapStyle.width = 'auto';
+			config.width = style.width = Math.max(0,width) + 'px';
+			wrapStyle.width = wrap[0].offsetWidth + 'px';
+			
+			config.height = style.height = Math.max(0,height) + 'px';
+		    // 使用loading层置顶窗口时窗口大小改变相应loading层大小也得改变
+			api._$load && api._$load.css({width:style.width, height:style.height});
+		}
+		else
+		{
+			var style = wrap[0].style,
+				left = x + startLeft,
+				top = y + startTop;
+
+			config.left = Math.max( limit.minX, Math.min(limit.maxX,left) );
+			config.top = Math.max( limit.minY, Math.min(limit.maxY,top) );
+			style.left = config.left + 'px';
+			style.top = config.top + 'px';
+		}
+			
+		clsSelect();
+		api._ie6SelectFix();
+	};
+	
+	// 对话框拖动结束
+	_dragEvent.onend = function( x, y )
+	{
+		_$doc.unbind('dblclick',_dragEvent.end);
+		
+		!_ie6 && _isLosecapture
+		? title.unbind('losecapture',_dragEvent.end)
+		: _$top.unbind('blur',_dragEvent.end);
+		
+		_isSetCapture && title[0].releaseCapture();
+		
+		_ie6 && api._autoPositionType();
+		
+		DOM.outer.removeClass('ui_state_drag');
+	};
+	
+	isResize = event.target === DOM.rb[0] ? true : false;
+	
+	limit = (function()
+	{
+		var maxX, maxY,
+			wrap = api.DOM.wrap[0],
+			fixed = wrap.style.position === 'fixed',
+			ow = wrap.offsetWidth,
+			// 向下拖动时不能将标题栏拖出可视区域
+			oh = title[0].offsetHeight + DOM.lt[0].offsetHeight || 20,
+			ww = _$top.width(),
+			wh = _$top.height(),
+			dl = fixed ? 0 : _$doc.scrollLeft(),
+			dt = fixed ? 0 : _$doc.scrollTop();
+		// 坐标最大值限制(在可视区域内)	
+		maxX = ww - ow + dl;
+		maxY = wh - oh + dt;
+		
+		return {
+			minX: dl,
+			minY: dt,
+			maxX: maxX,
+			maxY: maxY
+		};
+	})();
+	
+	_dragEvent.start(event);
+};
 
 /*!
  * 窗口组件模板，基础皮肤自适应九宫格结构
@@ -1359,13 +1652,13 @@ lhgdialog.templates =
 							'<tr>' +
 								'<td colspan="2" class="ui_header">' +
 									'<div class="ui_title_bar">' +
-										'<div class="ui_title" unselectable="on"><span class="ui_title_icon"></span><b class="ui_title_txt"></b></div>' +
+										'<div class="ui_title"><span class="ui_title_icon"></span><b class="ui_title_txt" unselectable="on"></b></div>' +
 										'<div class="ui_title_buttons">' +
-										    '<a class="ui_min" href="#" title="\u6700\u5C0F\u5316"><b class="ui_min_b"></b></a>' +
-											'<a class="ui_rese" href="#" title="\u6062\u590D"><b class="ui_rese_b"></b><b class="ui_rese_t"></b></a>' +
-											'<a class="ui_max" href="#" title="\u6700\u5927\u5316"><b class="ui_max_b"></b></a>' +
-											'<a class="ui_res" href="#" title="\u8FD8\u539F"><b class="ui_res_b"></b><b class="ui_res_t"></b></a>' +
-										    '<a class="ui_close" href="#" title="\u5173\u95ED(esc\u952E)">\xd7</a>' +
+											'<a class="ui_min" href="javascript:lhgdialog" title="\u6700\u5C0F\u5316"><b class="ui_min_b"></b></a>' +
+											'<a class="ui_rese" href="javascript:lhgdialog" title="\u6062\u590D"><b class="ui_rese_b"></b><b class="ui_rese_t"></b></a>' +
+											'<a class="ui_max" href="javascript:lhgdialog" title="\u6700\u5927\u5316"><b class="ui_max_b"></b></a>' +
+											'<a class="ui_res" href="javascript:lhgdialog" title="\u8FD8\u539F"><b class="ui_res_b"></b><b class="ui_res_t"></b></a>' +
+										    '<a class="ui_close" href="javascript:lhgdialog" title="\u5173\u95ED(esc\u952E)">\xd7</a>' +
 										'</div>' +
 									'</div>' +
 								'</td>' +
@@ -1412,9 +1705,8 @@ lhgdialog.setting =
 	close: null,				// 对话框关闭前执行的函数
 	okVal: '\u786E\u5B9A',		// 确定按钮文本. 默认'确定'
 	cancelVal: '\u53D6\u6D88',	// 取消按钮文本. 默认'取消'
-	skin: '',					// 皮肤名
+	skin: '',					// 多皮肤共存预留接口
 	esc: true,					// 是否支持Esc键关闭
-	focus: true,				// 是否支持对话框按钮聚焦
 	width: 'auto',				// 内容宽度
 	height: 'auto',				// 内容高度
 	minWidth: 96,				// 最小宽度限制
@@ -1425,7 +1717,7 @@ lhgdialog.setting =
 	parent: null,               // 打开子窗口的父窗口对象，主要用于多层锁屏窗口
 	background: '#DCE2F1',		// 遮罩颜色
 	opacity: .6,				// 遮罩透明度
-	padding: '15px 10px',		// 内容与边界填充距离
+	padding: '10px',		    // 内容与边界填充距离
 	fixed: false,				// 是否静止定位
 	left: '50%',				// X轴坐标
 	top: '38.2%',				// Y轴坐标
@@ -1444,294 +1736,6 @@ window.lhgdialog = $.dialog = $.lhgdialog = lhgdialog;
 
 /*!
  *------------------------------------------------
- * 对话框模块-拖拽支持（可选外置模块）
- *------------------------------------------------
- */
-;(function( $, lhgdialog ){
-
-var _$document = $(lhgdialog.top.document),
-    _$window = $(lhgdialog.top),
-	_dragEvent, _use,
-	_elem = document.documentElement,
-	_ie6 = window.VBArray && !window.XMLHttpRequest,
-	_isSetCapture = 'setCapture' in _elem,
-	_isLosecapture = 'onlosecapture' in _elem;
-
-lhgdialog.dragEvent = function()
-{
-    var that = this,
-	
-	proxy = function(name)
-	{
-	    var fn = that[name];
-		that[name] = function(){
-		    return fn.apply(that,arguments);
-		}
-	};
-	
-	proxy('start');
-	proxy('move');
-	proxy('end');
-};
-
-lhgdialog.dragEvent.prototype =
-{
-	// 开始拖拽
-	onstart: $.noop,
-	start: function(event)
-	{
-		var that = this;
-		
-		_$document
-		.bind( 'mousemove', that.move )
-		.bind( 'mouseup', that.end );
-		
-		that._sClientX = event.clientX;
-		that._sClientY = event.clientY;
-		that.onstart( event.clientX, event.clientY );
-		
-		return false;
-	},
-	
-	// 正在拖拽
-	onmove: $.noop,
-	move: function(event)
-	{		
-		var that = this;
-		
-		that._mClientX = event.clientX;
-		that._mClientY = event.clientY;
-		
-		that.onmove(
-			event.clientX - that._sClientX,
-			event.clientY - that._sClientY
-		);
-		
-		return false;
-	},
-	
-	// 结束拖拽
-	onend: $.noop,
-	end: function(event)
-	{
-		var that = this;
-		
-		_$document
-		.unbind('mousemove', that.move)
-		.unbind('mouseup', that.end);
-		
-		that.onend( event.clientX, event.clientY );
-		return false;
-	}
-};
-
-_use = function(event)
-{
-	var limit, startWidth, startHeight, startLeft, startTop, isResize,
-		api = lhgdialog.focus,
-		config = api.config,
-		DOM = api.DOM,
-		wrap = DOM.wrap,
-		title = DOM.title,
-		main = DOM.main,
-	
-	// 清除文本选择
-	clsSelect = 'getSelection' in _$window[0] ?
-	function(){
-		_$window[0].getSelection().removeAllRanges();
-	}:function(){
-		try{_$document[0].selection.empty();}catch(e){};
-	};
-	
-	// 对话框准备拖动
-	_dragEvent.onstart = function( x, y )
-	{
-		if( isResize )
-		{
-			startWidth = main[0].offsetWidth;
-			startHeight = main[0].offsetHeight;
-		}
-		else
-		{
-			startLeft = wrap[0].offsetLeft;
-			startTop = wrap[0].offsetTop;
-		};
-		
-		_$document.bind( 'dblclick', _dragEvent.end );
-		
-		!_ie6 && _isLosecapture
-		? title.bind('losecapture',_dragEvent.end )
-		: _$window.bind('blur',_dragEvent.end);
-		
-		_isSetCapture && title[0].setCapture();
-		
-		DOM.outer.addClass('ui_state_drag');
-		api.focus();
-	};
-	
-	// 对话框拖动进行中
-	_dragEvent.onmove = function( x, y )
-	{
-		if( isResize )
-		{
-			var wrapStyle = wrap[0].style,
-				style = main[0].style,
-				width = x + startWidth,
-				height = y + startHeight;
-			
-			wrapStyle.width = 'auto';
-			config.width = style.width = Math.max(0,width) + 'px';
-			wrapStyle.width = wrap[0].offsetWidth + 'px';
-			
-			config.height = style.height = Math.max(0,height) + 'px';
-			
-		}
-		else
-		{
-			var style = wrap[0].style,
-				left = x + startLeft,
-				top = y + startTop;
-
-			config.left = Math.max( limit.minX, Math.min(limit.maxX,left) );
-			config.top = Math.max( limit.minY, Math.min(limit.maxY,top) );
-			style.left = config.left + 'px';
-			style.top = config.top + 'px';
-		}
-			
-		clsSelect();
-		api._ie6SelectFix();
-	};
-	
-	// 对话框拖动结束
-	_dragEvent.onend = function( x, y )
-	{
-		_$document.unbind('dblclick',_dragEvent.end);
-		
-		!_ie6 && _isLosecapture
-		? title.unbind('losecapture',_dragEvent.end)
-		: _$window.unbind('blur',_dragEvent.end);
-		
-		_isSetCapture && title[0].releaseCapture();
-		
-		_ie6 && api._autoPositionType();
-		
-		DOM.outer.removeClass('ui_state_drag');
-	};
-	
-	isResize = event.target === DOM.rb[0] ? true : false;
-	
-	limit = (function()
-	{
-		var maxX, maxY,
-			wrap = api.DOM.wrap[0],
-			fixed = wrap.style.position === 'fixed',
-			ow = wrap.offsetWidth,
-			// 向下拖动时不能将标题栏拖出可视区域
-			oh = title[0].offsetHeight + DOM.t[0].offsetHeight || 20,
-			ww = _$window.width(),
-			wh = _$window.height(),
-			dl = fixed ? 0 : _$document.scrollLeft(),
-			dt = fixed ? 0 : _$document.scrollTop();
-		// 坐标最大值限制(在可视区域内)	
-		maxX = ww - ow + dl;
-		maxY = wh - oh + dt;
-		
-		return {
-			minX: dl,
-			minY: dt,
-			maxX: maxX,
-			maxY: maxY
-		};
-	})();
-	
-	_dragEvent.start(event);
-};
-
-_$document.bind('mousedown',function(event){
-    var api = lhgdialog.focus;
-	if( !api ) return;
-	
-	var target = event.target,
-		DOM = api.DOM,
-		title = DOM.title[0],
-		icon = DOM.title_icon[0],
-		txt = DOM.title_txt[0],
-	    config = api.config;
-	
-	if( config.drag !== false && (target === title || target === icon || target === txt)
-	|| config.resize !== false && target === DOM.rb[0] )
-	{
-	    _dragEvent = _dragEvent || new lhgdialog.dragEvent();
-		_use(event);
-		return false; // 防止firefox与chrome滚屏
-	}
-});
-
-/*!
- * -------------------------------------
- * 增强lhgdialog拖拽体验（可选外置模块，如不需要可删除）
- * 防止鼠标落入iframe导致不流畅
- * 对超大对话框拖动优化
- * --------------------------------------
- */
-$(function(){
-
-if( lhgdialog.setting.extendDrag ) //lhgdialog.setting.extendDrag 此默认选项只能使用全局设置
-{
-	var event = lhgdialog.dragEvent;
-	if( !event ) return;
-	
-	var dragEvent = event.prototype,
-		mask = _$document[0].createElement('div'),
-		style = mask.style,
-		positionType = _ie6 ? 'absolute' : 'fixed';
-	
-	style.cssText = 'display:none;position:' + positionType + ';left:0;top:0;width:100%;height:100%;'
-	+ 'cursor:move;filter:alpha(opacity=0);opacity:0;background:#FFF;pointer-events:none;';
-	
-	mask.id = 'dragMask';
-	_$document[0].body.appendChild(mask);
-	
-	dragEvent._start = dragEvent.start;
-	dragEvent._end = dragEvent.end;
-	
-	dragEvent.start = function()
-	{
-		var api = lhgdialog.focus,
-			main = api.DOM.main[0],
-			iframe = api.iframe;
-		
-		dragEvent._start.apply(this, arguments);
-		style.display = 'block';
-		style.zIndex = lhgdialog.setting.zIndex + 3;
-		
-		if(positionType === 'absolute')
-		{
-			style.width = '100%';
-			style.height = _$window.height() + 'px';
-			style.left = _$document.scrollLeft() + 'px';
-			style.top = _$document.scrollTop() + 'px';
-		};
-		
-		if( iframe && main.offsetWidth * main.offsetHeight > 307200 )
-			main.style.visibility = 'hidden';
-	};
-	
-	dragEvent.end = function()
-	{
-		var api = lhgdialog.focus;
-		dragEvent._end.apply(this, arguments);
-		style.display = 'none';
-		if(api) api.DOM.main[0].style.visibility = 'visible';
-	};
-}
-
-});
-
-})( window.jQuery||window.lhgcore, this.lhgdialog );
-
-/*!
- *------------------------------------------------
  * 对话框其它功能扩展模块（可选外置模块）
  *------------------------------------------------
  */
@@ -1742,11 +1746,50 @@ var _zIndex = function()
     return lhgdialog.setting.zIndex;
 };
 
+
+/**
+ * Ajax填充内容
+ * @param	{String}			地址
+ * @param	{Object}			配置参数
+ * @param	{Boolean}			是否允许缓存. 默认false
+ */
+lhgdialog.load = function( url, options, cache )
+{
+    cache = cache || false;
+	options = options || {};
+	
+	var config = {
+		zIndex: _zIndex(),
+		init: function(here){
+			var api = this,
+				aConfig = api.config;
+			
+			$.ajax({
+				url: url,
+				success: function(content){
+					api.content(content);
+					options.init && options.init.call(api, here);		
+				},
+				cache: cache
+			});
+		}
+	};
+	
+	delete options.content;
+	
+	for(var i in options)
+	{
+		if(config[i] === undefined) config[i] = options[i];
+	};
+	
+	return lhgdialog( config );
+};
+
 /**
  * 警告
  * @param	{String}	消息内容
  */
-lhgdialog.alert = function( content )
+lhgdialog.alert = function( content, callback )
 {
 	return lhgdialog({
 		title: '警告',
@@ -1757,7 +1800,8 @@ lhgdialog.alert = function( content )
 		lock: true,
 		content: content,
 		ok: true,
-		resize: false
+		resize: false,
+		close: callback
 	});
 	
 };
@@ -1831,11 +1875,17 @@ lhgdialog.prompt = function( content, yes, value )
 /**
  * 短暂提示
  * @param	{String}	提示内容
- * @param	{Number}	提示图标
- * @param   {Function}  提示关闭时执行的函数，返回false将阻止窗口关闭
+ * @param   {Number}    显示时间 (默认1.5秒)
+ * @param	{String}	提示图标 (注意要加扩展名)
+ * @param   {Function}  提示关闭时执行的回调函数
  */
-lhgdialog.tips = function( content, icon, close )
+lhgdialog.tips = function( content, time, icon, callback )
 {
+	var reIcon = icon ? function(){
+	    this.DOM.icon_bg[0].src = this.config.path + 'skins/icons/' + icon;
+		if( callback ) this.config.close = callback;
+	} : null;
+	
 	return lhgdialog({
 		id: 'Tips',
 		zIndex: _zIndex(),
@@ -1845,11 +1895,10 @@ lhgdialog.tips = function( content, icon, close )
 		lock: false,
 		resize: false,
 		icon: icon || 'tips.gif',
-		close: function(here){
-		    return close && close.call(this, here);
-		},
-		content: '<div style="padding: 0 1em;">' + content + '</div>'
-	});
+		close: callback
+	})
+	.content('<div style="padding: 0 1em;">' + content + '</div>')
+	.time(time || 1.5, reIcon);
 };
 
 })( window.jQuery||window.lhgcore, this.lhgdialog );
