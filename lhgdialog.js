@@ -1,9 +1,9 @@
 ﻿/*!
- * lhgcore Dialog Plugin v4.0.1 bate2
- * Date : 2011-12-11 10:05:00
+ * lhgcore Dialog Plugin v4.0.0 bate2
+ * Date : 2011-12-16 10:05:00
  * Copyright (c) 2009 - 2011 By Li Hui Gang
  * URL : http://lhgcore.com/
- * BBS : http://bbs.lhgcore.com/
+ * WIB : http://t.qq.com/lhgcore/
  */
 
 ;(function( $, window, undefined ){
@@ -179,7 +179,7 @@ lhgdialog.fn =
 			// 标题栏左边的图标
 			ticon = config.titleIcon 
 			? { backgroundImage: 'url(\'' + config.path + 'skins/icons/' + config.titleIcon + '\')', display:'' }
-			: { display:'none' }
+			: { display:'none' };
 		
 		// 假如提示性图标为真默认不显示最小化和最大化按钮
 		if( icon )
@@ -200,7 +200,7 @@ lhgdialog.fn =
 		DOM.icon_bg.attr('src',iconBg || '');
 		DOM.title_icon.css( ticon );
 		DOM.rb[0].style.cursor = config.resize ? 'se-resize' : 'auto';
-		DOM.title[0].style.cursor = config.drag ? 'move' : 'auto'
+		DOM.title[0].style.cursor = config.drag ? 'move' : 'auto';
 		DOM.max[config.max?'showIt':'hideIt'](true);
 		DOM.min[config.min?'showIt':'hideIt'](true);
 		DOM.close[config.cancel===false?'hideIt':'showIt'](true); //当cancel参数为false时隐藏关闭按钮
@@ -212,7 +212,7 @@ lhgdialog.fn =
 		.content(config.content, true)
 		.size(config.width, config.height)
 		.position(config.left, config.top)
-		.zindex().focus()
+		.zindex()
 		.time(config.time);
 		
 		config.lock && that.lock();
@@ -455,7 +455,7 @@ lhgdialog.fn =
 			    isNewButton = !listeners[name],
 				button = !isNewButton ?
 					listeners[name].elem :
-					_doc.createElement('button');
+					_doc.createElement('input');
 			
 			if( !listeners[name] ) listeners[name] = {};
 			if( obj.callback ) listeners[name].callback = obj.callback;
@@ -473,7 +473,8 @@ lhgdialog.fn =
 
 			if( isNewButton )
 			{
-				button.innerHTML = name;
+				button.type = 'button';
+				button.value = name;
 				listeners[name].elem = button;
 				buttons.appendChild(button);
 			}
@@ -589,7 +590,7 @@ lhgdialog.fn =
 		catch(e){ // 跨域
 			url = this.iframe.src;
 			$(this.iframe).attr('src', url);
-		}
+		};
 		
 		return this;
 	},
@@ -648,9 +649,9 @@ lhgdialog.fn =
 	focus: function()
 	{
 	    try{
-		    elemFocus = this._focus && this._focus[0] ||  this.DOM.close[0];
+		    elemFocus = this._focus && this._focus[0] || this.DOM.close[0];
 			elemFocus && elemFocus.focus();
-		}catch(e){}
+		}catch(e){};
 		
 		return this;
 	},
@@ -1543,8 +1544,6 @@ _use = function(event)
 		? title.bind('losecapture',_dragEvent.end )
 		: _$top.bind('blur',_dragEvent.end);
 		
-		api.focus();
-		
 		_isSetCapture && title[0].setCapture();
 		
 		DOM.outer.addClass('ui_state_drag');
@@ -1732,7 +1731,7 @@ lhgdialog.setting =
 
 window.lhgdialog = $.dialog = $.lhgdialog = lhgdialog;
 
-})( window.jQuery||window.lhgcore, this );
+})( this.jQuery||this.lhgcore, this );
 
 /*!
  *------------------------------------------------
@@ -1803,7 +1802,6 @@ lhgdialog.alert = function( content, callback )
 		resize: false,
 		close: callback
 	});
-	
 };
 
 /**
@@ -1883,8 +1881,9 @@ lhgdialog.tips = function( content, time, icon, callback )
 {
 	var reIcon = icon ? function(){
 	    this.DOM.icon_bg[0].src = this.config.path + 'skins/icons/' + icon;
+		this.DOM.icon[0].style.display = '';
 		if( callback ) this.config.close = callback;
-	} : null;
+	} : function(){ this.DOM.icon.hideIt(); };
 	
 	return lhgdialog({
 		id: 'Tips',
@@ -1894,11 +1893,10 @@ lhgdialog.tips = function( content, time, icon, callback )
 		fixed: true,
 		lock: false,
 		resize: false,
-		icon: icon || 'tips.gif',
 		close: callback
 	})
-	.content('<div style="padding: 0 1em;">' + content + '</div>')
+	.content(content)
 	.time(time || 1.5, reIcon);
 };
 
-})( window.jQuery||window.lhgcore, this.lhgdialog );
+})( this.jQuery||this.lhgcore, this.lhgdialog );
